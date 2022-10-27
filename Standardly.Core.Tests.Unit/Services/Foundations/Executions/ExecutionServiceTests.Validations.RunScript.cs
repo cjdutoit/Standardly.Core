@@ -20,11 +20,10 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRunIfPathIsInvalid(string invalidPath)
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalid(string invalidExecutionFolder)
         {
             // given
-            string someKey = GetRandomString();
-            string someValue = GetRandomString();
+            string inputExecutionFolder = invalidExecutionFolder;
             List<Execution> someExecutions = GetRandomExecutions();
 
             var invalidArgumentExecutionException =
@@ -38,7 +37,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionValidationException(invalidArgumentExecutionException);
 
             // when
-            ValueTask<string> runTask = this.executionService.Run(someExecutions, invalidPath);
+            ValueTask<string> runTask = this.executionService.Run(someExecutions, inputExecutionFolder);
 
             ExecutionValidationException actualExecutionValidationException =
                 await Assert.ThrowsAsync<ExecutionValidationException>(runTask.AsTask);
@@ -47,7 +46,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.Run(someExecutions, invalidPath),
+                broker.Run(someExecutions, inputExecutionFolder),
                     Times.Never);
 
             this.executionBrokerMock.VerifyNoOtherCalls();
