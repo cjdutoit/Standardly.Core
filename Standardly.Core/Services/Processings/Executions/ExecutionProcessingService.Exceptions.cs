@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -42,6 +43,13 @@ namespace Standardly.Core.Services.Processings.Executions
             {
                 throw CreateAndLogDependencyException(executionServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedExecutionProcessingServiceException =
+                    new FailedExecutionProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedExecutionProcessingServiceException);
+            }
         }
 
         private ExecutionProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -74,6 +82,16 @@ namespace Standardly.Core.Services.Processings.Executions
             this.loggingBroker.LogError(executionProcessingDependencyException);
 
             return executionProcessingDependencyException;
+        }
+
+        private ExecutionProcessingServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var executionProcessingServiceException = new
+                ExecutionProcessingServiceException(exception);
+
+            this.loggingBroker.LogError(executionProcessingServiceException);
+
+            return executionProcessingServiceException;
         }
     }
 }
