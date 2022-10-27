@@ -18,5 +18,8 @@ namespace Standardly.Core.Brokers.Files
 
         public string ReadFile(string path) =>
             File.ReadAllText(path);
+
+        public void DeleteFile(string path) =>
+            File.Delete(path);
     }
 }
