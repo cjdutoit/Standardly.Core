@@ -4,13 +4,16 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Moq;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Services.Foundations.Executions;
 using Tynamix.ObjectFiller;
+using Xeptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
@@ -30,6 +33,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 executionBroker: this.executionBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         public static TheoryData InvalidExecutions()
         {
