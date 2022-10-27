@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
+using Standardly.Core.Models.Foundations.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xeptions;
@@ -25,6 +26,14 @@ namespace Standardly.Core.Services.Processings.Executions
             {
                 throw CreateAndLogValidationException(invalidArgumentExecutionProcessingException);
             }
+            catch (ExecutionValidationException executionValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(executionValidationException);
+            }
+            catch (ExecutionDependencyValidationException executionDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(executionDependencyValidationException);
+            }
         }
 
         private ExecutionProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -35,6 +44,17 @@ namespace Standardly.Core.Services.Processings.Executions
             this.loggingBroker.LogError(executionProcessingValidationException);
 
             return executionProcessingValidationException;
+        }
+
+        private ExecutionProcessingDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var executionProcessingDependencyValidationException =
+                new ExecutionProcessingDependencyValidationException(
+                    exception.InnerException as Xeption);
+
+            this.loggingBroker.LogError(executionProcessingDependencyValidationException);
+
+            return executionProcessingDependencyValidationException;
         }
     }
 }
