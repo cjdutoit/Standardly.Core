@@ -57,5 +57,49 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             this.executionServiceMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogItAsync(string invalidValue)
+        {
+            // given
+            List<Execution> nullExecutions = GetRandomExecutions();
+            string executionFolder = invalidValue;
+
+            var invalidArgumentExecutionProcessingException =
+                new InvalidArgumentExecutionProcessingException();
+
+            invalidArgumentExecutionProcessingException.AddData(
+                key: "executionFolder",
+                values: "Text is required");
+
+            var expectedExecutionProcessingValidationException =
+                new ExecutionProcessingValidationException(invalidArgumentExecutionProcessingException);
+
+            // when
+            ValueTask<string> runTask =
+                this.executionProcessingService.Run(nullExecutions, executionFolder);
+
+            ExecutionProcessingValidationException actualExecutionProcessingValidationException =
+                await Assert.ThrowsAsync<ExecutionProcessingValidationException>(runTask.AsTask);
+
+            // then
+            actualExecutionProcessingValidationException.Should()
+                .BeEquivalentTo(expectedExecutionProcessingValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedExecutionProcessingValidationException))),
+                        Times.Once);
+
+            this.executionServiceMock.Verify(broker =>
+                broker.Run(nullExecutions, executionFolder),
+                    Times.Never);
+
+            this.executionServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
