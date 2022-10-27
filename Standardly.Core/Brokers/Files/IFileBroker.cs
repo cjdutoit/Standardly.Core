@@ -10,5 +10,6 @@ namespace Standardly.Core.Brokers.Files
     {
         bool CheckIfFileExists(string path);
         void WriteToFile(string path, string content);
+        string ReadFile(string path);
     }
 }

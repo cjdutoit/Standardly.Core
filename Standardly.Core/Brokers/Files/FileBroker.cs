@@ -15,5 +15,8 @@ namespace Standardly.Core.Brokers.Files
 
         public void WriteToFile(string path, string content) =>
             File.WriteAllText(path, content);
+
+        public string ReadFile(string path) =>
+            File.ReadAllText(path);
     }
 }
