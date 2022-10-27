@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
@@ -90,6 +91,49 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedExecutionProcessingDependencyException))),
+                        Times.Once);
+
+            this.executionServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRunIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string randomExecutionFolder = GetRandomString();
+            string inputExecutionFolder = randomExecutionFolder;
+            List<Execution> randomExecutions = GetRandomExecutions();
+            List<Execution> inputExecutions = randomExecutions;
+
+            var serviceException = new Exception();
+
+            var failedExecutionProcessingServiceException =
+                new FailedExecutionProcessingServiceException(serviceException);
+
+            var expectedExecutionProcessingServiveException =
+                new ExecutionProcessingServiceException(
+                    failedExecutionProcessingServiceException);
+
+            this.executionServiceMock.Setup(service =>
+                service.Run(inputExecutions, inputExecutionFolder))
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<string> runTask =
+                this.executionProcessingService.Run(randomExecutions, inputExecutionFolder);
+
+            // then
+            ExecutionProcessingServiceException actualException =
+                await Assert.ThrowsAsync<ExecutionProcessingServiceException>(runTask.AsTask);
+
+            this.executionServiceMock.Verify(service =>
+                service.Run(inputExecutions, inputExecutionFolder),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedExecutionProcessingServiveException))),
                         Times.Once);
 
             this.executionServiceMock.VerifyNoOtherCalls();
