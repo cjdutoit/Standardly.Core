@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
@@ -24,7 +23,7 @@ namespace Standardly.Core.Services.Processings.Executions
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
-            throw new NotImplementedException();
+        public async ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
+            await this.executionService.Run(executions, executionFolder);
     }
 }
