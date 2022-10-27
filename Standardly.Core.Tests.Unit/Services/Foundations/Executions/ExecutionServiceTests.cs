@@ -11,6 +11,7 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Services.Foundations.Executions;
 using Tynamix.ObjectFiller;
+using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
 {
@@ -28,6 +29,20 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             this.executionService = new ExecutionService(
                 executionBroker: this.executionBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
+        }
+
+        public static TheoryData InvalidExecutions()
+        {
+            return new TheoryData<List<Execution>>
+            {
+                null,
+                new List<Execution>() { new Execution(name: null, instruction: GetRandomString()) },
+                new List<Execution>() { new Execution(name: "", instruction: GetRandomString()) },
+                new List<Execution>() { new Execution(name: "   ", instruction: GetRandomString()) },
+                new List<Execution>() { new Execution(name: GetRandomString(), instruction: null) },
+                new List<Execution>() { new Execution(name: GetRandomString(),   instruction: "") },
+                new List<Execution>() { new Execution(name: GetRandomString(), instruction: "   ") },
+            };
         }
 
         private static int GetRandomNumber() =>

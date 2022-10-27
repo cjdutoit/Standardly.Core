@@ -15,7 +15,9 @@ namespace Standardly.Core.Services.Foundations.Executions
     {
         private void ValidateRunArguments(List<Execution> executions, string executionFolder)
         {
-            Validate((Rule: IsInvalid(executionFolder), Parameter: nameof(executionFolder)));
+            Validate(
+                (Rule: IsInvalid(executionFolder), Parameter: nameof(executionFolder)),
+                (Rule: IsInvalid(executions), Parameter: nameof(executions)));
         }
 
         private static dynamic IsInvalid(string text) => new
@@ -23,6 +25,34 @@ namespace Standardly.Core.Services.Foundations.Executions
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is required"
         };
+
+        private static dynamic IsInvalid(List<Execution> executions) => new
+        {
+            Condition = ValidateIfExecutionsIsInvalid(executions),
+            Message = "Executions is required"
+        };
+
+        private static bool ValidateIfExecutionsIsInvalid(List<Execution> executions)
+        {
+            if (executions == null)
+            {
+                return true;
+            }
+
+
+            foreach (Execution execution in executions)
+            {
+                if (
+                    execution == null
+                    || String.IsNullOrWhiteSpace(execution.Name)
+                    || String.IsNullOrWhiteSpace(execution.Instruction))
+                {
+                    return true;
+                }
+            };
+
+            return false;
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

@@ -25,10 +25,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             // given
             string inputExecutionFolder = invalidValue;
 
-            List<Execution> someExecutions = new List<Execution>()
-            {
-                new Execution(name: invalidValue, instruction: invalidValue)
-            };
+            List<Execution> someExecutions = GetRandomExecutions();
 
             var invalidArgumentExecutionException =
                 new InvalidArgumentExecutionException();
@@ -36,10 +33,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             invalidArgumentExecutionException.AddData(
                 key: "executionFolder",
                 values: "Text is required");
-
-            invalidArgumentExecutionException.AddData(
-                key: "executions",
-                values: "Executions is required");
 
             var expectedExecutionValidationException =
                 new ExecutionValidationException(invalidArgumentExecutionException);
@@ -60,13 +53,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             this.executionBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Fact]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNull()
+        [Theory]
+        [MemberData(nameof(InvalidExecutions))]
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNull(List<Execution> invalidExecutions)
         {
             // given
             string randomExecutionFolder = GetRandomString();
             string inputExecutionFolder = randomExecutionFolder;
-            List<Execution> someExecutions = null;
+            List<Execution> inputExecutions = invalidExecutions;
 
             var invalidArgumentExecutionException =
                 new InvalidArgumentExecutionException();
@@ -79,7 +73,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionValidationException(invalidArgumentExecutionException);
 
             // when
-            ValueTask<string> runTask = this.executionService.Run(someExecutions, inputExecutionFolder);
+            ValueTask<string> runTask = this.executionService.Run(inputExecutions, inputExecutionFolder);
 
             ExecutionValidationException actualExecutionValidationException =
                 await Assert.ThrowsAsync<ExecutionValidationException>(runTask.AsTask);
@@ -88,7 +82,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.Run(someExecutions, inputExecutionFolder),
+                broker.Run(inputExecutions, inputExecutionFolder),
                     Times.Never);
 
             this.executionBrokerMock.VerifyNoOtherCalls();
