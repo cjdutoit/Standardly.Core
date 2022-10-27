@@ -12,5 +12,6 @@ namespace Standardly.Core.Brokers.Files
         void WriteToFile(string path, string content);
         string ReadFile(string path);
         void DeleteFile(string path);
+        string[] GetListOfFiles(string path, string searchPattern = "*");
     }
 }

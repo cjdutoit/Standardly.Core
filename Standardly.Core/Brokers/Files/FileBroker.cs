@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Standardly.Core.Brokers.Files
 {
-    public class FileBroker
+    public class FileBroker : IFileBroker
     {
         public bool CheckIfFileExists(string path) =>
             File.Exists(path);
@@ -21,5 +21,8 @@ namespace Standardly.Core.Brokers.Files
 
         public void DeleteFile(string path) =>
             File.Delete(path);
+
+        public string[] GetListOfFiles(string path, string searchPattern = "*") =>
+            Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories);
     }
 }
