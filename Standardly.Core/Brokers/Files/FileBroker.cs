@@ -30,5 +30,8 @@ namespace Standardly.Core.Brokers.Files
 
         public void CreateDirectory(string path) =>
             Directory.CreateDirectory(path);
+
+        public void DeleteDirectory(string path, bool recursive = false) =>
+            Directory.Delete(path, recursive);
     }
 }
