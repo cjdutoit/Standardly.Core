@@ -46,6 +46,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             // then
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
 
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedExecutionValidationException))),
+                        Times.Once);
+
             this.executionBrokerMock.Verify(broker =>
                 broker.Run(someExecutions, inputExecutionFolder),
                     Times.Never);
@@ -80,6 +85,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
 
             // then
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedExecutionValidationException))),
+                        Times.Once);
 
             this.executionBrokerMock.Verify(broker =>
                 broker.Run(inputExecutions, inputExecutionFolder),
