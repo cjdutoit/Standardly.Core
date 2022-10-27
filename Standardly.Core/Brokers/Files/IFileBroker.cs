@@ -13,5 +13,6 @@ namespace Standardly.Core.Brokers.Files
         string ReadFile(string path);
         void DeleteFile(string path);
         string[] GetListOfFiles(string path, string searchPattern = "*");
+        bool CheckIfDirectoryExists(string path);
     }
 }
