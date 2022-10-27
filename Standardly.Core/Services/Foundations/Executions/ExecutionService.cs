@@ -23,7 +23,7 @@ namespace Standardly.Core.Services.Foundations.Executions
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
+            await new ValueTask<string>(this.executionBroker.Run(executions, executionFolder));
     }
 }
