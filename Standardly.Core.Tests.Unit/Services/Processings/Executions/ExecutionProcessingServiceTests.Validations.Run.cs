@@ -10,6 +10,7 @@ using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
@@ -23,11 +24,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             List<Execution> nullExecutions = null;
             string executionFolder = GetRandomString();
 
-            var nullExecutionProcessingException =
-                new NullExecutionProcessingException();
+            var invalidArgumentExecutionProcessingException =
+                new InvalidArgumentExecutionProcessingException();
+
+            invalidArgumentExecutionProcessingException.AddData(
+                key: "executions",
+                values: "Executions is required");
 
             var expectedExecutionProcessingValidationException =
-                new ExecutionProcessingValidationException(nullExecutionProcessingException);
+                new ExecutionProcessingValidationException(invalidArgumentExecutionProcessingException);
 
             // when
             ValueTask<string> runTask =

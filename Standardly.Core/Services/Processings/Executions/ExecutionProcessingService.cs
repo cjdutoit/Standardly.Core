@@ -12,7 +12,7 @@ using Standardly.Core.Services.Foundations.Executions;
 
 namespace Standardly.Core.Services.Processings.Executions
 {
-    public class ExecutionProcessingService : IExecutionProcessingService
+    public partial class ExecutionProcessingService : IExecutionProcessingService
     {
         private readonly IExecutionService executionService;
         private readonly ILoggingBroker loggingBroker;
@@ -23,7 +23,12 @@ namespace Standardly.Core.Services.Processings.Executions
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
-            await this.executionService.Run(executions, executionFolder);
+        public ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
+            TryCatch(async () =>
+            {
+                ValidateRunArguments(executions, executionFolder);
+
+                return await this.executionService.Run(executions, executionFolder);
+            });
     }
 }
