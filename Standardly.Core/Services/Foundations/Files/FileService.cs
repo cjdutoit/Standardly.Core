@@ -25,8 +25,13 @@ namespace Standardly.Core.Services.Foundations.Files
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<bool> CheckIfFileExists(string path) =>
-            await new ValueTask<bool>(this.fileBroker.CheckIfFileExists(path));
+        public ValueTask<bool> CheckIfFileExists(string path) =>
+            TryCatch(async () =>
+            {
+                ValidateCheckIfFileExistsArguments(path);
+
+                return await new ValueTask<bool>(this.fileBroker.CheckIfFileExists(path));
+            });
 
         public ValueTask WriteToFile(string path, string content) =>
             throw new System.NotImplementedException();
