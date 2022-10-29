@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnWriteToFileIfArgumantsIsInvalidAsync(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnDeleteFileIfArgumantsIsInvalidAsync(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;
@@ -31,16 +31,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 key: "path",
                 values: "Text is required");
 
-            invalidArgumentFileException.AddData(
-                key: "content",
-                values: "Text is required");
-
             var expectedFileValidationException =
                 new FileValidationException(invalidArgumentFileException);
 
             // when
             ValueTask writeToFileAsyncTask =
-                this.fileService.WriteToFileAsync(invalidPath, invalidContent);
+                this.fileService.DeleteFileAsync(invalidPath);
 
             FileValidationException actualException =
                 await Assert.ThrowsAsync<FileValidationException>(writeToFileAsyncTask.AsTask);
@@ -54,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.WriteToFile(invalidPath, invalidContent),
+                broker.DeleteFile(invalidPath),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
