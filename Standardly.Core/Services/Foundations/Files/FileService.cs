@@ -42,7 +42,12 @@ namespace Standardly.Core.Services.Foundations.Files
             });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
-            throw new System.NotImplementedException();
+             TryCatch(async () =>
+             {
+                 ValidateReadFromFileArguments(path);
+
+                 return await new ValueTask<string>(this.fileBroker.ReadFile(path));
+             });
 
         public ValueTask DeleteFileAsync(string path) =>
             throw new System.NotImplementedException();
