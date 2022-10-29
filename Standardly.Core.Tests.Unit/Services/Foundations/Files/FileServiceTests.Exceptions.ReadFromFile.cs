@@ -102,5 +102,51 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             this.fileBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(CriticalFileDependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogItCriticalAsync(
+            Exception dependencyException)
+        {
+            // given
+            string somePath = GetRandomString();
+
+            var invalidFileServiceDependencyException =
+                new InvalidFileServiceDependencyException(
+                    dependencyException);
+
+            var failedFileDependencyException =
+                new FailedFileDependencyException(
+                    invalidFileServiceDependencyException);
+
+            var expectedFileDependencyException =
+                new FileDependencyException(failedFileDependencyException);
+
+            this.fileBrokerMock.Setup(broker =>
+                broker.ReadFile(somePath))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask<string> writeToFileAction =
+                this.fileService.ReadFromFileAsync(somePath);
+
+            FileDependencyException actualException =
+                await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileDependencyException);
+
+            this.fileBrokerMock.Verify(broker =>
+                broker.ReadFile(somePath),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedFileDependencyException))),
+                        Times.Once);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
