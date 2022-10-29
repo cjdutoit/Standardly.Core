@@ -39,11 +39,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask writeToFileAsyncTask =
+            ValueTask writeToFileTask =
                 this.fileService.WriteToFileAsync(invalidPath, invalidContent);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(writeToFileAsyncTask.AsTask);
+                await Assert.ThrowsAsync<FileValidationException>(writeToFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);

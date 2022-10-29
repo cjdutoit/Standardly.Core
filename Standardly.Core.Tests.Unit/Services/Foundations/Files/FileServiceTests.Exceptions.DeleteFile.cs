@@ -81,11 +81,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask writeToFileAction =
+            ValueTask deleteFileTask =
                 this.fileService.DeleteFileAsync(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
+                await Assert.ThrowsAsync<FileDependencyException>(deleteFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -127,11 +127,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileAction =
+            ValueTask deleteFileTask =
                 this.fileService.DeleteFileAsync(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(deleteFileAction.AsTask);
+                await Assert.ThrowsAsync<FileDependencyException>(deleteFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -167,11 +167,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask deleteFileAction =
+            ValueTask deleteFileTask =
                 this.fileService.DeleteFileAsync(somePath);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(deleteFileAction.AsTask);
+                await Assert.ThrowsAsync<FileServiceException>(deleteFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

@@ -34,11 +34,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask deleteFileAsyncTask =
+            ValueTask deleteFileTask =
                 this.fileService.DeleteFileAsync(invalidPath);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(deleteFileAsyncTask.AsTask);
+                await Assert.ThrowsAsync<FileValidationException>(deleteFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
