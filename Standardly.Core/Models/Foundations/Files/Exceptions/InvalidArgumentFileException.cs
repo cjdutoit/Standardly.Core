@@ -4,14 +4,14 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Executions;
+using Xeptions;
 
-namespace Standardly.Core.Services.Foundations.Executions
+namespace Standardly.Core.Models.Foundations.Files.Exceptions
 {
-    public interface IExecutionService
+    public class InvalidArgumentFileException : Xeption
     {
-        ValueTask<string> RunAsync(List<Execution> executions, string executionFolder);
+        public InvalidArgumentFileException()
+            : base(message: "Invalid file argument(s), please correct the errors and try again.")
+        { }
     }
 }

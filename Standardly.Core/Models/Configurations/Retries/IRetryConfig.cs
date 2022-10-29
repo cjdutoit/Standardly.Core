@@ -4,14 +4,13 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Executions;
+using System;
 
-namespace Standardly.Core.Services.Foundations.Executions
+namespace Standardly.Core.Models.Configurations.Retries
 {
-    public interface IExecutionService
+    public interface IRetryConfig
     {
-        ValueTask<string> RunAsync(List<Execution> executions, string executionFolder);
+        int MaxRetryAttempts { get; }
+        TimeSpan PauseBetweenFailures { get; }
     }
 }

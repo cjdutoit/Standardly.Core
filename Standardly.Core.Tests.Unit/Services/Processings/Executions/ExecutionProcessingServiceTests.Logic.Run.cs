@@ -27,7 +27,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             string expectedResult = randomExecutionResult;
 
             this.executionServiceMock.Setup(service =>
-                service.Run(inputExecutions, inputExecutionFolder))
+                service.RunAsync(inputExecutions, inputExecutionFolder))
                     .ReturnsAsync(randomExecutionResult);
 
             // when
@@ -39,7 +39,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.executionServiceMock.Verify(service =>
-                service.Run(inputExecutions, inputExecutionFolder),
+                service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once());
 
             this.executionServiceMock.VerifyNoOtherCalls();

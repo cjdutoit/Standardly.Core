@@ -28,7 +28,7 @@ namespace Standardly.Core.Services.Processings.Executions
             {
                 ValidateRunArguments(executions, executionFolder);
 
-                return await this.executionService.Run(executions, executionFolder);
+                return await this.executionService.RunAsync(executions, executionFolder);
             });
     }
 }

@@ -38,13 +38,18 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionValidationException(invalidArgumentExecutionException);
 
             // when
-            ValueTask<string> runTask = this.executionService.Run(someExecutions, inputExecutionFolder);
+            ValueTask<string> runTask = this.executionService.RunAsync(someExecutions, inputExecutionFolder);
 
             ExecutionValidationException actualExecutionValidationException =
                 await Assert.ThrowsAsync<ExecutionValidationException>(runTask.AsTask);
 
             // then
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedExecutionValidationException))),
+                        Times.Once);
 
             this.executionBrokerMock.Verify(broker =>
                 broker.Run(someExecutions, inputExecutionFolder),
@@ -73,13 +78,18 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionValidationException(invalidArgumentExecutionException);
 
             // when
-            ValueTask<string> runTask = this.executionService.Run(inputExecutions, inputExecutionFolder);
+            ValueTask<string> runTask = this.executionService.RunAsync(inputExecutions, inputExecutionFolder);
 
             ExecutionValidationException actualExecutionValidationException =
                 await Assert.ThrowsAsync<ExecutionValidationException>(runTask.AsTask);
 
             // then
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedExecutionValidationException))),
+                        Times.Once);
 
             this.executionBrokerMock.Verify(broker =>
                 broker.Run(inputExecutions, inputExecutionFolder),
