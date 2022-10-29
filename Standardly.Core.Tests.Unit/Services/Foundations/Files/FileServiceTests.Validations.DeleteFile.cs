@@ -22,7 +22,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         {
             // given
             string invalidPath = invalidValue;
-            string invalidContent = invalidValue;
 
             var invalidArgumentFileException =
                 new InvalidArgumentFileException();
@@ -35,11 +34,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask writeToFileAsyncTask =
+            ValueTask deleteFileAsyncTask =
                 this.fileService.DeleteFileAsync(invalidPath);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(writeToFileAsyncTask.AsTask);
+                await Assert.ThrowsAsync<FileValidationException>(deleteFileAsyncTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);

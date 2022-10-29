@@ -35,11 +35,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<string> writeToFileTask =
+            ValueTask<string> readFileTask =
                 this.fileService.ReadFromFileAsync(somePath);
 
             FileDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileDependencyValidationException>(writeToFileTask.AsTask);
+                await Assert.ThrowsAsync<FileDependencyValidationException>(readFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);

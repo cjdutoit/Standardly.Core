@@ -32,11 +32,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask<string> checkIfFileExistsTask =
+            ValueTask<string> readFromFileTask =
                 this.fileService.ReadFromFileAsync(invalidPath);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(checkIfFileExistsTask.AsTask);
+                await Assert.ThrowsAsync<FileValidationException>(readFromFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
