@@ -58,8 +58,13 @@ namespace Standardly.Core.Services.Foundations.Files
                 await Task.Run(() => this.fileBroker.DeleteFile(path));
             });
 
-        public async ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            await new ValueTask<List<string>>(this.fileBroker.GetListOfFiles(path, searchPattern).ToList());
+        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            TryCatch(async () =>
+            {
+                ValidateRetrieveListOfFilesArguments(path, searchPattern);
+
+                return await new ValueTask<List<string>>(this.fileBroker.GetListOfFiles(path, searchPattern).ToList());
+            });
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
             throw new System.NotImplementedException();

@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Standardly.Core.Services.Foundations.Files
     {
         private delegate ValueTask<bool> ReturningBooleanFunction();
         private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<List<string>> ReturningStringListFunction();
         private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask<bool> TryCatch(ReturningBooleanFunction returningBooleanFunction)
@@ -152,6 +154,18 @@ namespace Standardly.Core.Services.Foundations.Files
                     new FailedFileServiceException(exception);
 
                 throw CreateAndLogServiceException(failedFileServiceException);
+            }
+        }
+
+        private async ValueTask<List<string>> TryCatch(ReturningStringListFunction returningStringListFunction)
+        {
+            try
+            {
+                return await returningStringListFunction();
+            }
+            catch (InvalidArgumentFileException invalidArgumentFileException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentFileException);
             }
         }
 
