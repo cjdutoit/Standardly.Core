@@ -33,8 +33,13 @@ namespace Standardly.Core.Services.Foundations.Files
                 return await new ValueTask<bool>(this.fileBroker.CheckIfFileExists(path));
             });
 
-        public async ValueTask WriteToFileAsync(string path, string content) =>
-            await Task.Run(() => this.fileBroker.WriteToFile(path, content));
+        public ValueTask WriteToFileAsync(string path, string content) =>
+            TryCatch(async () =>
+            {
+                ValidateWriteToFileArguments(path, content);
+
+                await Task.Run(() => this.fileBroker.WriteToFile(path, content));
+            });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
             throw new System.NotImplementedException();
