@@ -151,5 +151,46 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             this.fileBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShoudThrowServiceExceptionOnWriteToFileIfServiceErrorOccursAsync()
+        {
+            // given
+            string somePath = GetRandomString();
+            string someContent = GetRandomString();
+            var serviceException = new Exception();
+
+            var failedFileServiceException =
+                new FailedFileServiceException(serviceException);
+
+            var expectedFileServiceException =
+                new FileServiceException(failedFileServiceException);
+
+            this.fileBrokerMock.Setup(broker =>
+                broker.WriteToFile(somePath, someContent))
+                    .Throws(serviceException);
+
+            // when
+            ValueTask writeToFileAction =
+                this.fileService.WriteToFileAsync(somePath, someContent);
+
+            FileServiceException actualException =
+                await Assert.ThrowsAsync<FileServiceException>(writeToFileAction.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileServiceException);
+
+            this.fileBrokerMock.Verify(broker =>
+                broker.WriteToFile(somePath, someContent),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedFileServiceException))),
+                        Times.Once);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
