@@ -92,7 +92,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Verify(broker =>
                 broker.CheckIfFileExists(somePath),
-                    Times.Exactly(this.retryConfig.MaxRetryAttempts));
+                    Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
