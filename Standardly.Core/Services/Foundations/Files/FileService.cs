@@ -41,8 +41,8 @@ namespace Standardly.Core.Services.Foundations.Files
                 await Task.Run(() => this.fileBroker.WriteToFile(path, content));
             });
 
-        public ValueTask<string> ReadFromFileAsync(string path) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<string> ReadFromFileAsync(string path) =>
+            await new ValueTask<string>(this.fileBroker.ReadFile(path));
 
         public ValueTask DeleteFileAsync(string path) =>
             throw new System.NotImplementedException();
