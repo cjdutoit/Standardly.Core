@@ -57,5 +57,52 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             this.fileBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(FileServiceDependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnWriteToFileIfDependencyErrorOccursAndLogItAsync(
+            Exception dependencyException)
+        {
+            // given
+            string somePath = GetRandomString();
+            string someContent = GetRandomString();
+
+            var invalidFileServiceDependencyException =
+                new InvalidFileServiceDependencyException(
+                    dependencyException);
+
+            var failedFileDependencyException =
+                new FailedFileDependencyException(
+                    invalidFileServiceDependencyException);
+
+            var expectedFileDependencyException =
+                new FileDependencyException(failedFileDependencyException);
+
+            this.fileBrokerMock.Setup(broker =>
+                broker.WriteToFile(somePath, someContent))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask writeToFileAction =
+                this.fileService.WriteToFileAsync(somePath, someContent);
+
+            FileDependencyException actualException =
+                await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileDependencyException);
+
+            this.fileBrokerMock.Verify(broker =>
+                broker.WriteToFile(somePath, someContent),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedFileDependencyException))),
+                        Times.Once);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
