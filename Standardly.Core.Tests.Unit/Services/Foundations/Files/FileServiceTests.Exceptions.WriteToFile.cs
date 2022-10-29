@@ -17,11 +17,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnCheckIfFileExistsIfDependencyValidationErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyValidationExceptionOnWriteToFileIfDependencyValidationErrorOccursAndLogItAsync(
             Exception dependencyValidationException)
         {
             // given
             string somePath = GetRandomString();
+            string someContent = GetRandomString();
 
             var invalidFileServiceDependencyException =
                 new InvalidFileServiceDependencyException(
@@ -31,12 +32,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfFileExists(somePath))
+                broker.WriteToFile(somePath, someContent))
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<bool> writeToFileTask =
-                this.fileService.CheckIfFileExistsAsync(somePath);
+            ValueTask writeToFileTask =
+                this.fileService.WriteToFileAsync(somePath, someContent);
 
             FileDependencyValidationException actualException =
                 await Assert.ThrowsAsync<FileDependencyValidationException>(writeToFileTask.AsTask);
@@ -45,7 +46,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfFileExists(somePath),
+                broker.WriteToFile(somePath, someContent),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -59,11 +60,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfFileExistsIfDependencyErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyExceptionOnWriteToFileIfDependencyErrorOccursAndLogItAsync(
             Exception dependencyException)
         {
             // given
             string somePath = GetRandomString();
+            string someContent = GetRandomString();
 
             var invalidFileServiceDependencyException =
                 new InvalidFileServiceDependencyException(
@@ -77,12 +79,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfFileExists(somePath))
+                broker.WriteToFile(somePath, someContent))
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> writeToFileAction =
-                this.fileService.CheckIfFileExistsAsync(somePath);
+            ValueTask writeToFileAction =
+                this.fileService.WriteToFileAsync(somePath, someContent);
 
             FileDependencyException actualException =
                 await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
@@ -91,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfFileExists(somePath),
+                broker.WriteToFile(somePath, someContent),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -105,11 +107,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfFileExistsIfDependencyErrorOccursAndLogItCriticalAsync(
+        public async Task ShouldThrowDependencyExceptionOnWriteToFileIfDependencyErrorOccursAndLogItCriticalAsync(
             Exception dependencyException)
         {
             // given
             string somePath = GetRandomString();
+            string someContent = GetRandomString();
 
             var invalidFileServiceDependencyException =
                 new InvalidFileServiceDependencyException(
@@ -123,12 +126,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfFileExists(somePath))
+                broker.WriteToFile(somePath, someContent))
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> writeToFileAction =
-                this.fileService.CheckIfFileExistsAsync(somePath);
+            ValueTask writeToFileAction =
+                this.fileService.WriteToFileAsync(somePath, someContent);
 
             FileDependencyException actualException =
                 await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
@@ -137,7 +140,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfFileExists(somePath),
+                broker.WriteToFile(somePath, someContent),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -150,10 +153,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccursAsync()
+        public async Task ShoudThrowServiceExceptionOnWriteToFileIfServiceErrorOccursAsync()
         {
             // given
             string somePath = GetRandomString();
+            string someContent = GetRandomString();
             var serviceException = new Exception();
 
             var failedFileServiceException =
@@ -163,12 +167,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfFileExists(somePath))
+                broker.WriteToFile(somePath, someContent))
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> writeToFileAction =
-                this.fileService.CheckIfFileExistsAsync(somePath);
+            ValueTask writeToFileAction =
+                this.fileService.WriteToFileAsync(somePath, someContent);
 
             FileServiceException actualException =
                 await Assert.ThrowsAsync<FileServiceException>(writeToFileAction.AsTask);
@@ -177,7 +181,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfFileExists(somePath),
+                broker.WriteToFile(somePath, someContent),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

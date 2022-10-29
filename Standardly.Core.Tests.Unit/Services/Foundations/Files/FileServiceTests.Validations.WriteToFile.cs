@@ -18,9 +18,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnCheckIfFileExistsIfPathIsInvalidAsync(string invalidPath)
+        public async Task ShouldThrowValidationExceptionOnWriteToFileIfArgumantsIsInvalidAsync(string invalidValue)
         {
             // given
+            string invalidPath = invalidValue;
+            string invalidContent = invalidValue;
+
             var invalidArgumentFileException =
                 new InvalidArgumentFileException();
 
@@ -28,15 +31,20 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 key: "path",
                 values: "Text is required");
 
+
+            invalidArgumentFileException.AddData(
+                key: "content",
+                values: "Text is required");
+
             var expectedFileValidationException =
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfFileExistsAsync(invalidPath);
+            ValueTask writeToFileAsyncTask =
+                this.fileService.WriteToFileAsync(invalidPath, invalidContent);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(checkIfFileExistsTask.AsTask);
+                await Assert.ThrowsAsync<FileValidationException>(writeToFileAsyncTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
@@ -47,8 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfFileExists(
-                    It.IsAny<string>()),
+                broker.WriteToFile(invalidPath, invalidContent),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
