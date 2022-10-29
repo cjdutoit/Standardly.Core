@@ -132,6 +132,20 @@ namespace Standardly.Core.Services.Foundations.Files
 
                 throw CreateAndLogDependencyException(failedFileDependencyException);
             }
+            catch (OutOfMemoryException outOfMemoryException)
+            {
+                var failedFileDependencyException =
+                    new FailedFileDependencyException(outOfMemoryException);
+
+                throw CreateAndLogCriticalDependencyException(failedFileDependencyException);
+            }
+            catch (UnauthorizedAccessException unauthorizedAccessException)
+            {
+                var failedFileDependencyException =
+                    new FailedFileDependencyException(unauthorizedAccessException);
+
+                throw CreateAndLogCriticalDependencyException(failedFileDependencyException);
+            }
         }
 
         private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
