@@ -124,12 +124,26 @@ namespace Standardly.Core.Services.Foundations.Files
 
                 throw CreateAndLogDependencyException(failedFileDependencyException);
             }
+            catch (OutOfMemoryException outOfMemoryException)
+            {
+                var failedFileDependencyException =
+                    new FailedFileDependencyException(outOfMemoryException);
+
+                throw CreateAndLogCriticalDependencyException(failedFileDependencyException);
+            }
             catch (IOException ioException)
             {
                 var failedFileDependencyException =
                     new FailedFileDependencyException(ioException);
 
                 throw CreateAndLogDependencyException(failedFileDependencyException);
+            }
+            catch (UnauthorizedAccessException unauthorizedAccessException)
+            {
+                var failedFileDependencyException =
+                    new FailedFileDependencyException(unauthorizedAccessException);
+
+                throw CreateAndLogCriticalDependencyException(failedFileDependencyException);
             }
         }
 
