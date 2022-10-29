@@ -5,7 +5,9 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Moq;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
@@ -13,6 +15,7 @@ using Standardly.Core.Models.Configurations.Retries;
 using Standardly.Core.Services.Foundations.Files;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 {
@@ -39,6 +42,34 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
+
+        public static TheoryData FileServiceDependencyValidationExceptions()
+        {
+            return new TheoryData<Exception>()
+            {
+                new ArgumentNullException(),
+                new ArgumentOutOfRangeException(),
+                new ArgumentException()
+            };
+        }
+
+        public static TheoryData FileServiceDependencyExceptions()
+        {
+            return new TheoryData<Exception>()
+            {
+                new SerializationException(),
+                new IOException(),
+            };
+        }
+
+        public static TheoryData CriticalFileDependencyExceptions()
+        {
+            return new TheoryData<Exception>()
+            {
+                new OutOfMemoryException(),
+                new UnauthorizedAccessException()
+            };
+        }
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
