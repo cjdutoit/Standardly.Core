@@ -118,6 +118,20 @@ namespace Standardly.Core.Services.Foundations.Files
 
                 throw CreateAndLogDependencyValidationException(invalidFileDependencyException);
             }
+            catch (SerializationException serializationException)
+            {
+                var failedFileDependencyException =
+                    new FailedFileDependencyException(serializationException);
+
+                throw CreateAndLogDependencyException(failedFileDependencyException);
+            }
+            catch (IOException ioException)
+            {
+                var failedFileDependencyException =
+                    new FailedFileDependencyException(ioException);
+
+                throw CreateAndLogDependencyException(failedFileDependencyException);
+            }
         }
 
         private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
