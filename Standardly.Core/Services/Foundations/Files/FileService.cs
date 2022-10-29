@@ -49,7 +49,7 @@ namespace Standardly.Core.Services.Foundations.Files
                  return await new ValueTask<string>(this.fileBroker.ReadFile(path));
              });
 
-        public async ValueTask DeleteFileAsync(string path) =>
+        public ValueTask DeleteFileAsync(string path) =>
             TryCatch(async () =>
             {
                 ValidateDeleteFileArguments(path);
