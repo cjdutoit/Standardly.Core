@@ -56,5 +56,51 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             this.fileBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(FileServiceDependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnDeleteFileIfDependencyErrorOccursAndLogItAsync(
+            Exception dependencyException)
+        {
+            // given
+            string somePath = GetRandomString();
+
+            var invalidFileServiceDependencyException =
+                new InvalidFileServiceDependencyException(
+                    dependencyException);
+
+            var failedFileDependencyException =
+                new FailedFileDependencyException(
+                    invalidFileServiceDependencyException);
+
+            var expectedFileDependencyException =
+                new FileDependencyException(failedFileDependencyException);
+
+            this.fileBrokerMock.Setup(broker =>
+                broker.DeleteFile(somePath))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask writeToFileAction =
+                this.fileService.DeleteFileAsync(somePath);
+
+            FileDependencyException actualException =
+                await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileDependencyException);
+
+            this.fileBrokerMock.Verify(broker =>
+                broker.DeleteFile(somePath),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedFileDependencyException))),
+                        Times.Once);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
