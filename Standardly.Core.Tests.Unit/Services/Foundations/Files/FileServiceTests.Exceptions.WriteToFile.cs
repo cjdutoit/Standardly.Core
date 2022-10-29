@@ -83,11 +83,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask writeToFileAction =
+            ValueTask writeToFileTask =
                 this.fileService.WriteToFileAsync(somePath, someContent);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
+                await Assert.ThrowsAsync<FileDependencyException>(writeToFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -130,11 +130,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask writeToFileAction =
+            ValueTask writeToFileTask =
                 this.fileService.WriteToFileAsync(somePath, someContent);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(writeToFileAction.AsTask);
+                await Assert.ThrowsAsync<FileDependencyException>(writeToFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -171,11 +171,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask writeToFileAction =
+            ValueTask writeToFileTask =
                 this.fileService.WriteToFileAsync(somePath, someContent);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(writeToFileAction.AsTask);
+                await Assert.ThrowsAsync<FileServiceException>(writeToFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

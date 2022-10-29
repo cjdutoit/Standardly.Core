@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -18,11 +19,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnWriteToFileIfArgumantsIsInvalidAsync(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfPathIsInvalidAsync(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;
-            string invalidContent = invalidValue;
+            string invalidSearchPattern = invalidValue;
 
             var invalidArgumentFileException =
                 new InvalidArgumentFileException();
@@ -32,18 +33,18 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 values: "Text is required");
 
             invalidArgumentFileException.AddData(
-                key: "content",
+                key: "searchPattern",
                 values: "Text is required");
 
             var expectedFileValidationException =
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask writeToFileTask =
-                this.fileService.WriteToFileAsync(invalidPath, invalidContent);
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.fileService.RetrieveListOfFilesAsync(invalidPath, invalidSearchPattern);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(writeToFileTask.AsTask);
+                await Assert.ThrowsAsync<FileValidationException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
@@ -54,8 +55,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.WriteToFile(invalidPath, invalidContent),
-                        Times.Never);
+                broker.GetListOfFiles(invalidPath, invalidSearchPattern),
+                    Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
