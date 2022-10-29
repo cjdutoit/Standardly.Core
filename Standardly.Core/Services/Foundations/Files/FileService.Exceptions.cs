@@ -76,6 +76,13 @@ namespace Standardly.Core.Services.Foundations.Files
 
                 throw CreateAndLogCriticalDependencyException(failedFileDependencyException);
             }
+            catch (Exception exception)
+            {
+                var failedFileServiceException =
+                    new FailedFileServiceException(exception);
+
+                throw CreateAndLogServiceException(failedFileServiceException);
+            }
         }
 
         private FileValidationException CreateAndLogValidationException(Xeption exception)
@@ -111,6 +118,15 @@ namespace Standardly.Core.Services.Foundations.Files
             this.loggingBroker.LogCritical(fileServiceDependencyException);
 
             return fileServiceDependencyException;
+        }
+
+        private FileServiceException CreateAndLogServiceException(
+            Xeption exception)
+        {
+            var fileServiceException = new FileServiceException(exception);
+            this.loggingBroker.LogError(fileServiceException);
+
+            return fileServiceException;
         }
     }
 }
