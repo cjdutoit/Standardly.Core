@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
@@ -57,8 +58,8 @@ namespace Standardly.Core.Services.Foundations.Files
                 await Task.Run(() => this.fileBroker.DeleteFile(path));
             });
 
-        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            throw new System.NotImplementedException();
+        public async ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            await new ValueTask<List<string>>(this.fileBroker.GetListOfFiles(path, searchPattern).ToList());
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
             throw new System.NotImplementedException();
