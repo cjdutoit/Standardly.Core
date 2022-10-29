@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace Standardly.Core.Services.Foundations.Files
         private readonly List<Type> retryExceptionTypes =
             new List<Type>()
             {
+                typeof(IOException)
             };
 
         private async ValueTask<bool> WithRetry(ReturningBooleanFunction returningBooleanFunction)
