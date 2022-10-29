@@ -146,6 +146,13 @@ namespace Standardly.Core.Services.Foundations.Files
 
                 throw CreateAndLogCriticalDependencyException(failedFileDependencyException);
             }
+            catch (Exception exception)
+            {
+                var failedFileServiceException =
+                    new FailedFileServiceException(exception);
+
+                throw CreateAndLogServiceException(failedFileServiceException);
+            }
         }
 
         private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
