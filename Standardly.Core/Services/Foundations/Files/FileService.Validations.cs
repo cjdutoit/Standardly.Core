@@ -23,6 +23,11 @@ namespace Standardly.Core.Services.Foundations.Files
                 (Rule: IsInvalid(content), Parameter: nameof(content)));
         }
 
+        private void ValidateReadFromFileArguments(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

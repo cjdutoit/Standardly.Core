@@ -16,6 +16,7 @@ namespace Standardly.Core.Services.Foundations.Files
     public partial class FileService
     {
         private delegate ValueTask<bool> ReturningBooleanFunction();
+        private delegate ValueTask<string> ReturningStringFunction();
         private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask<bool> TryCatch(ReturningBooleanFunction returningBooleanFunction)
@@ -83,6 +84,18 @@ namespace Standardly.Core.Services.Foundations.Files
                     new FailedFileServiceException(exception);
 
                 throw CreateAndLogServiceException(failedFileServiceException);
+            }
+        }
+
+        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
+        {
+            try
+            {
+                return await returningStringFunction();
+            }
+            catch (InvalidArgumentFileException invalidArgumentFileException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentFileException);
             }
         }
 
