@@ -31,7 +31,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                     .Returns(randomOutput);
 
             // when
-            string actualResult = await this.executionService.Run(inputExecutions, inputFilePath);
+            string actualResult = await this.executionService.RunAsync(inputExecutions, inputFilePath);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);

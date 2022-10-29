@@ -33,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     dependencyValidationException.InnerException as Xeption);
 
             this.executionServiceMock.Setup(service =>
-                service.Run(inputExecutions, inputExecutionFolder))
+                service.RunAsync(inputExecutions, inputExecutionFolder))
                     .Throws(dependencyValidationException);
 
             // when
@@ -45,7 +45,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 await Assert.ThrowsAsync<ExecutionProcessingDependencyValidationException>(runTask.AsTask);
 
             this.executionServiceMock.Verify(service =>
-                service.Run(inputExecutions, inputExecutionFolder),
+                service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -73,7 +73,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     dependencyException.InnerException as Xeption);
 
             this.executionServiceMock.Setup(service =>
-                service.Run(inputExecutions, inputExecutionFolder))
+                service.RunAsync(inputExecutions, inputExecutionFolder))
                     .Throws(dependencyException);
 
             // when
@@ -85,7 +85,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 await Assert.ThrowsAsync<ExecutionProcessingDependencyException>(runTask.AsTask);
 
             this.executionServiceMock.Verify(service =>
-                service.Run(inputExecutions, inputExecutionFolder),
+                service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -116,7 +116,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     failedExecutionProcessingServiceException);
 
             this.executionServiceMock.Setup(service =>
-                service.Run(inputExecutions, inputExecutionFolder))
+                service.RunAsync(inputExecutions, inputExecutionFolder))
                     .Throws(serviceException);
 
             // when
@@ -128,7 +128,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 await Assert.ThrowsAsync<ExecutionProcessingServiceException>(runTask.AsTask);
 
             this.executionServiceMock.Verify(service =>
-                service.Run(inputExecutions, inputExecutionFolder),
+                service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

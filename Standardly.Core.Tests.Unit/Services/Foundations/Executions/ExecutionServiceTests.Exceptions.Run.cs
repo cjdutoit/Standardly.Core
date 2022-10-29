@@ -37,7 +37,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                     .Throws(serviceException);
 
             // when
-            ValueTask<string> runTask = this.executionService.Run(someExecutions, somePath);
+            ValueTask<string> runTask = this.executionService.RunAsync(someExecutions, somePath);
 
             ExecutionServiceException actualExecutionServiceException =
                 await Assert.ThrowsAsync<ExecutionServiceException>(runTask.AsTask);

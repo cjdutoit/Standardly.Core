@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                         Times.Once);
 
             this.executionServiceMock.Verify(broker =>
-                broker.Run(nullExecutions, executionFolder),
+                broker.RunAsync(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();
@@ -95,7 +95,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                         Times.Once);
 
             this.executionServiceMock.Verify(broker =>
-                broker.Run(nullExecutions, executionFolder),
+                broker.RunAsync(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();

@@ -4,14 +4,15 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Executions;
+using Xeptions;
 
-namespace Standardly.Core.Services.Foundations.Executions
+namespace Standardly.Core.Models.Foundations.Files.Exceptions
 {
-    public interface IExecutionService
+    public class FileServiceException : Xeption
     {
-        ValueTask<string> RunAsync(List<Execution> executions, string executionFolder);
+        public FileServiceException(Xeption innerException)
+            : base(message: "File service error occurred, contact support.",
+                  innerException)
+        { }
     }
 }

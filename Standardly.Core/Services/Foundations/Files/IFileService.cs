@@ -11,13 +11,13 @@ namespace Standardly.Core.Services.Foundations.Files
 {
     public interface IFileService
     {
-        ValueTask<bool> CheckIfFileExists(string path);
-        ValueTask WriteToFile(string path, string content);
-        ValueTask<string> ReadFromFile(string path);
-        ValueTask DeleteFile(string path);
-        ValueTask<List<string>> RetrieveListOfFiles(string path, string searchPattern = "*");
-        ValueTask<bool> CheckIfDirectoryExists(string path);
-        ValueTask CreateDirectory(string path);
-        ValueTask DeleteDirectory(string path, bool recursive = false);
+        ValueTask<bool> CheckIfFileExistsAsync(string path);
+        ValueTask WriteToFileAsync(string path, string content);
+        ValueTask<string> ReadFromFileAsync(string path);
+        ValueTask DeleteFileAsync(string path);
+        ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*");
+        ValueTask<bool> CheckIfDirectoryExistsAsync(string path);
+        ValueTask CreateDirectoryAsync(string path);
+        ValueTask DeleteDirectoryAsync(string path, bool recursive = false);
     }
 }

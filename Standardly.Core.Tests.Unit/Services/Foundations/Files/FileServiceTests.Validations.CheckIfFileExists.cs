@@ -33,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfFileExists(invalidPath);
+                this.fileService.CheckIfFileExistsAsync(invalidPath);
 
             FileValidationException actualException =
                 await Assert.ThrowsAsync<FileValidationException>(checkIfFileExistsTask.AsTask);
