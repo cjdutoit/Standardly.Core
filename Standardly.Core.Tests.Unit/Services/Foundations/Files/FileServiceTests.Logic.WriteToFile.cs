@@ -13,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public async Task ShouldWriteToFile()
+        public async Task ShouldWriteToFileAsync()
         {
             // given
             string randomFilePath = GetRandomString();

@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnCheckIfFileExistsIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationExceptionOnCheckIfFileExistsIfDependencyValidationErrorOccursAndLogItAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -59,7 +59,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfFileExistsIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnCheckIfFileExistsIfDependencyErrorOccursAndLogItAsync(
             Exception dependencyException)
         {
             // given
@@ -105,7 +105,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfFileExistsIfDependencyErrorOccursAndLogItCritical(
+        public async Task ShouldThrowDependencyExceptionOnCheckIfFileExistsIfDependencyErrorOccursAndLogItCriticalAsync(
             Exception dependencyException)
         {
             // given
@@ -150,7 +150,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccursAsync()
         {
             // given
             string somePath = GetRandomString();
