@@ -18,9 +18,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalidAsync(string invalidPath)
+        public async Task ShouldThrowValidationExceptionOnDeleteFileIfArgumantsIsInvalidAsync(string invalidValue)
         {
             // given
+            string invalidPath = invalidValue;
+
             var invalidArgumentFileException =
                 new InvalidArgumentFileException();
 
@@ -32,11 +34,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask<string> readFromFileTask =
-                this.fileService.ReadFromFileAsync(invalidPath);
+            ValueTask deleteFileAsyncTask =
+                this.fileService.DeleteFileAsync(invalidPath);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(readFromFileTask.AsTask);
+                await Assert.ThrowsAsync<FileValidationException>(deleteFileAsyncTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
@@ -47,8 +49,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(invalidPath),
-                    Times.Never);
+                broker.DeleteFile(invalidPath),
+                        Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

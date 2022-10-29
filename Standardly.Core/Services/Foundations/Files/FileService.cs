@@ -50,7 +50,12 @@ namespace Standardly.Core.Services.Foundations.Files
              });
 
         public ValueTask DeleteFileAsync(string path) =>
-            throw new System.NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateDeleteFileArguments(path);
+
+                await Task.Run(() => this.fileBroker.DeleteFile(path));
+            });
 
         public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
             throw new System.NotImplementedException();

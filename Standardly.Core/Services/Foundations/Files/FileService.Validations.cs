@@ -28,6 +28,11 @@ namespace Standardly.Core.Services.Foundations.Files
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
         }
 
+        private void ValidateDeleteFileArguments(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

@@ -31,7 +31,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 key: "path",
                 values: "Text is required");
 
-
             invalidArgumentFileException.AddData(
                 key: "content",
                 values: "Text is required");
