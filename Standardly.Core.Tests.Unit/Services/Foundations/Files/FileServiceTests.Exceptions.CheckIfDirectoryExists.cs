@@ -60,7 +60,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
         public async Task ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogItAsync(
-           Exception dependencyException)
+            Exception dependencyException)
         {
             // given
             string somePath = GetRandomString();
