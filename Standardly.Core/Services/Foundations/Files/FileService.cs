@@ -80,6 +80,10 @@ namespace Standardly.Core.Services.Foundations.Files
             });
 
         public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
-            throw new System.NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateDeleteDirectoryArguments(path);
+                await Task.Run(() => this.fileBroker.DeleteDirectory(path, recursive));
+            });
     }
 }
