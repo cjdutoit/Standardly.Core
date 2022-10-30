@@ -38,7 +38,6 @@ namespace Standardly.Core.Services.Foundations.Files
             TryCatch(async () =>
             {
                 ValidateWriteToFileArguments(path, content);
-
                 await Task.Run(() => this.fileBroker.WriteToFile(path, content));
             });
 
@@ -54,7 +53,6 @@ namespace Standardly.Core.Services.Foundations.Files
             TryCatch(async () =>
             {
                 ValidateDeleteFileArguments(path);
-
                 await Task.Run(() => this.fileBroker.DeleteFile(path));
             });
 
@@ -74,8 +72,12 @@ namespace Standardly.Core.Services.Foundations.Files
                 return await new ValueTask<bool>(this.fileBroker.CheckIfDirectoryExists(path));
             });
 
-        public async ValueTask CreateDirectoryAsync(string path) =>
-            await Task.Run(() => this.fileBroker.CreateDirectory(path));
+        public ValueTask CreateDirectoryAsync(string path) =>
+            TryCatch(async () =>
+            {
+                ValidateCreateDirectoryArguments(path);
+                await Task.Run(() => this.fileBroker.CreateDirectory(path));
+            });
 
         public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
             throw new System.NotImplementedException();
