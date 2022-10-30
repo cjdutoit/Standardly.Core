@@ -79,7 +79,7 @@ namespace Standardly.Core.Services.Foundations.Files
                 await Task.Run(() => this.fileBroker.CreateDirectory(path));
             });
 
-        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
-            throw new System.NotImplementedException();
+        public async ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
+            await Task.Run(() => this.fileBroker.DeleteDirectory(path, recursive));
     }
 }
