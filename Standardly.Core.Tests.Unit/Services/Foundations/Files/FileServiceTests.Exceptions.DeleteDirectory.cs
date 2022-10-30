@@ -104,5 +104,52 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             this.fileBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(CriticalFileDependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAndLogItCriticalAsync(
+            Exception dependencyException)
+        {
+            // given
+            string somePath = GetRandomString();
+            bool recursive = true;
+
+            var invalidFileServiceDependencyException =
+                new InvalidFileServiceDependencyException(
+                    dependencyException);
+
+            var failedFileDependencyException =
+                new FailedFileDependencyException(
+                    invalidFileServiceDependencyException);
+
+            var expectedFileDependencyException =
+                new FileDependencyException(failedFileDependencyException);
+
+            this.fileBrokerMock.Setup(broker =>
+                broker.DeleteDirectory(somePath, recursive))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask writeToFileTask =
+                this.fileService.DeleteDirectoryAsync(somePath, recursive);
+
+            FileDependencyException actualException =
+                await Assert.ThrowsAsync<FileDependencyException>(writeToFileTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileDependencyException);
+
+            this.fileBrokerMock.Verify(broker =>
+                broker.DeleteDirectory(somePath, recursive),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(
+                    expectedFileDependencyException))),
+                        Times.Once);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
