@@ -67,7 +67,12 @@ namespace Standardly.Core.Services.Foundations.Files
             });
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
-            throw new System.NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateCheckIfDirectoryExistsArguments(path);
+
+                return await new ValueTask<bool>(this.fileBroker.CheckIfDirectoryExists(path));
+            });
 
         public ValueTask CreateDirectoryAsync(string path) =>
             throw new System.NotImplementedException();

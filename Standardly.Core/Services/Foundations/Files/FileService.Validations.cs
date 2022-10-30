@@ -40,6 +40,11 @@ namespace Standardly.Core.Services.Foundations.Files
                 (Rule: IsInvalid(searchPattern), Parameter: nameof(searchPattern)));
         }
 
+        private void ValidateCheckIfDirectoryExistsArguments(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
