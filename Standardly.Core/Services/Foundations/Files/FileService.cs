@@ -74,8 +74,8 @@ namespace Standardly.Core.Services.Foundations.Files
                 return await new ValueTask<bool>(this.fileBroker.CheckIfDirectoryExists(path));
             });
 
-        public ValueTask CreateDirectoryAsync(string path) =>
-            throw new System.NotImplementedException();
+        public async ValueTask CreateDirectoryAsync(string path) =>
+            await Task.Run(() => this.fileBroker.CreateDirectory(path));
 
         public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
             throw new System.NotImplementedException();
