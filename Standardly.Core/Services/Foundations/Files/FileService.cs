@@ -79,7 +79,11 @@ namespace Standardly.Core.Services.Foundations.Files
                 await Task.Run(() => this.fileBroker.CreateDirectory(path));
             });
 
-        public async ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
-            await Task.Run(() => this.fileBroker.DeleteDirectory(path, recursive));
+        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
+            TryCatch(async () =>
+            {
+                ValidateDeleteDirectoryArguments(path);
+                await Task.Run(() => this.fileBroker.DeleteDirectory(path, recursive));
+            });
     }
 }
