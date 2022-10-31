@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -86,6 +87,48 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedFileProcessingDependencyException))),
+                        Times.Once);
+
+            this.fileServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnWriteToFileAsyncIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+            string inputContent = randomPath;
+
+            var serviceException = new Exception();
+
+            var failedFileProcessingServiceException =
+                new FailedFileProcessingServiceException(serviceException);
+
+            var expectedFileProcessingServiveException =
+                new FileProcessingServiceException(
+                    failedFileProcessingServiceException);
+
+            this.fileServiceMock.Setup(service =>
+                service.WriteToFileAsync(inputPath, inputContent))
+                    .Throws(serviceException);
+
+            // when
+            ValueTask runTask =
+                this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
+
+            // then
+            FileProcessingServiceException actualException =
+                await Assert.ThrowsAsync<FileProcessingServiceException>(runTask.AsTask);
+
+            this.fileServiceMock.Verify(service =>
+                service.WriteToFileAsync(inputPath, inputContent),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedFileProcessingServiveException))),
                         Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();
