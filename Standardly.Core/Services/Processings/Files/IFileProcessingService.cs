@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Standardly.Core.Services.Processings.Files
@@ -14,5 +15,6 @@ namespace Standardly.Core.Services.Processings.Files
         ValueTask WriteToFileAsync(string path, string content);
         ValueTask<string> ReadFromFileAsync(string path);
         ValueTask DeleteFileAsync(string path);
+        ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*");
     }
 }

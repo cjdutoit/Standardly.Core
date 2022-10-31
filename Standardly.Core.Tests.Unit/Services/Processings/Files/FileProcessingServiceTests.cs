@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Moq;
 using Standardly.Core.Brokers.Loggings;
@@ -64,5 +65,20 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 5).GetValue();
+
+        private static List<string> GetRandomStringList()
+        {
+            List<string> stringList = new List<string>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                stringList.Add(GetRandomString());
+            }
+
+            return stringList;
+        }
     }
 }
