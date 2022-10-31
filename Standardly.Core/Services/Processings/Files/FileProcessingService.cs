@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Services.Foundations.Files;
@@ -51,5 +52,13 @@ namespace Standardly.Core.Services.Processings.Files
 
                  await this.fileService.DeleteFileAsync(path);
              });
+
+        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            TryCatchAsync(async () =>
+            {
+                ValidateRetrieveListOfFiles(path, searchPattern);
+
+                return await this.fileService.RetrieveListOfFilesAsync(path, searchPattern);
+            });
     }
 }

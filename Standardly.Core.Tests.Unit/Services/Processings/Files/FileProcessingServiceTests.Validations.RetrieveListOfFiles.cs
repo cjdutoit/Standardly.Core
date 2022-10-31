@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -18,11 +19,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnDeleteFileIfInputsIsInvalidAndLogItAsync(
+        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAndLogItAsync(
             string invalidInput)
         {
             // given
             string invalidPath = invalidInput;
+            string invalidSearchPattern = invalidInput;
 
             var invalidFilesProcessingException =
                 new InvalidFileProcessingException();
@@ -31,12 +33,17 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 key: "path",
                 values: "Text is required");
 
+            invalidFilesProcessingException.AddData(
+                key: "searchPattern",
+                values: "Text is required");
+
             var expectedFilesProcessingValidationException =
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask runTask =
-                this.fileProcessingService.DeleteFileAsync(path: invalidPath);
+            ValueTask<List<string>> runTask =
+                this.fileProcessingService
+                    .RetrieveListOfFilesAsync(path: invalidPath, searchPattern: invalidSearchPattern);
 
             FileProcessingValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingValidationException>(runTask.AsTask);
@@ -50,7 +57,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(invalidPath),
+                service.RetrieveListOfFilesAsync(invalidPath, invalidSearchPattern),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();
