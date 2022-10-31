@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -16,6 +17,7 @@ namespace Standardly.Core.Services.Processings.Files
     {
         private delegate ValueTask<bool> ReturningBooleanFunction();
         private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<List<string>> ReturningStringListFunction();
         private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask<bool> TryCatchAsync(ReturningBooleanFunction returningBooleanFunction)
@@ -85,6 +87,18 @@ namespace Standardly.Core.Services.Processings.Files
                     new FailedFileProcessingServiceException(exception);
 
                 throw CreateAndLogServiceException(failedFileProcessingServiceException);
+            }
+        }
+
+        private async ValueTask<List<string>> TryCatchAsync(ReturningStringListFunction returningStringListFunction)
+        {
+            try
+            {
+                return await returningStringListFunction();
+            }
+            catch (InvalidFileProcessingException invalidPathFileProcessingException)
+            {
+                throw CreateAndLogValidationException(invalidPathFileProcessingException);
             }
         }
 

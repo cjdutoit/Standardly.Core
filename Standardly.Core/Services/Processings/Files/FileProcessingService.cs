@@ -53,7 +53,12 @@ namespace Standardly.Core.Services.Processings.Files
                  await this.fileService.DeleteFileAsync(path);
              });
 
-        public async ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            await this.fileService.RetrieveListOfFilesAsync(path, searchPattern);
+        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            TryCatchAsync(async () =>
+            {
+                ValidateRetrieveListOfFiles(path, searchPattern);
+
+                return await this.fileService.RetrieveListOfFilesAsync(path, searchPattern);
+            });
     }
 }
