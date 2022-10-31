@@ -71,6 +71,14 @@ namespace Standardly.Core.Services.Processings.Files
             {
                 throw CreateAndLogDependencyValidationException(fileDependencyValidationException);
             }
+            catch (FileDependencyException fileDependencyException)
+            {
+                throw CreateAndLogDependencyException(fileDependencyException);
+            }
+            catch (FileServiceException fileServiceException)
+            {
+                throw CreateAndLogDependencyException(fileServiceException);
+            }
         }
 
         private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
