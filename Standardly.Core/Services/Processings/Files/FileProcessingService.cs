@@ -43,5 +43,8 @@ namespace Standardly.Core.Services.Processings.Files
 
                 return await this.fileService.ReadFromFileAsync(path);
             });
+
+        public ValueTask DeleteFileAsync(string path) =>
+            throw new System.NotImplementedException();
     }
 }
