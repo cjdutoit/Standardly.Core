@@ -21,7 +21,12 @@ namespace Standardly.Core.Services.Processings.Files
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            await this.fileService.CheckIfFileExistsAsync(path);
+        public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
+            TryCatch(async () =>
+            {
+                ValidateCheckIfFileExists(path);
+
+                return await this.fileService.CheckIfFileExistsAsync(path);
+            });
     }
 }
