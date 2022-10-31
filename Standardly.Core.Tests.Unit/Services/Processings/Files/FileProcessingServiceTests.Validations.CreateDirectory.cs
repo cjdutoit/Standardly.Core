@@ -49,8 +49,8 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     expectedFilesProcessingValidationException))),
                         Times.Once);
 
-            this.fileServiceMock.Verify(broker =>
-                broker.CreateDirectoryAsync(invalidPath),
+            this.fileServiceMock.Verify(service =>
+                service.CreateDirectoryAsync(invalidPath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

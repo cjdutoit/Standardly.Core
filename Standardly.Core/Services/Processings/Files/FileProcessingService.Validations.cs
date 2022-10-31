@@ -45,6 +45,11 @@ namespace Standardly.Core.Services.Processings.Files
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
         }
 
+        private static void ValidateCreateDirectory(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

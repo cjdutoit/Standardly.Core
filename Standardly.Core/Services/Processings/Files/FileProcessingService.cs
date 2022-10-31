@@ -69,7 +69,11 @@ namespace Standardly.Core.Services.Processings.Files
                 return await this.fileService.CheckIfDirectoryExistsAsync(path);
             });
 
-        public async ValueTask CreateDirectoryAsync(string path) =>
-            await this.fileService.CreateDirectoryAsync(path);
+        public ValueTask CreateDirectoryAsync(string path) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateCreateDirectory(path);
+                await this.fileService.CreateDirectoryAsync(path);
+            });
     }
 }
