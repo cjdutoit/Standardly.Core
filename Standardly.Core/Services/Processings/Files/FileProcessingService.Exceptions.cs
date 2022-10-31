@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -41,6 +42,13 @@ namespace Standardly.Core.Services.Processings.Files
             {
                 throw CreateAndLogDependencyException(fileServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedFileProcessingServiceException =
+                    new FailedFileProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedFileProcessingServiceException);
+            }
         }
 
         private FileProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -73,6 +81,16 @@ namespace Standardly.Core.Services.Processings.Files
             this.loggingBroker.LogError(fileProcessingDependencyException);
 
             return fileProcessingDependencyException;
+        }
+
+        private FileProcessingServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var fileProcessingServiceException = new
+                FileProcessingServiceException(exception);
+
+            this.loggingBroker.LogError(fileProcessingServiceException);
+
+            return fileProcessingServiceException;
         }
     }
 }
