@@ -50,8 +50,8 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     expectedExecutionProcessingValidationException))),
                         Times.Once);
 
-            this.executionServiceMock.Verify(broker =>
-                broker.RunAsync(nullExecutions, executionFolder),
+            this.executionServiceMock.Verify(service =>
+                service.RunAsync(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();
@@ -94,8 +94,8 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     expectedExecutionProcessingValidationException))),
                         Times.Once);
 
-            this.executionServiceMock.Verify(broker =>
-                broker.RunAsync(nullExecutions, executionFolder),
+            this.executionServiceMock.Verify(service =>
+                service.RunAsync(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();

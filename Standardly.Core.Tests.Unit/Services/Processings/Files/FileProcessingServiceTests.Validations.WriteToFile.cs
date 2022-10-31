@@ -18,10 +18,13 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnCheckIfFileExistsIfPathIsInvalidAndLogItAsync(
-            string invalidFilePath)
+        public async Task ShouldThrowValidationExceptionOnWriteToFileIfInputsIsInvalidAndLogItAsync(
+            string invalidInput)
         {
             // given
+            string invalidPath = invalidInput;
+            string invalidContent = invalidInput;
+
             var invalidFilesProcessingException =
                 new InvalidFileProcessingException();
 
@@ -29,12 +32,16 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 key: "path",
                 values: "Text is required");
 
+            invalidFilesProcessingException.AddData(
+                key: "content",
+                values: "Text is required");
+
             var expectedFilesProcessingValidationException =
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask<bool> runTask =
-                this.fileProcessingService.CheckIfFileExistsAsync(invalidFilePath);
+            ValueTask runTask =
+                this.fileProcessingService.WriteToFileAsync(path: invalidPath, content: invalidContent);
 
             FileProcessingValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingValidationException>(runTask.AsTask);
@@ -48,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfFileExistsAsync(invalidFilePath),
+                service.WriteToFileAsync(invalidPath, invalidContent),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

@@ -16,6 +16,13 @@ namespace Standardly.Core.Services.Processings.Files
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
         }
 
+        private static void ValidateWriteToFile(string path, string content)
+        {
+            Validate(
+                (Rule: IsInvalid(path), Parameter: nameof(path)),
+                (Rule: IsInvalid(content), Parameter: nameof(content)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

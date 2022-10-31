@@ -15,6 +15,7 @@ namespace Standardly.Core.Services.Processings.Files
     public partial class FileProcessingService
     {
         private delegate ValueTask<bool> ReturningBooleanFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask<bool> TryCatchAsync(ReturningBooleanFunction returningBooleanFunction)
         {
@@ -48,6 +49,18 @@ namespace Standardly.Core.Services.Processings.Files
                     new FailedFileProcessingServiceException(exception);
 
                 throw CreateAndLogServiceException(failedFileProcessingServiceException);
+            }
+        }
+
+        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
+        {
+            try
+            {
+                await returningNothingFunction();
+            }
+            catch (InvalidFileProcessingException invalidPathFileProcessingException)
+            {
+                throw CreateAndLogValidationException(invalidPathFileProcessingException);
             }
         }
 

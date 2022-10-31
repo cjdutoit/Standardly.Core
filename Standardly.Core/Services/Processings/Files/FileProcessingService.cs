@@ -29,7 +29,11 @@ namespace Standardly.Core.Services.Processings.Files
                 return await this.fileService.CheckIfFileExistsAsync(path);
             });
 
-        public async ValueTask WriteToFileAsync(string path, string content) =>
-            await this.fileService.WriteToFileAsync(path, content);
+        public ValueTask WriteToFileAsync(string path, string content) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateWriteToFile(path, content);
+                await this.fileService.WriteToFileAsync(path, content);
+            });
     }
 }
