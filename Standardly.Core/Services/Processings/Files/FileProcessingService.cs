@@ -36,7 +36,7 @@ namespace Standardly.Core.Services.Processings.Files
                 await this.fileService.WriteToFileAsync(path, content);
             });
 
-        public ValueTask<string> ReadFromFileAsync(string path) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<string> ReadFromFileAsync(string path) =>
+            await this.fileService.ReadFromFileAsync(path);
     }
 }
