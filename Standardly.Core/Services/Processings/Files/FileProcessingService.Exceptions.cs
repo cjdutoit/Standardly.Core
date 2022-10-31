@@ -116,6 +116,13 @@ namespace Standardly.Core.Services.Processings.Files
             {
                 throw CreateAndLogDependencyException(fileServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedFileProcessingServiceException =
+                    new FailedFileProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedFileProcessingServiceException);
+            }
         }
 
         private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
