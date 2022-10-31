@@ -78,6 +78,13 @@ namespace Standardly.Core.Services.Processings.Files
             {
                 throw CreateAndLogDependencyException(fileServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedFileProcessingServiceException =
+                    new FailedFileProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedFileProcessingServiceException);
+            }
         }
 
         private FileProcessingValidationException CreateAndLogValidationException(Xeption exception)
