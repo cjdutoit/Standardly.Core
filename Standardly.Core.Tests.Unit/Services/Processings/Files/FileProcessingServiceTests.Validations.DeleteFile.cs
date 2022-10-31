@@ -49,8 +49,8 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     expectedFilesProcessingValidationException))),
                         Times.Once);
 
-            this.fileServiceMock.Verify(broker =>
-                broker.DeleteFileAsync(invalidPath),
+            this.fileServiceMock.Verify(service =>
+                service.DeleteFileAsync(invalidPath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();
