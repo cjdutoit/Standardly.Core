@@ -15,7 +15,7 @@ namespace Standardly.Core.Services.Foundations.Executions
     {
         private delegate ValueTask<string> ReturningStringFunction();
 
-        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
+        private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
         {
             try
             {

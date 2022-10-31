@@ -16,7 +16,7 @@ namespace Standardly.Core.Services.Processings.Files
     {
         private delegate ValueTask<bool> ReturningBooleanFunction();
 
-        private async ValueTask<bool> TryCatch(ReturningBooleanFunction returningBooleanFunction)
+        private async ValueTask<bool> TryCatchAsync(ReturningBooleanFunction returningBooleanFunction)
         {
             try
             {

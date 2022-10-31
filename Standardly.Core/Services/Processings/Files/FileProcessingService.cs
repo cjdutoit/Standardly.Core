@@ -22,7 +22,7 @@ namespace Standardly.Core.Services.Processings.Files
         }
 
         public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateCheckIfFileExists(path);
 
