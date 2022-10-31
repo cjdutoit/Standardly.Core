@@ -24,7 +24,7 @@ namespace Standardly.Core.Services.Foundations.Executions
         }
 
         public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateRunArguments(executions, executionFolder);
 

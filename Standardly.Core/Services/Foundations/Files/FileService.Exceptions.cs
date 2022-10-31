@@ -21,7 +21,7 @@ namespace Standardly.Core.Services.Foundations.Files
         private delegate ValueTask<List<string>> ReturningStringListFunction();
         private delegate ValueTask ReturningNothingFunction();
 
-        private async ValueTask<bool> TryCatch(ReturningBooleanFunction returningBooleanFunction)
+        private async ValueTask<bool> TryCatchAsync(ReturningBooleanFunction returningBooleanFunction)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
+        private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
         {
             try
             {
@@ -157,7 +157,7 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private async ValueTask<List<string>> TryCatch(ReturningStringListFunction returningStringListFunction)
+        private async ValueTask<List<string>> TryCatchAsync(ReturningStringListFunction returningStringListFunction)
         {
             try
             {
@@ -225,7 +225,7 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
+        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
         {
             try
             {

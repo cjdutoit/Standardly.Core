@@ -11,5 +11,6 @@ namespace Standardly.Core.Services.Processings.Files
     public interface IFileProcessingService
     {
         ValueTask<bool> CheckIfFileExistsAsync(string path);
+        ValueTask WriteToFileAsync(string path, string content);
     }
 }

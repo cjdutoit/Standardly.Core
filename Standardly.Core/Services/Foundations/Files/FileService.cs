@@ -27,7 +27,7 @@ namespace Standardly.Core.Services.Foundations.Files
         }
 
         public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateCheckIfFileExistsArguments(path);
 
@@ -35,14 +35,14 @@ namespace Standardly.Core.Services.Foundations.Files
             });
 
         public ValueTask WriteToFileAsync(string path, string content) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateWriteToFileArguments(path, content);
                 await Task.Run(() => this.fileBroker.WriteToFile(path, content));
             });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
-             TryCatch(async () =>
+             TryCatchAsync(async () =>
              {
                  ValidateReadFromFileArguments(path);
 
@@ -50,14 +50,14 @@ namespace Standardly.Core.Services.Foundations.Files
              });
 
         public ValueTask DeleteFileAsync(string path) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateDeleteFileArguments(path);
                 await Task.Run(() => this.fileBroker.DeleteFile(path));
             });
 
         public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateRetrieveListOfFilesArguments(path, searchPattern);
 
@@ -65,7 +65,7 @@ namespace Standardly.Core.Services.Foundations.Files
             });
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateCheckIfDirectoryExistsArguments(path);
 
@@ -73,14 +73,14 @@ namespace Standardly.Core.Services.Foundations.Files
             });
 
         public ValueTask CreateDirectoryAsync(string path) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateCreateDirectoryArguments(path);
                 await Task.Run(() => this.fileBroker.CreateDirectory(path));
             });
 
         public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
-            TryCatch(async () =>
+            TryCatchAsync(async () =>
             {
                 ValidateDeleteDirectoryArguments(path);
                 await Task.Run(() => this.fileBroker.DeleteDirectory(path, recursive));

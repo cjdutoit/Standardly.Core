@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
-using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -14,27 +13,20 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldCheckIfFileExistsAsync()
+        public async Task ShouldWriteToFileAsync()
         {
             // given
             string randomPath = GetRandomString();
             string inputFilePath = randomPath;
-            bool fileCheckResult = true;
-            bool expectedResult = fileCheckResult;
-
-            this.fileServiceMock.Setup(service =>
-                service.CheckIfFileExistsAsync(randomPath))
-                    .ReturnsAsync(fileCheckResult);
+            string randomContent = GetRandomString();
+            string inputContent = randomContent;
 
             // when
-            bool actualResult = await this.fileProcessingService
-                .CheckIfFileExistsAsync(inputFilePath);
+            await this.fileProcessingService.WriteToFileAsync(inputFilePath, inputContent);
 
             // then
-            actualResult.Should().Be(expectedResult);
-
             this.fileServiceMock.Verify(service =>
-                service.CheckIfFileExistsAsync(inputFilePath),
+                service.WriteToFileAsync(inputFilePath, inputContent),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();
