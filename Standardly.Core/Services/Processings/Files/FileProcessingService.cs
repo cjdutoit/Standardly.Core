@@ -21,7 +21,7 @@ namespace Standardly.Core.Services.Processings.Files
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<bool> CheckIfFileExistsAsync(string path) =>
+            await this.fileService.CheckIfFileExistsAsync(path);
     }
 }
