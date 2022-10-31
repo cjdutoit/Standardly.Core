@@ -100,6 +100,14 @@ namespace Standardly.Core.Services.Processings.Files
             {
                 throw CreateAndLogValidationException(invalidPathFileProcessingException);
             }
+            catch (FileValidationException fileValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileValidationException);
+            }
+            catch (FileDependencyValidationException fileDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileDependencyValidationException);
+            }
         }
 
         private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
