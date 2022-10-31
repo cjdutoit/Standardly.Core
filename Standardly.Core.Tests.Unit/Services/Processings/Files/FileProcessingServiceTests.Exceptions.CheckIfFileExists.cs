@@ -92,7 +92,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccursAndLogItAsync()
         {
             // given
             string randomPath = GetRandomString();
