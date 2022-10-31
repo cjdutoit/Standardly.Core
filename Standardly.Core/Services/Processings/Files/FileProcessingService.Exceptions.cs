@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
+using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
 
@@ -24,6 +25,14 @@ namespace Standardly.Core.Services.Processings.Files
             {
                 throw CreateAndLogValidationException(invalidPathFileProcessingException);
             }
+            catch (FileValidationException fileValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileValidationException);
+            }
+            catch (FileDependencyValidationException fileDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileDependencyValidationException);
+            }
         }
 
         private FileProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -34,6 +43,17 @@ namespace Standardly.Core.Services.Processings.Files
             this.loggingBroker.LogError(fileProcessingValidationException);
 
             return fileProcessingValidationException;
+        }
+
+        private FileProcessingDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var fileProcessingDependencyValidationException =
+                new FileProcessingDependencyValidationException(
+                    exception.InnerException as Xeption);
+
+            this.loggingBroker.LogError(fileProcessingDependencyValidationException);
+
+            return fileProcessingDependencyValidationException;
         }
     }
 }
