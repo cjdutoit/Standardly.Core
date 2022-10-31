@@ -13,5 +13,6 @@ namespace Standardly.Core.Services.Processings.Files
         ValueTask<bool> CheckIfFileExistsAsync(string path);
         ValueTask WriteToFileAsync(string path, string content);
         ValueTask<string> ReadFromFileAsync(string path);
+        ValueTask DeleteFileAsync(string path);
     }
 }
