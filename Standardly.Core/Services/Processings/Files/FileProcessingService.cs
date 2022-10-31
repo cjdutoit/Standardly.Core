@@ -61,7 +61,12 @@ namespace Standardly.Core.Services.Processings.Files
                 return await this.fileService.RetrieveListOfFilesAsync(path, searchPattern);
             });
 
-        public async ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
-            await this.fileService.CheckIfDirectoryExistsAsync(path);
+        public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateCheckIfDirectoryExists(path);
+
+                return await this.fileService.CheckIfDirectoryExistsAsync(path);
+            });
     }
 }
