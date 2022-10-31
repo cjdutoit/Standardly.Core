@@ -44,7 +44,12 @@ namespace Standardly.Core.Services.Processings.Files
                 return await this.fileService.ReadFromFileAsync(path);
             });
 
-        public async ValueTask DeleteFileAsync(string path) =>
-            await this.fileService.DeleteFileAsync(path);
+        public ValueTask DeleteFileAsync(string path) =>
+             TryCatchAsync(async () =>
+             {
+                 ValidateDeleteFile(path);
+
+                 await this.fileService.DeleteFileAsync(path);
+             });
     }
 }
