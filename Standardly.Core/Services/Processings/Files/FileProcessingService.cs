@@ -28,5 +28,8 @@ namespace Standardly.Core.Services.Processings.Files
 
                 return await this.fileService.CheckIfFileExistsAsync(path);
             });
+
+        public ValueTask WriteToFileAsync(string path, string content) =>
+            throw new System.NotImplementedException();
     }
 }
