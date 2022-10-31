@@ -36,7 +36,12 @@ namespace Standardly.Core.Services.Processings.Files
                 await this.fileService.WriteToFileAsync(path, content);
             });
 
-        public async ValueTask<string> ReadFromFileAsync(string path) =>
-            await this.fileService.ReadFromFileAsync(path);
+        public ValueTask<string> ReadFromFileAsync(string path) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateReadFromFile(path);
+
+                return await this.fileService.ReadFromFileAsync(path);
+            });
     }
 }

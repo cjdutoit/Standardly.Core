@@ -29,6 +29,11 @@ namespace Standardly.Core.Services.Processings.Files
             Message = "Text is required"
         };
 
+        private static void ValidateReadFromFile(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidFileProcessingException =
