@@ -53,7 +53,7 @@ namespace Standardly.Core.Services.Processings.Files
                  await this.fileService.DeleteFileAsync(path);
              });
 
-        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            throw new System.NotImplementedException();
+        public async ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            await this.fileService.RetrieveListOfFilesAsync(path, searchPattern);
     }
 }
