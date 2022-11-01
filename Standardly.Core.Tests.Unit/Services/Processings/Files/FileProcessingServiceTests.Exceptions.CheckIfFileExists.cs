@@ -33,12 +33,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<bool> runTask =
+            ValueTask<bool> checkIfFileExistsTask =
                 this.fileProcessingService.CheckIfFileExistsAsync(inputPath);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(checkIfFileExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfFileExistsAsync(inputPath),
@@ -71,12 +71,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> runTask =
+            ValueTask<bool> checkIfFileExistsTask =
                 this.fileProcessingService.CheckIfFileExistsAsync(inputPath);
 
             // then
             FileProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingDependencyException>(checkIfFileExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfFileExistsAsync(inputPath),
@@ -112,12 +112,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> runTask =
+            ValueTask<bool> checkIfFileExistsTask =
                 this.fileProcessingService.CheckIfFileExistsAsync(inputPath);
 
             // then
             FileProcessingServiceException actualException =
-                await Assert.ThrowsAsync<FileProcessingServiceException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingServiceException>(checkIfFileExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfFileExistsAsync(inputPath),

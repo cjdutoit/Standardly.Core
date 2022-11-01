@@ -75,5 +75,12 @@ namespace Standardly.Core.Services.Processings.Files
                 ValidateCreateDirectory(path);
                 await this.fileService.CreateDirectoryAsync(path);
             });
+
+        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateDeleteDirectory(path);
+                await this.fileService.DeleteDirectoryAsync(path, recursive);
+            });
     }
 }

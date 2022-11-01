@@ -35,11 +35,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask runTask =
+            ValueTask deleteFileTask =
                 this.fileProcessingService.DeleteFileAsync(path: invalidPath);
 
             FileProcessingValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingValidationException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingValidationException>(deleteFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);

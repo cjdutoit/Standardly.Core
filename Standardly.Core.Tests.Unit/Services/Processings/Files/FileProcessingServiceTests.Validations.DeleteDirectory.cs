@@ -18,10 +18,13 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnCheckIfFileExistsIfPathIsInvalidAndLogItAsync(
-            string invalidFilePath)
+        public async Task ShouldThrowValidationExceptionOnDeleteDirectoryIfInputsIsInvalidAndLogItAsync(
+            string invalidInput)
         {
             // given
+            string invalidPath = invalidInput;
+            bool recursive = false;
+
             var invalidFilesProcessingException =
                 new InvalidFileProcessingException();
 
@@ -33,11 +36,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileProcessingService.CheckIfFileExistsAsync(invalidFilePath);
+            ValueTask deleteDirectoryTask =
+                this.fileProcessingService.DeleteDirectoryAsync(path: invalidPath, recursive);
 
             FileProcessingValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingValidationException>(checkIfFileExistsTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingValidationException>(deleteDirectoryTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
@@ -48,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfFileExistsAsync(invalidFilePath),
+                service.DeleteDirectoryAsync(invalidPath, recursive),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

@@ -17,31 +17,32 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnDeleteFileAsyncIfDependencyValidationErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyValidationOnDeleteDirectoryIfDependencyValidationErrorOccursAndLogItAsync(
             Xeption dependencyValidationException)
         {
             // given
             string randomPath = GetRandomString();
             string inputPath = randomPath;
+            bool recursive = true;
 
             var expectedFileProcessingDependencyValidationException =
                 new FileProcessingDependencyValidationException(
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteFileAsync(inputPath))
+                service.DeleteDirectoryAsync(inputPath, recursive))
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask deleteFileTask =
-                this.fileProcessingService.DeleteFileAsync(inputPath);
+            ValueTask deleteDirectoryTask =
+                this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(deleteFileTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(deleteDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(inputPath),
+                service.DeleteDirectoryAsync(inputPath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -55,31 +56,32 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnDeleteFileAsyncIfDependencyErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyOnDeleteDirectoryIfDependencyErrorOccursAndLogItAsync(
             Xeption dependencyException)
         {
             // given
             string randomPath = GetRandomString();
             string inputPath = randomPath;
+            bool recursive = true;
 
             var expectedFileProcessingDependencyException =
                 new FileProcessingDependencyException(
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteFileAsync(inputPath))
+                service.DeleteDirectoryAsync(inputPath, recursive))
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileTask =
-                this.fileProcessingService.DeleteFileAsync(inputPath);
+            ValueTask deleteDirectoryTask =
+                this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
             // then
             FileProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyException>(deleteFileTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingDependencyException>(deleteDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(inputPath),
+                service.DeleteDirectoryAsync(inputPath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -92,12 +94,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnDeleteFileAsyncIfServiceErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnDeleteDirectoryIfServiceErrorOccursAndLogItAsync()
         {
             // given
             string randomPath = GetRandomString();
             string inputPath = randomPath;
-            string inputContent = randomPath;
+            bool recursive = true;
 
             var serviceException = new Exception();
 
@@ -109,19 +111,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteFileAsync(inputPath))
+                service.DeleteDirectoryAsync(inputPath, recursive))
                     .Throws(serviceException);
 
             // when
-            ValueTask deleteFileTask =
-                this.fileProcessingService.DeleteFileAsync(inputPath);
+            ValueTask deleteDirectoryTask =
+                this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
             // then
             FileProcessingServiceException actualException =
-                await Assert.ThrowsAsync<FileProcessingServiceException>(deleteFileTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingServiceException>(deleteDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(inputPath),
+                service.DeleteDirectoryAsync(inputPath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

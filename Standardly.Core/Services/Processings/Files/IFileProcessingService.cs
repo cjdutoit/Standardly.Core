@@ -18,5 +18,6 @@ namespace Standardly.Core.Services.Processings.Files
         ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*");
         ValueTask<bool> CheckIfDirectoryExistsAsync(string path);
         ValueTask CreateDirectoryAsync(string path);
+        ValueTask DeleteDirectoryAsync(string path, bool recursive = false);
     }
 }
