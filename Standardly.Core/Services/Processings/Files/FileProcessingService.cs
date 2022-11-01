@@ -76,7 +76,7 @@ namespace Standardly.Core.Services.Processings.Files
                 await this.fileService.CreateDirectoryAsync(path);
             });
 
-        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
-            throw new System.NotImplementedException();
+        public async ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
+            await this.fileService.DeleteDirectoryAsync(path, recursive);
     }
 }
