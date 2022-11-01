@@ -14,8 +14,11 @@ namespace Standardly.Core.Brokers.Executions
     {
         public string Run(List<Execution> executions, string executionFolder)
         {
-            List<Execution> executionList = new List<Execution>();
-            executionList.Add(new Execution("Execution Folder", $"cd /d \"{executionFolder}\""));
+            List<Execution> executionList = new List<Execution>
+            {
+                new Execution("Execution Folder", $"cd /d \"{executionFolder}\"")
+            };
+
             executionList.AddRange(executions);
 
             StringBuilder outputMessages = new StringBuilder();

@@ -34,12 +34,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask runTask =
+            ValueTask writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
                 service.WriteToFileAsync(inputPath, inputContent),
@@ -73,12 +73,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask runTask =
+            ValueTask writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
             FileProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingDependencyException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
                 service.WriteToFileAsync(inputPath, inputContent),
@@ -115,12 +115,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask runTask =
+            ValueTask writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
             FileProcessingServiceException actualException =
-                await Assert.ThrowsAsync<FileProcessingServiceException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingServiceException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
                 service.WriteToFileAsync(inputPath, inputContent),

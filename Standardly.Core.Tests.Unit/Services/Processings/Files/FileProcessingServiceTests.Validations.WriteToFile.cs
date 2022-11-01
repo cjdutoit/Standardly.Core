@@ -40,11 +40,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask runTask =
+            ValueTask writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(path: invalidPath, content: invalidContent);
 
             FileProcessingValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingValidationException>(runTask.AsTask);
+                await Assert.ThrowsAsync<FileProcessingValidationException>(writeToFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
