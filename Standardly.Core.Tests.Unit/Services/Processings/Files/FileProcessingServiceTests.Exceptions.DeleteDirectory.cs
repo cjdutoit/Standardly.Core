@@ -52,5 +52,44 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             this.fileServiceMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyOnDeleteDirectoryIfDependencyErrorOccursAndLogItAsync(
+            Xeption dependencyException)
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+            bool recursive = true;
+
+            var expectedFileProcessingDependencyException =
+                new FileProcessingDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.fileServiceMock.Setup(service =>
+                service.DeleteDirectoryAsync(inputPath, recursive))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask deleteDirectoryTask =
+                this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
+
+            // then
+            FileProcessingDependencyException actualException =
+                await Assert.ThrowsAsync<FileProcessingDependencyException>(deleteDirectoryTask.AsTask);
+
+            this.fileServiceMock.Verify(service =>
+                service.DeleteDirectoryAsync(inputPath, recursive),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedFileProcessingDependencyException))),
+                        Times.Once);
+
+            this.fileServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
