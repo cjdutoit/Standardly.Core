@@ -40,8 +40,8 @@ namespace Standardly.Core.Services.Foundations.Templates
 
         private static dynamic IsInvalid(char tagCharacter) => new
         {
-            Condition = String.IsNullOrWhiteSpace(tagCharacter.ToString()),
-            Message = "Tag character required"
+            Condition = String.IsNullOrWhiteSpace(tagCharacter.ToString().Replace("\0", "")),
+            Message = "Character is required"
         };
 
         private static dynamic IsInvalid(Dictionary<string, string> dictionary) => new

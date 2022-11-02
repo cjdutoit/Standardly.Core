@@ -52,5 +52,42 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(' ')]
+        public async Task ShouldThrowValidationExceptionOnValidateTransformIfCharArgumentsInvalid(char invalidCharacter)
+        {
+            // given
+            string randomContent = GetRandomString();
+            char invalidTagCharacter = invalidCharacter;
+
+            var invalidArgumentTemplateException =
+               new InvalidArgumentTemplateException();
+
+            invalidArgumentTemplateException.AddData(
+                key: "tagCharacter",
+                values: "Character is required");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidArgumentTemplateException);
+
+            // when
+            ValueTask validateTransformationAction =
+                this.templateService.ValidateTransformation(randomContent, invalidTagCharacter);
+
+            TemplateValidationException actualTemplateValidationException =
+                await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationAction.AsTask);
+
+            // then
+            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTemplateValidationException))),
+                        Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
