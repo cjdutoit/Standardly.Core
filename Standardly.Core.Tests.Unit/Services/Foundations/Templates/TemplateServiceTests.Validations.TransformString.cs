@@ -45,5 +45,35 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnTransformStringIfDictionaryIsNull()
+        {
+            // given
+            string randomString = GetRandomString();
+            string content = randomString;
+            Dictionary<string, string> randomReplacementDictionary = null;
+            Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
+
+            var invalidTemplateException =
+                            new InvalidTemplateException();
+
+            invalidTemplateException.AddData(
+                key: "randomReplacementDictionary",
+                values: "Replacement dictionary is required");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidTemplateException);
+
+            // when
+            ValueTask<string> transformStringTask =
+                this.templateService.TransformString(content, inputReplacementDictionary);
+
+            var actualException =
+                await Assert.ThrowsAsync<TemplateValidationException>(transformStringTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+        }
     }
 }
