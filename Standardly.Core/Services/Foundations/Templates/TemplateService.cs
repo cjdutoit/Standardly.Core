@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
@@ -23,7 +23,21 @@ namespace Standardly.Core.Services.Foundations.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> TransformString(string content, Dictionary<string, string> replacementDictionary) =>
-            throw new NotImplementedException();
+        public async ValueTask<string> TransformString(
+            string content,
+            Dictionary<string, string> replacementDictionary)
+        {
+            string template = content;
+
+            if (replacementDictionary != null && replacementDictionary.Any())
+            {
+                foreach (var replacement in replacementDictionary)
+                {
+                    template = template.Replace(replacement.Key, replacement.Value);
+                }
+            }
+
+            return await Task.FromResult(template);
+        }
     }
 }
