@@ -14,12 +14,22 @@ namespace Standardly.Core.Services.Foundations.Templates
 {
     public partial class TemplateService
     {
-        private static void ValidateTransformString(string content,
+        private static void ValidateTransformString(
+            string content,
             Dictionary<string, string> replacementDictionary)
         {
             Validate(
                 (Rule: IsInvalid(content), Parameter: nameof(content)),
                 (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
+        }
+
+        private static void ValidateTransformationArguments(
+            string content,
+            char tagCharacter)
+        {
+            Validate(
+                (Rule: IsInvalid(content), Parameter: nameof(content)),
+                (Rule: IsInvalid(tagCharacter), Parameter: nameof(tagCharacter)));
         }
 
         private static dynamic IsInvalid(string text) => new
@@ -28,13 +38,19 @@ namespace Standardly.Core.Services.Foundations.Templates
             Message = "Text is required"
         };
 
+        private static dynamic IsInvalid(char tagCharacter) => new
+        {
+            Condition = String.IsNullOrWhiteSpace(tagCharacter.ToString()),
+            Message = "Tag character required"
+        };
+
         private static dynamic IsInvalid(Dictionary<string, string> dictionary) => new
         {
             Condition = dictionary == null,
             Message = "Dictionary is required"
         };
 
-        private void ValidateTagReplacement(string template, char tagCharacter = '$')
+        private void CheckAllTagsHasBeenReplaced(string template, char tagCharacter = '$')
         {
             var regex = $@"\{tagCharacter}([a-zA-Z]*)\{tagCharacter}";
             var matches = Regex.Matches(template, regex);
