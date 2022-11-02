@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
+using Standardly.Core.Models.Foundations.Templates.Exceptions;
 
 namespace Standardly.Core.Services.Foundations.Templates
 {
@@ -31,6 +33,34 @@ namespace Standardly.Core.Services.Foundations.Templates
             Condition = dictionary == null,
             Message = "Dictionary is required"
         };
+
+        private void ValidateTagReplacement(string template, char tagCharacter = '$')
+        {
+            var regex = $@"\{tagCharacter}([a-zA-Z]*)\{tagCharacter}";
+            var matches = Regex.Matches(template, regex);
+            List<string> tags = new List<string>();
+
+            foreach (Match match in matches)
+            {
+                if (!tags.Contains(match.Value))
+                {
+                    tags.Add(match.Value);
+                }
+            }
+
+            var invalidReplacementException = new InvalidReplacementException();
+
+            foreach (string tag in tags)
+            {
+                invalidReplacementException.UpsertDataList(
+                    key: tag,
+                    value: $"Found '{tag}' that was not in the replacement dictionary, " +
+                        $"fix the errors and try again.");
+            }
+
+            invalidReplacementException.ThrowIfContainsErrors();
+        }
+
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {

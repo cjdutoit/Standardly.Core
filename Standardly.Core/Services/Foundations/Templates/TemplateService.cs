@@ -43,7 +43,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                     return await Task.FromResult(template);
                 });
 
-        public ValueTask ValidateTransformation(string content, char tagCharacter) =>
-            throw new System.NotImplementedException();
+        public async ValueTask ValidateTransformation(string content, char tagCharacter) =>
+            await Task.Run(() => ValidateTagReplacement(content, tagCharacter));
     }
 }
