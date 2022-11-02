@@ -23,21 +23,24 @@ namespace Standardly.Core.Services.Foundations.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<string> TransformString(
+        public ValueTask<string> TransformString(
             string content,
-            Dictionary<string, string> replacementDictionary)
-        {
-            string template = content;
-
-            if (replacementDictionary != null && replacementDictionary.Any())
-            {
-                foreach (var replacement in replacementDictionary)
+            Dictionary<string, string> replacementDictionary) =>
+                TryCatchAsync(async () =>
                 {
-                    template = template.Replace(replacement.Key, replacement.Value);
-                }
-            }
+                    ValidateTransformString(content, replacementDictionary);
 
-            return await Task.FromResult(template);
-        }
+                    string template = content;
+
+                    if (replacementDictionary != null && replacementDictionary.Any())
+                    {
+                        foreach (var replacement in replacementDictionary)
+                        {
+                            template = template.Replace(replacement.Key, replacement.Value);
+                        }
+                    }
+
+                    return await Task.FromResult(template);
+                });
     }
 }
