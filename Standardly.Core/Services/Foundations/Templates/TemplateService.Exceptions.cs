@@ -4,7 +4,9 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
+using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Xeptions;
 
@@ -20,9 +22,16 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 return await returningStringFunction();
             }
-            catch (InvalidTemplateException invalidTemplateException)
+            catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {
-                throw CreateAndLogValidationException(invalidTemplateException);
+                throw CreateAndLogValidationException(invalidArgumentTemplateException);
+            }
+            catch (Exception exception)
+            {
+                var failedTemplateServiceException =
+                    new FailedTemplateServiceException(exception.InnerException as Xeption);
+
+                throw CreateAndLogServiceException(failedTemplateServiceException);
             }
         }
 
@@ -31,6 +40,13 @@ namespace Standardly.Core.Services.Foundations.Templates
             var templateValidationException = new TemplateValidationException(exception);
 
             return templateValidationException;
+        }
+
+        private TemplateServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var templateOrchestrationServiceException = new TemplateServiceException(exception);
+
+            return templateOrchestrationServiceException;
         }
     }
 }

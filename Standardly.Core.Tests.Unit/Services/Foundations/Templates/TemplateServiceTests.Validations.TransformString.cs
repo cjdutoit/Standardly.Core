@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Xunit;
 
@@ -25,15 +26,15 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
 
-            var invalidTemplateException =
-                            new InvalidTemplateException();
+            var invalidArgumentTemplateException =
+                            new InvalidArgumentTemplateException();
 
-            invalidTemplateException.AddData(
+            invalidArgumentTemplateException.AddData(
                 key: "content",
                 values: "Text is required");
 
             var expectedTemplateValidationException =
-                new TemplateValidationException(invalidTemplateException);
+                new TemplateValidationException(invalidArgumentTemplateException);
 
             // when
             ValueTask<string> transformStringTask =
@@ -55,15 +56,15 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             Dictionary<string, string> randomReplacementDictionary = null;
             Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
 
-            var invalidTemplateException =
-                            new InvalidTemplateException();
+            var invalidArgumentTemplateException =
+                            new InvalidArgumentTemplateException();
 
-            invalidTemplateException.AddData(
-                key: "randomReplacementDictionary",
-                values: "Replacement dictionary is required");
+            invalidArgumentTemplateException.AddData(
+                key: "replacementDictionary",
+                values: "Dictionary is required");
 
             var expectedTemplateValidationException =
-                new TemplateValidationException(invalidTemplateException);
+                new TemplateValidationException(invalidArgumentTemplateException);
 
             // when
             ValueTask<string> transformStringTask =
