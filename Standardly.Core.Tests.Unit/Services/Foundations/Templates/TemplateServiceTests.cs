@@ -4,13 +4,16 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using Moq;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Services.Foundations.Templates;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 {
@@ -28,6 +31,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             this.templateService = new TemplateService(
                 fileBroker: fileBrokerMock.Object, loggingBroker: loggingBrokerMock.Object);
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static string CreateStringTemplate(Dictionary<string, string> dictionary)
         {

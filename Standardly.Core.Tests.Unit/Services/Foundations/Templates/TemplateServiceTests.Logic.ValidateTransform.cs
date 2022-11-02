@@ -26,10 +26,10 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 char replacementTag = '$';
 
                 // when then
-                string actualTemplate =
+                string transformedTemplate =
                     await this.templateService.TransformString(inputStringTemplate, inputReplacementDictionary);
 
-                await this.templateService.ValidateTransformation(actualTemplate, replacementTag);
+                await this.templateService.ValidateTransformation(transformedTemplate, replacementTag);
                 Assert.True(true);
             }
             catch (Exception ex)
