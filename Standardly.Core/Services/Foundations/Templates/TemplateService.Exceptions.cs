@@ -15,6 +15,7 @@ namespace Standardly.Core.Services.Foundations.Templates
     public partial class TemplateService
     {
         private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
         {
@@ -35,9 +36,22 @@ namespace Standardly.Core.Services.Foundations.Templates
             }
         }
 
+        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
+        {
+            try
+            {
+                await returningNothingFunction();
+            }
+            catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentTemplateException);
+            }
+        }
+
         private TemplateValidationException CreateAndLogValidationException(Xeption exception)
         {
             var templateValidationException = new TemplateValidationException(exception);
+            this.loggingBroker.LogError(templateValidationException);
 
             return templateValidationException;
         }
@@ -45,6 +59,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         private TemplateServiceException CreateAndLogServiceException(Exception exception)
         {
             var templateOrchestrationServiceException = new TemplateServiceException(exception);
+            this.loggingBroker.LogError(templateOrchestrationServiceException);
 
             return templateOrchestrationServiceException;
         }
