@@ -101,5 +101,54 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTasksIsInvalid(string invalidString)
+        {
+            // given
+            Template someTemplate = new Template()
+            {
+                Name = GetRandomString(),
+                Description = GetRandomString(),
+                TemplateType = GetRandomString(),
+                ProjectsRequired = GetRandomString()
+            };
+
+            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
+            {
+                Name = invalidString,
+            };
+
+            someTemplate.Tasks.Add(someTask);
+            string someRawFile = SerializeTemplate(someTemplate);
+            string inputRawFile = someRawFile;
+
+            var invalidTemplateException =
+                new InvalidTemplateException();
+
+            invalidTemplateException.AddData(
+                key: "Tasks[0].Name",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Tasks[0].Actions",
+                values: "Actions is required");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidTemplateException);
+
+            // when
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputRawFile);
+
+            TemplateValidationException actualException =
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+        }
     }
 }
