@@ -9,8 +9,11 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Moq;
+using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
+using Standardly.Core.Models.Foundations.Executions;
+using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Services.Foundations.Templates;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -59,6 +62,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             return dictionary;
         }
 
+        private static string SerializeTemplate(Template template) =>
+            JsonConvert.SerializeObject(template);
+
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 5).GetValue();
 
@@ -67,5 +73,105 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
         private static string GetRandomString() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private static List<Execution> CreateListOfExecutions()
+        {
+            List<Execution> list = new List<Execution>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                list.Add(new Execution()
+                {
+                    Name = GetRandomString(1),
+                    Instruction = GetRandomString(1)
+                });
+            }
+
+            return list;
+        }
+
+        private static List<Models.Foundations.Templates.Tasks.Actions.Files.File> CreateListOfFileItems()
+        {
+            List<Models.Foundations.Templates.Tasks.Actions.Files.File> list =
+                new List<Models.Foundations.Templates.Tasks.Actions.Files.File>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                list.Add(new Models.Foundations.Templates.Tasks.Actions.Files.File()
+                {
+                    Template = GetRandomString(1),
+                    Target = GetRandomString(1),
+                    Replace = true
+                });
+            }
+
+            return list;
+        }
+
+        private static List<Models.Foundations.Templates.Tasks.Actions.Action> CreateListOfActions()
+        {
+            List<Models.Foundations.Templates.Tasks.Actions.Action> list =
+                new List<Models.Foundations.Templates.Tasks.Actions.Action>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                list.Add(new Models.Foundations.Templates.Tasks.Actions.Action()
+                {
+                    Name = GetRandomString(1),
+                    ExecutionFolder = GetRandomString(1),
+                    Files = CreateListOfFileItems(),
+                    Executions = CreateListOfExecutions()
+                });
+            }
+
+            return list;
+        }
+
+        private static List<Models.Foundations.Templates.Tasks.Task> CreateListOfTasks()
+        {
+            List<Models.Foundations.Templates.Tasks.Task> list =
+                new List<Models.Foundations.Templates.Tasks.Task>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                list.Add(new Models.Foundations.Templates.Tasks.Task()
+                {
+                    Name = GetRandomString(1),
+                    Actions = CreateListOfActions()
+                });
+            }
+
+            return list;
+        }
+
+        private static List<string> CreateListOfStrings()
+        {
+            List<string> list = new List<string>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                list.Add(GetRandomString(1));
+            }
+
+            return list;
+        }
+
+        private static Template CreateRandomTemplate()
+        {
+            Template template = CreateTemplateFiller().Create();
+            template.RawTemplate = SerializeTemplate(template);
+
+            return template;
+        }
+
+        private static Filler<Template> CreateTemplateFiller()
+        {
+            var filler = new Filler<Template>();
+            filler.Setup()
+                .OnType<List<string>>().Use(CreateListOfStrings)
+                .OnType<List<Models.Foundations.Templates.Tasks.Task>>().Use(CreateListOfTasks);
+
+            return filler;
+        }
     }
 }

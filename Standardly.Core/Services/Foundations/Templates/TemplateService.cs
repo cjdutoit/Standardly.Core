@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
+using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Foundations.Templates
 {
@@ -50,5 +51,8 @@ namespace Standardly.Core.Services.Foundations.Templates
 
                 await Task.Run(() => CheckAllTagsHasBeenReplaced(content, tagCharacter));
             });
+
+        public ValueTask<Template> ConvertStringToTemplate(string content) =>
+            throw new System.NotImplementedException();
     }
 }

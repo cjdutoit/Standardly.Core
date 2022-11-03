@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Foundations.Templates
 {
@@ -13,5 +14,6 @@ namespace Standardly.Core.Services.Foundations.Templates
     {
         ValueTask<string> TransformString(string content, Dictionary<string, string> replacementDictionary);
         ValueTask ValidateTransformation(string content, char tagCharacter);
+        ValueTask<Template> ConvertStringToTemplate(string content);
     }
 }
