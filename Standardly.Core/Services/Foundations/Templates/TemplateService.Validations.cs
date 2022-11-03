@@ -98,6 +98,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                             Parameter: $"Actions[{actionIndex}].Executions"));
 
                     actionRules.AddRange(GetFileItemValidationRules(actions[actionIndex], actionIndex));
+                    actionRules.AddRange(GetExecutionValidationRules(actions[actionIndex], actionIndex));
                 }
             }
 
@@ -126,6 +127,30 @@ namespace Standardly.Core.Services.Foundations.Templates
             }
 
             return fileItemRules;
+        }
+
+        private List<(dynamic Rule, string Parameter)> GetExecutionValidationRules(
+            Models.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
+        {
+            var executionRules = new List<(dynamic Rule, string Parameter)>();
+
+            if (action.Executions.Any())
+            {
+                var executions = action.Executions;
+
+                for (int executionIndex = 0; executionIndex <= executions.Count - 1; executionIndex++)
+                {
+                    executionRules.Add(
+                        (Rule: IsInvalid(executions[executionIndex].Name),
+                            Parameter: $"Actions[{actionIndex}].Executions[{executionIndex}].Name"));
+
+                    executionRules.Add(
+                        (Rule: IsInvalid(executions[executionIndex].Instruction),
+                            Parameter: $"Actions[{actionIndex}].Executions[{executionIndex}].Instruction"));
+                }
+            }
+
+            return executionRules;
         }
 
         private static dynamic IsInvalid(string text) => new
