@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
@@ -50,7 +51,26 @@ namespace Standardly.Core.Services.Foundations.Templates
                 (Rule: IsInvalid(template.Tasks), Parameter: "Template Tasks")
             };
 
+            templateRules.AddRange(GetTaskValidationRules(template));
             Validate<InvalidTemplateException>(templateRules.ToArray());
+        }
+
+        private List<(dynamic Rule, string Parameter)> GetTaskValidationRules(Template template)
+        {
+            var taskRules = new List<(dynamic Rule, string Parameter)>();
+
+            if (template.Tasks.Any())
+            {
+                var tasks = template.Tasks;
+
+                for (int taskIndex = 0; taskIndex <= tasks.Count - 1; taskIndex++)
+                {
+                    taskRules.Add((Rule: IsInvalid(tasks[taskIndex].Name), Parameter: $"Tasks[{taskIndex}].Name"));
+                    taskRules.Add((Rule: IsInvalid(tasks[taskIndex].Actions), Parameter: $"Tasks[{taskIndex}].Actions"));
+                }
+            }
+
+            return taskRules;
         }
 
         private static dynamic IsInvalid(string text) => new
@@ -75,6 +95,12 @@ namespace Standardly.Core.Services.Foundations.Templates
         {
             Condition = tasks.Count == 0,
             Message = "Tasks is required"
+        };
+
+        private static dynamic IsInvalid(List<Models.Foundations.Templates.Tasks.Actions.Action> actions) => new
+        {
+            Condition = actions.Count == 0,
+            Message = "Actions is required"
         };
 
         private void CheckAllTagsHasBeenReplaced(string template, char tagCharacter = '$')
