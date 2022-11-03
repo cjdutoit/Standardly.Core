@@ -216,7 +216,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemIsInvalid(string invalidString)
+        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemIsInvalid(
+            string invalidString)
         {
             // given
             Template someTemplate = new Template()
@@ -268,6 +269,79 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             invalidTemplateException.AddData(
                 key: "Actions[0].Files[0].Target",
+                values: "Text is required");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidTemplateException);
+
+            // when
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
+
+            TemplateValidationException actualException =
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionExecutionsIsInvalid(
+            string invalidString)
+        {
+            // given
+            Template someTemplate = new Template()
+            {
+                Name = GetRandomString(),
+                Description = GetRandomString(),
+                TemplateType = GetRandomString(),
+                ProjectsRequired = GetRandomString()
+            };
+
+            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
+            {
+                Name = GetRandomString(),
+                Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
+                {
+                    new Models.Foundations.Templates.Tasks.Actions.Action()
+                    {
+                        Name = GetRandomString(),
+                        Files = new List<Models.Foundations.Templates.Tasks.Actions.Files.File>()
+                        {
+                            new Models.Foundations.Templates.Tasks.Actions.Files.File()
+                            {
+                                Template = GetRandomString(),
+                                Target = GetRandomString()
+                            },
+                        },
+                        Executions = new List<Execution>()
+                        {
+                            new Execution()
+                            {
+                               Name = invalidString,
+                               Instruction = invalidString,
+                            },
+                        },
+                    }
+                }
+            };
+
+            someTemplate.Tasks.Add(someTask);
+            string someStringTemplate = SerializeTemplate(someTemplate);
+            string inputStringTemplate = someStringTemplate;
+
+            var invalidTemplateException =
+                new InvalidTemplateException();
+
+            invalidTemplateException.AddData(
+                key: "Actions[0].Executions[0].Name",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Actions[0].Executions[0].Instruction",
                 values: "Text is required");
 
             var expectedTemplateValidationException =
