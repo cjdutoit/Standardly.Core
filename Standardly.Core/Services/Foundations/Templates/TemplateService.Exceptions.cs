@@ -46,6 +46,13 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateException);
             }
+            catch (Exception exception)
+            {
+                var failedTemplateServiceException =
+                    new FailedTemplateServiceException(exception.InnerException as Xeption);
+
+                throw CreateAndLogServiceException(failedTemplateServiceException);
+            }
         }
 
         private TemplateValidationException CreateAndLogValidationException(Xeption exception)
