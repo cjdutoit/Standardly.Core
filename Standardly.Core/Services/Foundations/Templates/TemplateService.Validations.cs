@@ -97,7 +97,8 @@ namespace Standardly.Core.Services.Foundations.Templates
                         (Rule: IsInvalid(actions[actionIndex].Executions),
                             Parameter: $"Actions[{actionIndex}].Executions"));
 
-                    actionRules.AddRange(GetFileItemValidationRules(actions[actionIndex], actionIndex));
+                    actionRules.AddRange(GetFileValidationRules(actions[actionIndex], actionIndex));
+                    actionRules.AddRange(GetAppendValidationRules(actions[actionIndex], actionIndex));
                     actionRules.AddRange(GetExecutionValidationRules(actions[actionIndex], actionIndex));
                 }
             }
@@ -105,7 +106,7 @@ namespace Standardly.Core.Services.Foundations.Templates
             return actionRules;
         }
 
-        private List<(dynamic Rule, string Parameter)> GetFileItemValidationRules(
+        private List<(dynamic Rule, string Parameter)> GetFileValidationRules(
             Models.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
         {
             var fileItemRules = new List<(dynamic Rule, string Parameter)>();
@@ -117,16 +118,44 @@ namespace Standardly.Core.Services.Foundations.Templates
                 for (int fileItemIndex = 0; fileItemIndex <= files.Count - 1; fileItemIndex++)
                 {
                     fileItemRules.Add(
-                        (Rule: IsInvalid(files[fileItemIndex].Target),
-                            Parameter: $"Actions[{actionIndex}].Files[{fileItemIndex}].Target"));
-
-                    fileItemRules.Add(
                         (Rule: IsInvalid(files[fileItemIndex].Template),
                             Parameter: $"Actions[{actionIndex}].Files[{fileItemIndex}].Template"));
+
+                    fileItemRules.Add(
+                        (Rule: IsInvalid(files[fileItemIndex].Target),
+                            Parameter: $"Actions[{actionIndex}].Files[{fileItemIndex}].Target"));
                 }
             }
 
             return fileItemRules;
+        }
+
+        private List<(dynamic Rule, string Parameter)> GetAppendValidationRules(
+            Models.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
+        {
+            var appendRules = new List<(dynamic Rule, string Parameter)>();
+
+            if (action.Appends.Any())
+            {
+                var appends = action.Appends;
+
+                for (int fileItemIndex = 0; fileItemIndex <= appends.Count - 1; fileItemIndex++)
+                {
+                    appendRules.Add(
+                        (Rule: IsInvalid(appends[fileItemIndex].Target),
+                            Parameter: $"Actions[{actionIndex}].Appends[{fileItemIndex}].Target"));
+
+                    appendRules.Add(
+                        (Rule: IsInvalid(appends[fileItemIndex].RegexToMatch),
+                            Parameter: $"Actions[{actionIndex}].Appends[{fileItemIndex}].RegexToMatch"));
+
+                    appendRules.Add(
+                        (Rule: IsInvalid(appends[fileItemIndex].ContentToAppend),
+                            Parameter: $"Actions[{actionIndex}].Appends[{fileItemIndex}].ContentToAppend"));
+                }
+            }
+
+            return appendRules;
         }
 
         private List<(dynamic Rule, string Parameter)> GetExecutionValidationRules(
