@@ -216,7 +216,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemIsInvalid(
+        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemsIsInvalidAsync(
             string invalidString)
         {
             // given
@@ -289,7 +289,93 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionExecutionsIsInvalid(
+        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionAppendItemsIsInvalidAsync(
+            string invalidString)
+        {
+            // given
+            Template someTemplate = new Template()
+            {
+                Name = GetRandomString(),
+                Description = GetRandomString(),
+                TemplateType = GetRandomString(),
+                ProjectsRequired = GetRandomString()
+            };
+
+            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
+            {
+                Name = GetRandomString(),
+                Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
+                {
+                    new Models.Foundations.Templates.Tasks.Actions.Action()
+                    {
+                        Name = GetRandomString(),
+                        Files = new List<Models.Foundations.Templates.Tasks.Actions.Files.File>()
+                        {
+                            new Models.Foundations.Templates.Tasks.Actions.Files.File()
+                            {
+                                Template = GetRandomString(),
+                                Target = GetRandomString()
+                            },
+                        },
+                        Appends = new List<Models.Foundations.Templates.Tasks.Actions.Files.Append>()
+                        {
+                            new Models.Foundations.Templates.Tasks.Actions.Files.Append()
+                            {
+                                Target = invalidString,
+                                RegexToMatch = invalidString,
+                                ContentToAppend = invalidString
+                            }
+                        },
+                        Executions = new List<Execution>()
+                        {
+                            new Execution()
+                            {
+                               Name = GetRandomString(),
+                               Instruction = GetRandomString(),
+                            },
+                        },
+                    }
+                }
+            };
+
+            someTemplate.Tasks.Add(someTask);
+            string someStringTemplate = SerializeTemplate(someTemplate);
+            string inputStringTemplate = someStringTemplate;
+
+            var invalidTemplateException =
+                new InvalidTemplateException();
+
+            invalidTemplateException.AddData(
+                key: "Actions[0].Appends[0].Target",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Actions[0].Appends[0].RegexToMatch",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Actions[0].Appends[0].ContentToAppend",
+                values: "Text is required");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidTemplateException);
+
+            // when
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
+
+            TemplateValidationException actualException =
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionExecutionsIsInvalidAsync(
             string invalidString)
         {
             // given

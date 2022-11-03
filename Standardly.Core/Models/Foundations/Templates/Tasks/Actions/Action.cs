@@ -15,6 +15,7 @@ namespace Standardly.Core.Models.Foundations.Templates.Tasks.Actions
         public string Name { get; set; }
         public string ExecutionFolder { get; set; }
         public List<File> Files { get; set; } = new List<File>();
+        public List<Append> Appends { get; set; } = new List<Append>();
         public List<Execution> Executions { get; set; } = new List<Execution>();
     }
 }
