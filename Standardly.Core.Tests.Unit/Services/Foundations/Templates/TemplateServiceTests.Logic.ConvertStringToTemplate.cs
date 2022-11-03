@@ -24,7 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string inputString = randomString;
 
             // when
-            var actualTemplate = await this.templateService.ConvertStringToTemplate(inputString);
+            var actualTemplate = await this.templateService.ConvertStringToTemplateAsync(inputString);
 
             // then
             actualTemplate.Should().BeEquivalentTo(expectedTemplate);

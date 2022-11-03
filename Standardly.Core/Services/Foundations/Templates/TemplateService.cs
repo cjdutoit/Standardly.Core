@@ -25,7 +25,7 @@ namespace Standardly.Core.Services.Foundations.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> TransformString(
+        public ValueTask<string> TransformStringAsync(
             string content,
             Dictionary<string, string> replacementDictionary) =>
                 TryCatchAsync(async () =>
@@ -45,7 +45,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                     return await Task.FromResult(template);
                 });
 
-        public ValueTask ValidateTransformation(string content, char tagCharacter) =>
+        public ValueTask ValidateTransformationAsync(string content, char tagCharacter) =>
             TryCatchAsync(async () =>
             {
                 ValidateTransformationArguments(content, tagCharacter);
@@ -53,7 +53,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                 await Task.Run(() => CheckAllTagsHasBeenReplaced(content, tagCharacter));
             });
 
-        public async ValueTask<Template> ConvertStringToTemplate(string content)
+        public async ValueTask<Template> ConvertStringToTemplateAsync(string content)
         {
             Template template = JsonConvert.DeserializeObject<Template>(content);
             template.RawTemplate = content;

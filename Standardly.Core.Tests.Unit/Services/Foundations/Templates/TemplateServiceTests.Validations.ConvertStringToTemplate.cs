@@ -1,0 +1,49 @@
+﻿// ---------------------------------------------------------------
+// Copyright (c) Christo du Toit. All rights reserved.
+// Licensed under the MIT License.
+// See License.txt in the project root for license information.
+// ---------------------------------------------------------------
+
+using System.Threading.Tasks;
+using FluentAssertions;
+using Standardly.Core.Models.Foundations.Files.Exceptions;
+using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.Exceptions;
+using Xunit;
+
+namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
+{
+    public partial class TemplateServiceTests
+    {
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfContentIsNullOrEmpty(
+            string invalidString)
+        {
+            // given
+            string content = invalidString;
+
+            var invalidArgumentTemplateException =
+                            new InvalidArgumentTemplateException();
+
+            invalidArgumentTemplateException.AddData(
+                key: "content",
+                values: "Text is required");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidArgumentTemplateException);
+
+            // when
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(content);
+
+            var actualException =
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+        }
+    }
+}

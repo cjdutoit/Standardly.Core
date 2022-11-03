@@ -24,7 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             var actualTemplate = await this.templateService
-                .TransformString(inputStringTemplate, inputReplacementDictionary);
+                .TransformStringAsync(inputStringTemplate, inputReplacementDictionary);
 
             // then
             foreach (KeyValuePair<string, string> item in inputReplacementDictionary)
