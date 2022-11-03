@@ -32,6 +32,11 @@ namespace Standardly.Core.Services.Foundations.Templates
                 (Rule: IsInvalid(tagCharacter), Parameter: nameof(tagCharacter)));
         }
 
+        private static void ValidateConvertStringToTemplateArguments(string content)
+        {
+            Validate((Rule: IsInvalid(content), Parameter: nameof(content)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

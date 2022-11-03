@@ -53,12 +53,15 @@ namespace Standardly.Core.Services.Foundations.Templates
                 await Task.Run(() => CheckAllTagsHasBeenReplaced(content, tagCharacter));
             });
 
-        public async ValueTask<Template> ConvertStringToTemplateAsync(string content)
-        {
-            Template template = JsonConvert.DeserializeObject<Template>(content);
-            template.RawTemplate = content;
+        public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateConvertStringToTemplateArguments(content);
 
-            return await Task.FromResult(template);
-        }
+                Template template = JsonConvert.DeserializeObject<Template>(content);
+                template.RawTemplate = content;
+
+                return await Task.FromResult(template);
+            });
     }
 }
