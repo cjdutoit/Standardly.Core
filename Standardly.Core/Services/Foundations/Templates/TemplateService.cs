@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Templates;
@@ -52,7 +53,12 @@ namespace Standardly.Core.Services.Foundations.Templates
                 await Task.Run(() => CheckAllTagsHasBeenReplaced(content, tagCharacter));
             });
 
-        public ValueTask<Template> ConvertStringToTemplate(string content) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<Template> ConvertStringToTemplate(string content)
+        {
+            Template template = JsonConvert.DeserializeObject<Template>(content);
+            template.RawTemplate = content;
+
+            return await Task.FromResult(template);
+        }
     }
 }
