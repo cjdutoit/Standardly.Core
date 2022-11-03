@@ -263,11 +263,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new InvalidTemplateException();
 
             invalidTemplateException.AddData(
-                key: "Actions[0].FileItems[0].Template",
+                key: "Actions[0].Files[0].Template",
                 values: "Text is required");
 
             invalidTemplateException.AddData(
-                key: "Actions[0].FileItems[0].Target",
+                key: "Actions[0].Files[0].Target",
                 values: "Text is required");
 
             var expectedTemplateValidationException =

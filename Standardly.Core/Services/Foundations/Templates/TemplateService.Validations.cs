@@ -96,10 +96,36 @@ namespace Standardly.Core.Services.Foundations.Templates
                     actionRules.Add(
                         (Rule: IsInvalid(actions[actionIndex].Executions),
                             Parameter: $"Actions[{actionIndex}].Executions"));
+
+                    actionRules.AddRange(GetFileItemValidationRules(actions[actionIndex], actionIndex));
                 }
             }
 
             return actionRules;
+        }
+
+        private List<(dynamic Rule, string Parameter)> GetFileItemValidationRules(
+            Models.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
+        {
+            var fileItemRules = new List<(dynamic Rule, string Parameter)>();
+
+            if (action.Files.Any())
+            {
+                var files = action.Files;
+
+                for (int fileItemIndex = 0; fileItemIndex <= files.Count - 1; fileItemIndex++)
+                {
+                    fileItemRules.Add(
+                        (Rule: IsInvalid(files[fileItemIndex].Target),
+                            Parameter: $"Actions[{actionIndex}].Files[{fileItemIndex}].Target"));
+
+                    fileItemRules.Add(
+                        (Rule: IsInvalid(files[fileItemIndex].Template),
+                            Parameter: $"Actions[{actionIndex}].Files[{fileItemIndex}].Template"));
+                }
+            }
+
+            return fileItemRules;
         }
 
         private static dynamic IsInvalid(string text) => new
