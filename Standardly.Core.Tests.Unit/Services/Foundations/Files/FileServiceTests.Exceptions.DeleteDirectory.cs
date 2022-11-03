@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectory(somePath, recursive))
+                broker.DeleteDirectoryAsync(somePath, recursive))
                     .Throws(dependencyValidationException);
 
             // when
@@ -46,7 +46,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectory(somePath, recursive),
+                broker.DeleteDirectoryAsync(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -79,7 +79,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectory(somePath, recursive))
+                broker.DeleteDirectoryAsync(somePath, recursive))
                     .Throws(dependencyException);
 
             // when
@@ -93,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectory(somePath, recursive),
+                broker.DeleteDirectoryAsync(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -126,7 +126,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectory(somePath, recursive))
+                broker.DeleteDirectoryAsync(somePath, recursive))
                     .Throws(dependencyException);
 
             // when
@@ -140,7 +140,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectory(somePath, recursive),
+                broker.DeleteDirectoryAsync(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -167,7 +167,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectory(somePath, recursive))
+                broker.DeleteDirectoryAsync(somePath, recursive))
                     .Throws(serviceException);
 
             // when
@@ -181,7 +181,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectory(somePath, recursive),
+                broker.DeleteDirectoryAsync(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

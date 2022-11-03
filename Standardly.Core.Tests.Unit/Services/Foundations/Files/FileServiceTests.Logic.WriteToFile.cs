@@ -26,7 +26,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             // then
             this.fileBrokerMock.Verify(broker =>
-                broker.WriteToFile(inputFilePath, inputContent),
+                broker.WriteToFileAsync(inputFilePath, inputContent),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

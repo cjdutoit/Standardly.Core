@@ -49,7 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CreateDirectory(invalidPath),
+                broker.CreateDirectoryAsync(invalidPath),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

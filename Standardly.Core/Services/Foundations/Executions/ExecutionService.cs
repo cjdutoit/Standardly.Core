@@ -28,7 +28,7 @@ namespace Standardly.Core.Services.Foundations.Executions
             {
                 ValidateRunArguments(executions, executionFolder);
 
-                return await new ValueTask<string>(this.executionBroker.Run(executions, executionFolder));
+                return await this.executionBroker.RunAsync(executions, executionFolder);
             });
     }
 }

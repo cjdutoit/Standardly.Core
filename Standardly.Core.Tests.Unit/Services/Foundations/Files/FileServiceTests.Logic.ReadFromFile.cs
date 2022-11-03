@@ -23,8 +23,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             string expectedResult = outputResult;
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFile(inputFilePath))
-                    .Returns(outputResult);
+                broker.ReadFileAsync(inputFilePath))
+                    .ReturnsAsync(outputResult);
 
             // when
             string actualResult = await this.fileService.ReadFromFileAsync(inputFilePath);
@@ -33,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualResult.Should().Be(expectedResult);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(inputFilePath),
+                broker.ReadFileAsync(inputFilePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

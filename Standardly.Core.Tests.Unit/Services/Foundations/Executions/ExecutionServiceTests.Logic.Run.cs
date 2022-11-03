@@ -27,8 +27,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             string expectedResult = randomOutput;
 
             this.executionBrokerMock.Setup(broker =>
-                broker.Run(inputExecutions, inputFilePath))
-                    .Returns(randomOutput);
+                broker.RunAsync(inputExecutions, inputFilePath))
+                    .ReturnsAsync(randomOutput);
 
             // when
             string actualResult = await this.executionService.RunAsync(inputExecutions, inputFilePath);
@@ -37,7 +37,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.Run(inputExecutions, inputFilePath),
+                broker.RunAsync(inputExecutions, inputFilePath),
                     Times.Once);
 
             this.executionBrokerMock.VerifyNoOtherCalls();

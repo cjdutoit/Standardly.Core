@@ -23,12 +23,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             string randomSearchPattern = GetRandomString();
             string inputSearchPattern = randomSearchPattern;
             List<string> randomResult = GetRandomStringList();
-            string[] outputResult = randomResult.ToArray();
+            List<string> outputResult = randomResult;
             List<string> expectedResult = randomResult;
 
             this.fileBrokerMock.Setup(broker =>
-                broker.GetListOfFiles(inputFilePath, inputSearchPattern))
-                    .Returns(outputResult);
+                broker.GetListOfFilesAsync(inputFilePath, inputSearchPattern))
+                    .ReturnsAsync(outputResult);
 
             // when
             List<string> actualResult =
@@ -38,7 +38,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(inputFilePath, inputSearchPattern),
+                broker.GetListOfFilesAsync(inputFilePath, inputSearchPattern),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
