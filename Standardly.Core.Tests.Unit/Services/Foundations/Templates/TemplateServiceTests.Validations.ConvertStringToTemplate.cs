@@ -45,5 +45,60 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfTemplateIsInvalid(string invalidString)
+        {
+            // given
+            Template someTemplate = new Template()
+            {
+                Name = invalidString,
+                Description = invalidString,
+                TemplateType = invalidString,
+                ProjectsRequired = invalidString,
+            };
+
+            string someStringTemplate = SerializeTemplate(someTemplate);
+            string inputStringTemplate = someStringTemplate;
+
+            var invalidTemplateException =
+                new InvalidTemplateException();
+
+            invalidTemplateException.AddData(
+                key: "Template Name",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Template Description",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Template Type",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Template Projects Required",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Template Tasks",
+                values: "Tasks is required");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidTemplateException);
+
+            // when
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
+
+            var actualException =
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+        }
     }
 }
