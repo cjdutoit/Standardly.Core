@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
@@ -66,11 +67,39 @@ namespace Standardly.Core.Services.Foundations.Templates
                 for (int taskIndex = 0; taskIndex <= tasks.Count - 1; taskIndex++)
                 {
                     taskRules.Add((Rule: IsInvalid(tasks[taskIndex].Name), Parameter: $"Tasks[{taskIndex}].Name"));
-                    taskRules.Add((Rule: IsInvalid(tasks[taskIndex].Actions), Parameter: $"Tasks[{taskIndex}].Actions"));
+
+                    taskRules.Add(
+                        (Rule: IsInvalid(tasks[taskIndex].Actions), Parameter: $"Tasks[{taskIndex}].Actions"));
+
+                    taskRules.AddRange(GetActionValidationRules(tasks[taskIndex]));
                 }
             }
 
             return taskRules;
+        }
+
+        private List<(dynamic Rule, string Parameter)> GetActionValidationRules(
+            Models.Foundations.Templates.Tasks.Task task)
+        {
+            var actionRules = new List<(dynamic Rule, string Parameter)>();
+
+            if (task.Actions.Any())
+            {
+                var actions = task.Actions;
+
+                for (int actionIndex = 0; actionIndex <= actions.Count - 1; actionIndex++)
+                {
+                    actionRules.Add(
+                        (Rule: IsInvalid(actions[actionIndex].Name),
+                                Parameter: $"Actions[{actionIndex}].Name"));
+
+                    actionRules.Add(
+                        (Rule: IsInvalid(actions[actionIndex].Executions),
+                            Parameter: $"Actions[{actionIndex}].Executions"));
+                }
+            }
+
+            return actionRules;
         }
 
         private static dynamic IsInvalid(string text) => new
@@ -101,6 +130,12 @@ namespace Standardly.Core.Services.Foundations.Templates
         {
             Condition = actions.Count == 0,
             Message = "Actions is required"
+        };
+
+        private static dynamic IsInvalid(List<Execution> executions) => new
+        {
+            Condition = executions.Count == 0,
+            Message = "Executions is required"
         };
 
         private void CheckAllTagsHasBeenReplaced(string template, char tagCharacter = '$')
