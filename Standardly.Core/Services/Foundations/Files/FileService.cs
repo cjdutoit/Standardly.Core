@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
@@ -31,14 +30,14 @@ namespace Standardly.Core.Services.Foundations.Files
             {
                 ValidateCheckIfFileExistsArguments(path);
 
-                return await new ValueTask<bool>(this.fileBroker.CheckIfFileExists(path));
+                return await this.fileBroker.CheckIfFileExistsAsync(path);
             });
 
         public ValueTask WriteToFileAsync(string path, string content) =>
             TryCatchAsync(async () =>
             {
                 ValidateWriteToFileArguments(path, content);
-                await Task.Run(() => this.fileBroker.WriteToFile(path, content));
+                await this.fileBroker.WriteToFileAsync(path, content);
             });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
@@ -46,14 +45,14 @@ namespace Standardly.Core.Services.Foundations.Files
              {
                  ValidateReadFromFileArguments(path);
 
-                 return await new ValueTask<string>(this.fileBroker.ReadFile(path));
+                 return await this.fileBroker.ReadFileAsync(path);
              });
 
         public ValueTask DeleteFileAsync(string path) =>
             TryCatchAsync(async () =>
             {
                 ValidateDeleteFileArguments(path);
-                await Task.Run(() => this.fileBroker.DeleteFile(path));
+                await this.fileBroker.DeleteFileAsync(path);
             });
 
         public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
@@ -61,7 +60,7 @@ namespace Standardly.Core.Services.Foundations.Files
             {
                 ValidateRetrieveListOfFilesArguments(path, searchPattern);
 
-                return await new ValueTask<List<string>>(this.fileBroker.GetListOfFiles(path, searchPattern).ToList());
+                return await this.fileBroker.GetListOfFilesAsync(path, searchPattern);
             });
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
@@ -69,21 +68,21 @@ namespace Standardly.Core.Services.Foundations.Files
             {
                 ValidateCheckIfDirectoryExistsArguments(path);
 
-                return await new ValueTask<bool>(this.fileBroker.CheckIfDirectoryExists(path));
+                return await this.fileBroker.CheckIfDirectoryExistsAsync(path);
             });
 
         public ValueTask CreateDirectoryAsync(string path) =>
             TryCatchAsync(async () =>
             {
                 ValidateCreateDirectoryArguments(path);
-                await Task.Run(() => this.fileBroker.CreateDirectory(path));
+                await this.fileBroker.CreateDirectoryAsync(path);
             });
 
         public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
             TryCatchAsync(async () =>
             {
                 ValidateDeleteDirectoryArguments(path);
-                await Task.Run(() => this.fileBroker.DeleteDirectory(path, recursive));
+                await this.fileBroker.DeleteDirectoryAsync(path, recursive);
             });
     }
 }

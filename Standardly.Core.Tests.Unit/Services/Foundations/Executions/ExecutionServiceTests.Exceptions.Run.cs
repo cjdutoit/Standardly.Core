@@ -33,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionServiceException(failedExecutionServiceException);
 
             this.executionBrokerMock.Setup(broker =>
-                broker.Run(someExecutions, somePath))
+                broker.RunAsync(someExecutions, somePath))
                     .Throws(serviceException);
 
             // when
@@ -46,7 +46,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             actualExecutionServiceException.Should().BeEquivalentTo(expectedExecutionServiceException);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.Run(someExecutions, somePath),
+                broker.RunAsync(someExecutions, somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

@@ -4,17 +4,20 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace Standardly.Core.Brokers.Files
 {
     public interface IFileBroker
     {
-        bool CheckIfFileExists(string path);
-        void WriteToFile(string path, string content);
-        string ReadFile(string path);
-        void DeleteFile(string path);
-        string[] GetListOfFiles(string path, string searchPattern = "*");
-        bool CheckIfDirectoryExists(string path);
-        void CreateDirectory(string path);
-        void DeleteDirectory(string path, bool recursive = false);
+        ValueTask<bool> CheckIfFileExistsAsync(string path);
+        ValueTask WriteToFileAsync(string path, string content);
+        ValueTask<string> ReadFileAsync(string path);
+        ValueTask DeleteFileAsync(string path);
+        ValueTask<List<string>> GetListOfFilesAsync(string path, string searchPattern = "*");
+        ValueTask<bool> CheckIfDirectoryExistsAsync(string path);
+        ValueTask CreateDirectoryAsync(string path);
+        ValueTask DeleteDirectoryAsync(string path, bool recursive = false);
     }
 }

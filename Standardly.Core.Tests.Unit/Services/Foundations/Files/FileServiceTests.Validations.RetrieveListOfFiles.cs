@@ -55,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(invalidPath, invalidSearchPattern),
+                broker.GetListOfFilesAsync(invalidPath, invalidSearchPattern),
                     Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

@@ -50,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectory(invalidPath, recursive),
+                broker.DeleteDirectoryAsync(invalidPath, recursive),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

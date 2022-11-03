@@ -52,7 +52,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                         Times.Once);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.Run(someExecutions, inputExecutionFolder),
+                broker.RunAsync(someExecutions, inputExecutionFolder),
                     Times.Never);
 
             this.executionBrokerMock.VerifyNoOtherCalls();
@@ -92,7 +92,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                         Times.Once);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.Run(inputExecutions, inputExecutionFolder),
+                broker.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Never);
 
             this.executionBrokerMock.VerifyNoOtherCalls();
