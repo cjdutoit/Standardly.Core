@@ -48,6 +48,10 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateException);
             }
+            catch (InvalidTemplateException invalidTemplateException)
+            {
+                throw CreateAndLogValidationException(invalidTemplateException);
+            }
             catch (Exception exception)
             {
                 var failedTemplateServiceException =

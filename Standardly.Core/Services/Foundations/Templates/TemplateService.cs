@@ -58,8 +58,11 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 ValidateConvertStringToTemplateArguments(content);
 
-                Template template = JsonConvert.DeserializeObject<Template>(content);
+                Template template =
+                    JsonConvert.DeserializeObject<Template>(content);
+
                 template.RawTemplate = content;
+                ValidateTemplate(template);
 
                 return await Task.FromResult(template);
             });

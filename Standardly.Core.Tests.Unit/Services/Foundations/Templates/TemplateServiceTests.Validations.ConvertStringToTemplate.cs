@@ -50,7 +50,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfTemplateIsInvalid(string invalidString)
+        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfTemplateIsInvalid(
+            string invalidString)
         {
             // given
             Template someTemplate = new Template()

@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
+using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
+using Xeptions;
 
 namespace Standardly.Core.Services.Foundations.Templates
 {
@@ -18,7 +20,7 @@ namespace Standardly.Core.Services.Foundations.Templates
             string content,
             Dictionary<string, string> replacementDictionary)
         {
-            Validate(
+            Validate<InvalidArgumentTemplateException>(
                 (Rule: IsInvalid(content), Parameter: nameof(content)),
                 (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
         }
@@ -27,14 +29,28 @@ namespace Standardly.Core.Services.Foundations.Templates
             string content,
             char tagCharacter)
         {
-            Validate(
+            Validate<InvalidArgumentTemplateException>(
                 (Rule: IsInvalid(content), Parameter: nameof(content)),
                 (Rule: IsInvalid(tagCharacter), Parameter: nameof(tagCharacter)));
         }
 
         private static void ValidateConvertStringToTemplateArguments(string content)
         {
-            Validate((Rule: IsInvalid(content), Parameter: nameof(content)));
+            Validate<InvalidArgumentTemplateException>((Rule: IsInvalid(content), Parameter: nameof(content)));
+        }
+
+        private void ValidateTemplate(Template template)
+        {
+            var templateRules = new List<(dynamic Rule, string Parameter)>()
+            {
+                (Rule: IsInvalid(template.Name), Parameter: "Template Name"),
+                (Rule: IsInvalid(template.Description), Parameter: "Template Description"),
+                (Rule: IsInvalid(template.TemplateType), Parameter: "Template Type"),
+                (Rule: IsInvalid(template.ProjectsRequired), Parameter: "Template Projects Required"),
+                (Rule: IsInvalid(template.Tasks), Parameter: "Template Tasks")
+            };
+
+            Validate<InvalidTemplateException>(templateRules.ToArray());
         }
 
         private static dynamic IsInvalid(string text) => new
@@ -53,6 +69,12 @@ namespace Standardly.Core.Services.Foundations.Templates
         {
             Condition = dictionary == null,
             Message = "Dictionary is required"
+        };
+
+        private static dynamic IsInvalid(List<Models.Foundations.Templates.Tasks.Task> tasks) => new
+        {
+            Condition = tasks.Count == 0,
+            Message = "Tasks is required"
         };
 
         private void CheckAllTagsHasBeenReplaced(string template, char tagCharacter = '$')
@@ -83,22 +105,22 @@ namespace Standardly.Core.Services.Foundations.Templates
         }
 
 
-        private static void Validate(params (dynamic Rule, string Parameter)[] validations)
+        private static void Validate<T>(params (dynamic Rule, string Parameter)[] validations)
+            where T : Xeption
         {
-            var invalidArgumentTemplateException =
-                new InvalidArgumentTemplateException();
+            var invalidException = (Xeption)Activator.CreateInstance(typeof(T));
 
             foreach ((dynamic rule, string parameter) in validations)
             {
                 if (rule.Condition)
                 {
-                    invalidArgumentTemplateException.UpsertDataList(
+                    invalidException.UpsertDataList(
                         key: parameter,
                         value: rule.Message);
                 }
             }
 
-            invalidArgumentTemplateException.ThrowIfContainsErrors();
+            invalidException.ThrowIfContainsErrors();
         }
     }
 }
