@@ -34,6 +34,14 @@ namespace Standardly.Core.Services.Processings.Templates
             {
                 throw CreateAndLogDependencyValidationException(templateDependencyValidationException);
             }
+            catch (TemplateDependencyException templateDependencyException)
+            {
+                throw CreateAndLogDependencyException(templateDependencyException);
+            }
+            catch (TemplateServiceException templateServiceException)
+            {
+                throw CreateAndLogDependencyException(templateServiceException);
+            }
         }
 
         private TemplateProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -55,6 +63,17 @@ namespace Standardly.Core.Services.Processings.Templates
             this.loggingBroker.LogError(templateProcessingDependencyValidationException);
 
             return templateProcessingDependencyValidationException;
+        }
+
+        private TemplateProcessingDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var templateProcessingDependencyException =
+                new TemplateProcessingDependencyException(
+                    exception.InnerException as Xeption);
+
+            this.loggingBroker.LogError(templateProcessingDependencyException);
+
+            return templateProcessingDependencyException;
         }
     }
 }
