@@ -95,5 +95,40 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
+        {
+            // given
+            var serviceException = new Exception();
+
+            var failedTemplateOrchestrationServiceException =
+                new FailedTemplateOrchestrationServiceException(serviceException);
+
+            var expectedTemplateOrchestrationServiceException =
+                new TemplateOrchestrationServiceException(failedTemplateOrchestrationServiceException);
+
+            this.fileProcessingServiceMock.Setup(broker =>
+                broker.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
+                    .Throws(serviceException);
+
+            // when
+            ValueTask<List<Template>> findAllTemplatesTask =
+                this.templateOrchestrationService.FindAllTemplatesAsync();
+
+            TemplateOrchestrationServiceException actualException =
+                await Assert.ThrowsAsync<TemplateOrchestrationServiceException>(findAllTemplatesTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationServiceException);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
