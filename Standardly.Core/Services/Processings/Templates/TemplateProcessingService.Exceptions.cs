@@ -6,6 +6,7 @@
 
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xeptions;
 
@@ -25,6 +26,14 @@ namespace Standardly.Core.Services.Processings.Templates
             {
                 throw CreateAndLogValidationException(invalidContentTemplateProcessingException);
             }
+            catch (TemplateValidationException templateValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateValidationException);
+            }
+            catch (TemplateDependencyValidationException templateDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateDependencyValidationException);
+            }
         }
 
         private TemplateProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -35,6 +44,17 @@ namespace Standardly.Core.Services.Processings.Templates
             this.loggingBroker.LogError(templateProcessingValidationException);
 
             return templateProcessingValidationException;
+        }
+
+        private TemplateProcessingDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var templateProcessingDependencyValidationException =
+                new TemplateProcessingDependencyValidationException(
+                    exception.InnerException as Xeption);
+
+            this.loggingBroker.LogError(templateProcessingDependencyValidationException);
+
+            return templateProcessingDependencyValidationException;
         }
     }
 }
