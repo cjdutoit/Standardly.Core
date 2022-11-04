@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -39,6 +40,13 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 throw CreateAndLogDependencyException(fileServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedTemplateOrchestrationServiceException =
+                    new FailedTemplateOrchestrationServiceException(exception.InnerException as Xeption);
+
+                throw CreateAndLogServiceException(failedTemplateOrchestrationServiceException);
+            }
         }
 
         private TemplateOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(
@@ -56,6 +64,13 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                 new TemplateOrchestrationDependencyException(exception.InnerException as Xeption);
 
             throw templateOrchestrationDependencyException;
+        }
+
+        private TemplateOrchestrationServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var templateOrchestrationServiceException = new TemplateOrchestrationServiceException(exception);
+
+            return templateOrchestrationServiceException;
         }
     }
 }

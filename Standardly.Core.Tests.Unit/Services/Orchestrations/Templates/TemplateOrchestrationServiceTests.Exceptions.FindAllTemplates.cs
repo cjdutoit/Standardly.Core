@@ -61,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
         [Theory]
         [MemberData(nameof(FindAllTemplateOrchestrationDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogItAsync(
             Exception dependencyException)
         {
             // given
@@ -97,7 +97,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccursAsync()
         {
             // given
             var serviceException = new Exception();
