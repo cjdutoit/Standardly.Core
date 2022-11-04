@@ -52,6 +52,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 templateConfig: templateConfigMock.Object);
         }
 
+        private static List<string> CreateListOfStrings()
+        {
+            List<string> list = new List<string>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                list.Add(GetRandomString(1));
+            }
+
+            return list;
+        }
+
         public static TheoryData FindAllTemplateOrchestrationTemplatesDependencyValidationExceptions()
         {
             string exceptionMessage = GetRandomString();
