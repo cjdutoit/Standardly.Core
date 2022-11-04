@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
@@ -37,7 +38,28 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             TemplateFolder = this.templateConfig.TemplateFolder;
         }
 
-        public ValueTask<List<Template>> FindAllTemplatesAsync() =>
-            throw new System.NotImplementedException();
+        public async ValueTask<List<Template>> FindAllTemplatesAsync()
+        {
+            List<Template> templates = new List<Template>();
+
+            var fileList = await this.fileProcessingService
+                .RetrieveListOfFilesAsync(this.TemplateFolder, templateDefinitionFile);
+
+            foreach (string file in fileList)
+            {
+                try
+                {
+                    string rawTemplate = await this.fileProcessingService.ReadFromFileAsync(file);
+                    Template template = await this.templateProcessingService.ConvertStringToTemplateAsync(rawTemplate);
+                    templates.Add(template);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            return templates;
+        }
+
     }
 }
