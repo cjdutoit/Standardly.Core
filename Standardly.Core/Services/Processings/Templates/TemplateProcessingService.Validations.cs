@@ -5,6 +5,8 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 
 namespace Standardly.Core.Services.Processings.Templates
@@ -16,10 +18,39 @@ namespace Standardly.Core.Services.Processings.Templates
             Validate((Rule: IsInvalid(content), Parameter: nameof(content)));
         }
 
+        private static void ValidateTransformTemplate(
+            Template template,
+            Dictionary<string, string> replacementDictionary,
+            char tagCharacter)
+        {
+            Validate(
+                (Rule: IsInvalid(template), Parameter: nameof(template)),
+                (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)),
+                (Rule: IsInvalid(tagCharacter), Parameter: nameof(tagCharacter)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is required"
+        };
+
+        private static dynamic IsInvalid(Template template) => new
+        {
+            Condition = template == null,
+            Message = "Template is required"
+        };
+
+        private static dynamic IsInvalid(Dictionary<string, string> replacementDictionary) => new
+        {
+            Condition = replacementDictionary == null,
+            Message = "Dictionary values is required"
+        };
+
+        private static dynamic IsInvalid(char tagCharacter) => new
+        {
+            Condition = String.IsNullOrWhiteSpace(tagCharacter.ToString().Replace("\0", "")),
+            Message = "Character is required"
         };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)

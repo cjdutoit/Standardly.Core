@@ -33,21 +33,24 @@ namespace Standardly.Core.Services.Processings.Templates
                 return await this.templateService.ConvertStringToTemplateAsync(content);
             });
 
-        public async ValueTask<Template> TransformTemplateAsync(
+        public ValueTask<Template> TransformTemplateAsync(
             Template template,
             Dictionary<string, string> replacementDictionary,
-            char tagCharacter)
-        {
-            var transformedStringTemplate = await this.templateService
-                .TransformStringAsync(template.RawTemplate, replacementDictionary);
+            char tagCharacter) =>
+                TryCatchAsync(async () =>
+                {
+                    ValidateTransformTemplate(template, replacementDictionary, tagCharacter);
 
-            await this.templateService
-                .ValidateTransformationAsync(transformedStringTemplate, tagCharacter);
+                    var transformedStringTemplate = await this.templateService
+                        .TransformStringAsync(template.RawTemplate, replacementDictionary);
 
-            var transformedTemplate = await this.templateService
-                .ConvertStringToTemplateAsync(transformedStringTemplate);
+                    await this.templateService
+                        .ValidateTransformationAsync(transformedStringTemplate, tagCharacter);
 
-            return transformedTemplate;
-        }
+                    var transformedTemplate = await this.templateService
+                        .ConvertStringToTemplateAsync(transformedStringTemplate);
+
+                    return transformedTemplate;
+                });
     }
 }

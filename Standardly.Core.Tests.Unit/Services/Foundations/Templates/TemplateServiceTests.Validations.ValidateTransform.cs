@@ -54,8 +54,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData(' ')]
+        [MemberData(nameof(InvalidCharacters))]
         public async Task ShouldThrowValidationExceptionOnValidateTransformIfCharArgumentsInvalid(char invalidCharacter)
         {
             // given

@@ -19,6 +19,7 @@ using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
 using Standardly.Core.Services.Foundations.Templates;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 {
@@ -39,6 +40,15 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
+
+        public static TheoryData InvalidCharacters()
+        {
+            return new TheoryData<char>()
+            {
+                new char(),
+                ' ',
+            };
+        }
 
         private static string CreateStringTemplate(Dictionary<string, string> dictionary)
         {

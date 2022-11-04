@@ -42,6 +42,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
+        public static TheoryData InvalidCharacters()
+        {
+            return new TheoryData<char>()
+            {
+                new char(),
+                ' ',
+            };
+        }
+
         public static TheoryData DependencyValidationExceptions()
         {
             string randomMessage = GetRandomString();
