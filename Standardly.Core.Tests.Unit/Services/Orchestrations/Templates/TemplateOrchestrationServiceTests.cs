@@ -64,6 +64,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             };
         }
 
+        public static TheoryData FindAllTemplateOrchestrationDependencyExceptions()
+        {
+            string exceptionMessage = GetRandomString();
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Exception>()
+            {
+                new FileDependencyException(innerException),
+                new FileServiceException(innerException),
+            };
+        }
+
         private static List<Append> CreateAppends(int numberOfFileItems)
         {
             var appends = new List<Append>();

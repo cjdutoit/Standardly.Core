@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateOrchestrations.Exceptions;
+using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Xeptions;
 using Xunit;
 
@@ -49,6 +49,43 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             // then
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
+
+            this.fileProcessingServiceMock.Verify(broker =>
+                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(FindAllTemplateOrchestrationDependencyExceptions))]
+        public void ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
+            Exception dependencyException)
+        {
+            // given
+            string somePath = GetRandomString();
+            string someContent = GetRandomString();
+            string templatefolder = this.templateConfigMock.Object.TemplateFolder;
+            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFile;
+
+            var expectedTemplateOrchestrationDependencyException =
+                new TemplateOrchestrationDependencyException(dependencyException.InnerException as Xeption);
+
+            this.fileProcessingServiceMock.Setup(broker =>
+                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile))
+                    .Throws(dependencyException);
+
+            // when
+            Action findAllTemplatesAction = () =>
+                this.templateOrchestrationService.FindAllTemplatesAsync();
+
+            TemplateOrchestrationDependencyException actualException =
+                Assert.Throws<TemplateOrchestrationDependencyException>(findAllTemplatesAction);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(broker =>
                 broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),

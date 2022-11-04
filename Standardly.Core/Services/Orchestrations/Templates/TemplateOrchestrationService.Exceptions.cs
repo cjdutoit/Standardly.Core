@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateOrchestrations.Exceptions;
+using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.Templates
