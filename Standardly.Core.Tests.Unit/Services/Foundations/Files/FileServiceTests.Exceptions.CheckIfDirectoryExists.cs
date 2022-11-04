@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.CheckIfDirectoryExistsAsync(somePath))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
@@ -78,7 +78,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.CheckIfDirectoryExistsAsync(somePath))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
@@ -124,7 +124,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.CheckIfDirectoryExistsAsync(somePath))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
@@ -164,7 +164,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.CheckIfDirectoryExistsAsync(somePath))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =

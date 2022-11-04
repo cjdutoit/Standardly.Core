@@ -31,7 +31,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.WriteToFileAsync(inputPath, inputContent))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask writeToFileTask =
@@ -70,7 +70,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.WriteToFileAsync(inputPath, inputContent))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask writeToFileTask =
@@ -112,7 +112,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.WriteToFileAsync(inputPath, inputContent))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask writeToFileTask =

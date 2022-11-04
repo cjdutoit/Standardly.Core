@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<List<string>> runTask =
@@ -71,7 +71,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<List<string>> runTask =
@@ -113,7 +113,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<List<string>> runTask =
