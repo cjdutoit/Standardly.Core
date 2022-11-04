@@ -55,6 +55,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             };
         }
 
+        public static TheoryData DependencyExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new TemplateDependencyException(innerException),
+                new TemplateServiceException(innerException)
+            };
+        }
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 

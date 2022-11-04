@@ -53,5 +53,43 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyOnConvertStringTemplateIfDependencyErrorOccursAndLogItAsync(
+            Xeption dependencyException)
+        {
+            // given
+            string randomString = GetRandomString();
+            string inputContent = randomString;
+
+            var expectedTemplateProcessingDependencyException =
+                new TemplateProcessingDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.templateServiceMock.Setup(service =>
+                service.ConvertStringToTemplateAsync(inputContent))
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
+
+            // then
+            TemplateProcessingDependencyException actualException =
+                await Assert.ThrowsAsync<TemplateProcessingDependencyException>(convertStringToTemplateTask.AsTask);
+
+            this.templateServiceMock.Verify(service =>
+                service.ConvertStringToTemplateAsync(inputContent),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTemplateProcessingDependencyException))),
+                        Times.Once);
+
+            this.templateServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
