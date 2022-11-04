@@ -11,6 +11,7 @@ using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
+using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
@@ -177,7 +178,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     new Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = invalidString,
-                        Files = new List<Models.Foundations.Templates.Tasks.Actions.Files.File>(),
+                        Files = new List<File>(),
                         Executions = new List<Execution>(),
                     }
                 }
@@ -228,15 +229,16 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
-            {
-                Name = GetRandomString(),
-                Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
+            Models.Foundations.Templates.Tasks.Task someTask =
+                new Models.Foundations.Templates.Tasks.Task()
+                {
+                    Name = GetRandomString(),
+                    Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
                     new Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
-                        Files = new List<Models.Foundations.Templates.Tasks.Actions.Files.File>()
+                        Files = new List<File>()
                         {
                             new Models.Foundations.Templates.Tasks.Actions.Files.File()
                             {
@@ -254,7 +256,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                         },
                     }
                 }
-            };
+                };
 
             someTemplate.Tasks.Add(someTask);
             string someStringTemplate = SerializeTemplate(someTemplate);
@@ -309,7 +311,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     new Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
-                        Files = new List<Models.Foundations.Templates.Tasks.Actions.Files.File>()
+                        Files = new List<File>()
                         {
                             new Models.Foundations.Templates.Tasks.Actions.Files.File()
                             {
@@ -317,9 +319,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                                 Target = GetRandomString()
                             },
                         },
-                        Appends = new List<Models.Foundations.Templates.Tasks.Actions.Files.Append>()
+                        Appends = new List<Models.Foundations.Templates.Tasks.Actions.Appends.Append>()
                         {
-                            new Models.Foundations.Templates.Tasks.Actions.Files.Append()
+                            new Models.Foundations.Templates.Tasks.Actions.Appends.Append()
                             {
                                 Target = invalidString,
                                 RegexToMatch = invalidString,
@@ -395,7 +397,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     new Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
-                        Files = new List<Models.Foundations.Templates.Tasks.Actions.Files.File>()
+                        Files = new List<File>()
                         {
                             new Models.Foundations.Templates.Tasks.Actions.Files.File()
                             {

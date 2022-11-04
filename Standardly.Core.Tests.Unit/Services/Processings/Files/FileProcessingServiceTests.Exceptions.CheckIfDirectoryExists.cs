@@ -30,7 +30,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<bool> checkIfDirectoryExistsTask =
@@ -68,7 +68,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<bool> checkIfDirectoryExistsTask =
@@ -109,7 +109,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<bool> checkIfDirectoryExistsTask =

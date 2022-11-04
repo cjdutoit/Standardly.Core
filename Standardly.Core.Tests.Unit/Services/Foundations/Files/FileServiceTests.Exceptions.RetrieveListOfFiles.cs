@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.GetListOfFilesAsync(somePath, someSearchPattern))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<List<string>> retrieveListOfFilesTask =
@@ -81,7 +81,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.GetListOfFilesAsync(somePath, someSearchPattern))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<List<string>> retrieveListOfFilesTask =
@@ -128,7 +128,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.GetListOfFilesAsync(somePath, someSearchPattern))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<List<string>> retrieveListOfFilesTask =
@@ -169,7 +169,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.GetListOfFilesAsync(somePath, someSearchPattern))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<List<string>> retrieveListOfFilesTask =

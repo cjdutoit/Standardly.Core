@@ -30,7 +30,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.ReadFromFileAsync(inputPath))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<string> runTask =
@@ -68,7 +68,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.ReadFromFileAsync(inputPath))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<string> runTask =
@@ -109,7 +109,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.ReadFromFileAsync(inputPath))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<string> runTask =

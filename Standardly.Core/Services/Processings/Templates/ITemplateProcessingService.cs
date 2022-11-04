@@ -4,13 +4,13 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-namespace Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends
+using System.Threading.Tasks;
+using Standardly.Core.Models.Foundations.Templates;
+
+namespace Standardly.Core.Services.Processings.Templates
 {
-    public class Append
+    public interface ITemplateProcessingService
     {
-        public string Target { get; set; }
-        public string RegexToMatch { get; set; }
-        public string ContentToAppend { get; set; }
-        public bool AppendToTop { get; set; } = false;
+        ValueTask<Template> ConvertStringToTemplateAsync(string content);
     }
 }

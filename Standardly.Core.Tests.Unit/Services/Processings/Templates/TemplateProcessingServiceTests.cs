@@ -7,74 +7,75 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using Moq;
 using Newtonsoft.Json;
-using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
 using Standardly.Core.Services.Foundations.Templates;
+using Standardly.Core.Services.Processings.Templates;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
+namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 {
-    public partial class TemplateServiceTests
+    public partial class TemplateProcessingServiceTests
     {
-        private readonly Mock<IFileBroker> fileBrokerMock;
+        private readonly Mock<ITemplateService> templateServiceMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly ITemplateService templateService;
+        private readonly ITemplateProcessingService templateProcessingService;
 
-        public TemplateServiceTests()
+        public TemplateProcessingServiceTests()
         {
-            this.fileBrokerMock = new Mock<IFileBroker>();
+            this.templateServiceMock = new Mock<ITemplateService>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
-            this.templateService = new TemplateService(
-                fileBroker: fileBrokerMock.Object, loggingBroker: loggingBrokerMock.Object);
+            this.templateProcessingService = new TemplateProcessingService(
+                templateService: this.templateServiceMock.Object,
+                loggingBroker: this.loggingBrokerMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
-        private static string CreateStringTemplate(Dictionary<string, string> dictionary)
+        public static TheoryData DependencyValidationExceptions()
         {
-            var stringBuilder = new StringBuilder();
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
 
-            foreach (KeyValuePair<string, string> item in dictionary)
+            return new TheoryData<Xeption>
             {
-                stringBuilder.Append($"{item.Key} {GetRandomString()} ");
-            }
-
-            return stringBuilder.ToString();
+                new TemplateValidationException(innerException),
+                new TemplateDependencyValidationException(innerException)
+            };
         }
 
-        private static Dictionary<string, string> CreateReplacementDictionary()
+        public static TheoryData DependencyExceptions()
         {
-            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
 
-            for (int i = 0; i < GetRandomNumber(); i++)
+            return new TheoryData<Xeption>
             {
-                dictionary.Add($"${GetRandomString(1)}$", GetRandomString(1));
-            }
-
-            return dictionary;
+                new TemplateDependencyException(innerException),
+                new TemplateServiceException(innerException)
+            };
         }
 
-        private static string SerializeTemplate(Template template) =>
-            JsonConvert.SerializeObject(template);
-
-        private static int GetRandomNumber() =>
-            new IntRange(min: 2, max: 5).GetValue();
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
 
         private static string GetRandomString(int wordCount) =>
             new MnemonicString(wordCount: wordCount).GetValue();
 
-        private static string GetRandomString() =>
-            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
 
         private static List<Execution> CreateListOfExecutions()
         {
@@ -111,14 +112,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             return list;
         }
 
-        private static List<File> CreateListOfFiles()
+        private static List<File> CreateListOfFileItems()
         {
             List<File> list =
                 new List<File>();
 
             for (int i = 0; i < GetRandomNumber(); i++)
             {
-                list.Add(new File()
+                list.Add(new Models.Foundations.Templates.Tasks.Actions.Files.File()
                 {
                     Template = GetRandomString(1),
                     Target = GetRandomString(1),
@@ -140,7 +141,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 {
                     Name = GetRandomString(1),
                     ExecutionFolder = GetRandomString(1),
-                    Files = CreateListOfFiles(),
+                    Files = CreateListOfFileItems(),
                     Appends = CreateListOfAppends(),
                     Executions = CreateListOfExecutions()
                 });
@@ -177,6 +178,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             return list;
         }
+
+        private static string SerializeTemplate(Template template) =>
+            JsonConvert.SerializeObject(template);
 
         private static Template CreateRandomTemplate()
         {

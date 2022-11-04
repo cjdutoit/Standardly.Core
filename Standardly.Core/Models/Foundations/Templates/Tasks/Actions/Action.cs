@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Executions;
+using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
 
 namespace Standardly.Core.Models.Foundations.Templates.Tasks.Actions

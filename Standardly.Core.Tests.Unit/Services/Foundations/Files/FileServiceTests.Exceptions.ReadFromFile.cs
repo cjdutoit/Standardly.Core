@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.ReadFileAsync(somePath))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<string> readFileTask =
@@ -78,7 +78,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.ReadFileAsync(somePath))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<string> readFromFileTask =
@@ -124,7 +124,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.ReadFileAsync(somePath))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<string> readFromFileTask =
@@ -164,7 +164,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.ReadFileAsync(somePath))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<string> readFromFileTask =
