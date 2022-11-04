@@ -22,7 +22,7 @@ namespace Standardly.Core.Services.Processings.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
+            await this.templateService.ConvertStringToTemplateAsync(content);
     }
 }
