@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
@@ -42,6 +43,13 @@ namespace Standardly.Core.Services.Processings.Templates
             {
                 throw CreateAndLogDependencyException(templateServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedTemplateProcessingServiceException =
+                    new FailedTemplateProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedTemplateProcessingServiceException);
+            }
         }
 
         private TemplateProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -74,6 +82,16 @@ namespace Standardly.Core.Services.Processings.Templates
             this.loggingBroker.LogError(templateProcessingDependencyException);
 
             return templateProcessingDependencyException;
+        }
+
+        private TemplateProcessingServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var countryProcessingServiceException = new
+                TemplateProcessingServiceException(exception);
+
+            this.loggingBroker.LogError(countryProcessingServiceException);
+
+            return countryProcessingServiceException;
         }
     }
 }
