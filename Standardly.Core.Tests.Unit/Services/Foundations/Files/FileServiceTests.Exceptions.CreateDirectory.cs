@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.CreateDirectoryAsync(somePath))
-                    .ThrowsAsync(dependencyValidationException);
+                    .Throws(dependencyValidationException);
 
             // when
             ValueTask deleteFileTask =
@@ -78,7 +78,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.CreateDirectoryAsync(somePath))
-                    .ThrowsAsync(dependencyException);
+                    .Throws(dependencyException);
 
             // when
             ValueTask deleteFileTask =
@@ -124,7 +124,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Setup(broker =>
                 broker.CreateDirectoryAsync(somePath))
-                    .ThrowsAsync(dependencyException);
+                    .Throws(dependencyException);
 
             // when
             ValueTask deleteFileTask =
