@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Templates;
@@ -29,5 +30,10 @@ namespace Standardly.Core.Services.Processings.Templates
 
                 return await this.templateService.ConvertStringToTemplateAsync(content);
             });
+
+        public ValueTask<Template> TransformTemplateAsync(
+            Template template,
+            Dictionary<string, string> replacementDictionary) =>
+                throw new System.NotImplementedException();
     }
 }

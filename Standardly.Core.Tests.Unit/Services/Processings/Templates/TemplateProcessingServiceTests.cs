@@ -68,6 +68,18 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             };
         }
 
+        private static Dictionary<string, string> CreateReplacementDictionary()
+        {
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                dictionary.Add($"${GetRandomString(1)}$", GetRandomString(1));
+            }
+
+            return dictionary;
+        }
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
