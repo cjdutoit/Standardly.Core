@@ -34,30 +34,31 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             this.templateConfig = templateConfig;
         }
 
-        public async ValueTask<List<Template>> FindAllTemplatesAsync()
-        {
-            List<Template> templates = new List<Template>();
-
-            var fileList = await this.fileProcessingService
-                .RetrieveListOfFilesAsync(
-                this.templateConfig.TemplateFolder,
-                this.templateConfig.TemplateDefinitionFile);
-
-            foreach (string file in fileList)
+        public ValueTask<List<Template>> FindAllTemplatesAsync() =>
+            TryCatchAsync(async () =>
             {
-                try
-                {
-                    string rawTemplate = await this.fileProcessingService.ReadFromFileAsync(file);
-                    Template template = await this.templateProcessingService.ConvertStringToTemplateAsync(rawTemplate);
-                    templates.Add(template);
-                }
-                catch (Exception)
-                {
-                }
-            }
+                List<Template> templates = new List<Template>();
 
-            return templates;
-        }
+                var fileList = await this.fileProcessingService
+                    .RetrieveListOfFilesAsync(
+                    this.templateConfig.TemplateFolder,
+                    this.templateConfig.TemplateDefinitionFile);
+
+                foreach (string file in fileList)
+                {
+                    try
+                    {
+                        string rawTemplate = await this.fileProcessingService.ReadFromFileAsync(file);
+                        Template template = await this.templateProcessingService.ConvertStringToTemplateAsync(rawTemplate);
+                        templates.Add(template);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+
+                return templates;
+            });
 
     }
 }
