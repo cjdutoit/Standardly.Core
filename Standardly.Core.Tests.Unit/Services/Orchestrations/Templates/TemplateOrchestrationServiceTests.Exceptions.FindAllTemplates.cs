@@ -61,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
         [Theory]
         [MemberData(nameof(FindAllTemplateOrchestrationDependencyExceptions))]
-        public void ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -75,14 +75,14 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             this.fileProcessingServiceMock.Setup(broker =>
                 broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action findAllTemplatesAction = () =>
+            ValueTask<List<Template>> findAllTemplatesTask =
                 this.templateOrchestrationService.FindAllTemplatesAsync();
 
             TemplateOrchestrationDependencyException actualException =
-                Assert.Throws<TemplateOrchestrationDependencyException>(findAllTemplatesAction);
+                await Assert.ThrowsAsync<TemplateOrchestrationDependencyException>(findAllTemplatesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
