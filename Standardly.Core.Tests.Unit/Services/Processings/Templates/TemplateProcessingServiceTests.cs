@@ -12,12 +12,14 @@ using Newtonsoft.Json;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
 using Standardly.Core.Services.Foundations.Templates;
 using Standardly.Core.Services.Processings.Templates;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 {
@@ -39,6 +41,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
+
+        public static TheoryData DependencyValidationExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new TemplateValidationException(innerException),
+                new TemplateDependencyValidationException(innerException)
+            };
+        }
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
