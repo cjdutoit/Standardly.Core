@@ -22,7 +22,12 @@ namespace Standardly.Core.Services.Processings.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
-            await this.templateService.ConvertStringToTemplateAsync(content);
+        public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateConvertStringToTemplate(content);
+
+                return await this.templateService.ConvertStringToTemplateAsync(content);
+            });
     }
 }
