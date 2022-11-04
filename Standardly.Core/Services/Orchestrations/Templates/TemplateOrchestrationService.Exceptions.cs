@@ -7,9 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
+using Standardly.Core.Models.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Processings.Files.Exceptions;
+using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.Templates
@@ -24,21 +26,53 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 return await returningTemplateListFunction();
             }
-            catch (FileValidationException fileValidationException)
+            catch (FileProcessingValidationException fileServiceValidationException)
             {
-                throw CreateAndLogDependencyValidationException(fileValidationException);
+                throw CreateAndLogDependencyValidationException(fileServiceValidationException);
             }
-            catch (FileDependencyValidationException fileDependencyValidationException)
+            catch (FileProcessingDependencyValidationException fileServiceDependencyValidationException)
             {
-                throw CreateAndLogDependencyValidationException(fileDependencyValidationException);
+                throw CreateAndLogDependencyValidationException(fileServiceDependencyValidationException);
             }
-            catch (FileDependencyException fileDependencyException)
+            catch (ExecutionProcessingValidationException executionValidationException)
             {
-                throw CreateAndLogDependencyException(fileDependencyException);
+                throw CreateAndLogDependencyValidationException(executionValidationException);
             }
-            catch (FileServiceException fileServiceException)
+            catch (ExecutionProcessingDependencyValidationException executionDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(executionDependencyValidationException);
+            }
+            catch (TemplateProcessingValidationException templateValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateValidationException);
+            }
+            catch (TemplateProcessingDependencyValidationException templateDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateDependencyValidationException);
+            }
+            catch (FileProcessingServiceException fileServiceException)
             {
                 throw CreateAndLogDependencyException(fileServiceException);
+            }
+            catch (FileProcessingDependencyException fileServiceDependencyException)
+            {
+                throw CreateAndLogDependencyException(fileServiceDependencyException);
+            }
+            catch (TemplateProcessingServiceException templateServiceException)
+            {
+                throw CreateAndLogDependencyException(templateServiceException);
+            }
+            catch (TemplateProcessingDependencyException templateDependencyException)
+            {
+                throw CreateAndLogDependencyException(templateDependencyException);
+            }
+            catch (ExecutionProcessingServiceException executionServiceException)
+            {
+                throw CreateAndLogDependencyException(executionServiceException);
+            }
+            catch (ExecutionProcessingDependencyException executionDependencyException)
+            {
+                throw CreateAndLogDependencyException(executionDependencyException);
             }
             catch (Exception exception)
             {

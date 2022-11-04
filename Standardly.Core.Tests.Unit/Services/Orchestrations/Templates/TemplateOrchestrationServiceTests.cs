@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
 using Standardly.Core.Models.Orchestrations.Templates;
+using Standardly.Core.Models.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Processings.Files.Exceptions;
+using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Standardly.Core.Services.Orchestrations.Templates;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
@@ -64,27 +66,35 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             return list;
         }
 
-        public static TheoryData FindAllTemplateOrchestrationTemplatesDependencyValidationExceptions()
+        public static TheoryData TemplateOrchestrationDependencyValidationExceptions()
         {
             string exceptionMessage = GetRandomString();
             var innerException = new Xeption(exceptionMessage);
 
             return new TheoryData<Exception>()
             {
-                new FileValidationException(innerException),
-                new FileDependencyValidationException(innerException),
+                new FileProcessingValidationException(innerException),
+                new FileProcessingDependencyValidationException(innerException),
+                new ExecutionProcessingValidationException(innerException),
+                new ExecutionProcessingDependencyValidationException(innerException),
+                new TemplateProcessingValidationException(innerException),
+                new TemplateProcessingDependencyValidationException(innerException)
             };
         }
 
-        public static TheoryData FindAllTemplateOrchestrationDependencyExceptions()
+        public static TheoryData TemplateOrchestrationDependencyExceptions()
         {
             string exceptionMessage = GetRandomString();
             var innerException = new Xeption(exceptionMessage);
 
             return new TheoryData<Exception>()
             {
-                new FileDependencyException(innerException),
-                new FileServiceException(innerException),
+                new FileProcessingDependencyException(innerException),
+                new FileProcessingServiceException(innerException),
+                new TemplateProcessingDependencyException(innerException),
+                new TemplateProcessingServiceException(innerException),
+                new ExecutionProcessingDependencyException(innerException),
+                new ExecutionProcessingServiceException(innerException)
             };
         }
 

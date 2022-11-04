@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     public partial class TemplateOrchestrationServiceTests
     {
         [Theory]
-        [MemberData(nameof(FindAllTemplateOrchestrationTemplatesDependencyValidationExceptions))]
+        [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
         public async Task ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogItAsync(
             Exception dependencyValidationException)
         {
@@ -60,7 +60,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         [Theory]
-        [MemberData(nameof(FindAllTemplateOrchestrationDependencyExceptions))]
+        [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
         public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogItAsync(
             Exception dependencyException)
         {

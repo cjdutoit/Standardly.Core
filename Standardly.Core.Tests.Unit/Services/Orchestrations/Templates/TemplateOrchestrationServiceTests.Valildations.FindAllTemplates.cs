@@ -10,6 +10,7 @@ using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Processings.Files.Exceptions;
+using Xeptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
@@ -29,7 +30,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Template randomTemplate = CreateRandomTemplate();
             Template outputTemplate = randomTemplate;
 
-
             this.fileProcessingServiceMock.Setup(fileService =>
                 fileService.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
                     .ReturnsAsync(expectedFileList);
@@ -40,7 +40,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             this.fileProcessingServiceMock.Setup(fileService =>
                 fileService.ReadFromFileAsync(randomFileList[0]))
-                    .ThrowsAsync(new InvalidFileProcessingException());
+                    .ThrowsAsync(new FileProcessingDependencyException(new Xeption(randomFileList[0])));
 
             this.templateProcessingServiceMock.Setup(templateService =>
                 templateService.ConvertStringToTemplateAsync(rawTemplateString))
