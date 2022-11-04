@@ -13,6 +13,10 @@ namespace Standardly.Core.Services.Processings.Templates
     public interface ITemplateProcessingService
     {
         ValueTask<Template> ConvertStringToTemplateAsync(string content);
-        ValueTask<Template> TransformTemplateAsync(Template template, Dictionary<string, string> replacementDictionary);
+
+        ValueTask<Template> TransformTemplateAsync(
+            Template template,
+            Dictionary<string, string> replacementDictionary,
+            char tagCharacter);
     }
 }

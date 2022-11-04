@@ -17,7 +17,9 @@ namespace Standardly.Core.Services.Processings.Templates
         private readonly ITemplateService templateService;
         private readonly ILoggingBroker loggingBroker;
 
-        public TemplateProcessingService(ITemplateService templateService, ILoggingBroker loggingBroker)
+        public TemplateProcessingService(
+            ITemplateService templateService,
+            ILoggingBroker loggingBroker)
         {
             this.templateService = templateService;
             this.loggingBroker = loggingBroker;
@@ -31,9 +33,21 @@ namespace Standardly.Core.Services.Processings.Templates
                 return await this.templateService.ConvertStringToTemplateAsync(content);
             });
 
-        public ValueTask<Template> TransformTemplateAsync(
+        public async ValueTask<Template> TransformTemplateAsync(
             Template template,
-            Dictionary<string, string> replacementDictionary) =>
-                throw new System.NotImplementedException();
+            Dictionary<string, string> replacementDictionary,
+            char tagCharacter)
+        {
+            var transformedStringTemplate = await this.templateService
+                .TransformStringAsync(template.RawTemplate, replacementDictionary);
+
+            await this.templateService
+                .ValidateTransformationAsync(transformedStringTemplate, tagCharacter);
+
+            var transformedTemplate = await this.templateService
+                .ConvertStringToTemplateAsync(transformedStringTemplate);
+
+            return transformedTemplate;
+        }
     }
 }
