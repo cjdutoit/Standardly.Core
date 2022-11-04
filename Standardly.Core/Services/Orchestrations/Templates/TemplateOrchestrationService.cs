@@ -22,9 +22,6 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         private readonly ITemplateProcessingService templateProcessingService;
         private readonly ITemplateConfig templateConfig;
 
-        public string TemplateFolder { get; private set; }
-        private readonly string templateDefinitionFile = "Template.json";
-
         public TemplateOrchestrationService(
             IFileProcessingService fileProcessingService,
             IExecutionProcessingService executionProcessingService,
@@ -35,7 +32,6 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             this.executionProcessingService = executionProcessingService;
             this.templateProcessingService = templateProcessingService;
             this.templateConfig = templateConfig;
-            TemplateFolder = this.templateConfig.TemplateFolder;
         }
 
         public async ValueTask<List<Template>> FindAllTemplatesAsync()
@@ -43,7 +39,9 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             List<Template> templates = new List<Template>();
 
             var fileList = await this.fileProcessingService
-                .RetrieveListOfFilesAsync(this.TemplateFolder, templateDefinitionFile);
+                .RetrieveListOfFilesAsync(
+                this.templateConfig.TemplateFolder,
+                this.templateConfig.TemplateDefinitionFile);
 
             foreach (string file in fileList)
             {

@@ -20,6 +20,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldFindAllTemplatesAsync()
         {
             // given
+            string templatefolder = this.templateConfigMock.Object.TemplateFolder;
+            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFile;
             List<string> randomFileList = GetRandomStringList();
             List<string> expectedFileList = randomFileList;
             string randomTemplateString = GetRandomString();
@@ -31,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
 
             fileProcessingServiceMock.Setup(fileService =>
-                fileService.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
+                fileService.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile))
                     .ReturnsAsync(expectedFileList);
 
             this.fileProcessingServiceMock.Setup(fileService =>
@@ -49,8 +51,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             actualTemplates.Count.Should().Be(expectedFileList.Count);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()),
-                    Times.Once);
+                fileService.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                        Times.Once);
 
             this.fileProcessingServiceMock.Verify(fileService =>
                 fileService.ReadFromFileAsync(It.IsAny<string>()),

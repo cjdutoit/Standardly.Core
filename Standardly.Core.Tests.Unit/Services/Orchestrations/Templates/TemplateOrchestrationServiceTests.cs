@@ -4,10 +4,12 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
+using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
@@ -17,6 +19,8 @@ using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
 using Tynamix.ObjectFiller;
+using Xeptions;
+using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 {
@@ -35,11 +39,29 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             this.templateProcessingServiceMock = new Mock<ITemplateProcessingService>();
             this.templateConfigMock = new Mock<ITemplateConfig>();
 
+            this.templateConfigMock
+                .Setup(config => config.TemplateFolder).Returns("c:\\Standardly\\Templates");
+
+            this.templateConfigMock
+                .Setup(config => config.TemplateFolder).Returns("Template.json");
+
             templateOrchestrationService = new TemplateOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
                 executionProcessingService: executionProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,
                 templateConfig: templateConfigMock.Object);
+        }
+
+        public static TheoryData FindAllTemplateOrchestrationTemplatesDependencyValidationExceptions()
+        {
+            string exceptionMessage = GetRandomString();
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Exception>()
+            {
+                new FileValidationException(innerException),
+                new FileDependencyValidationException(innerException),
+            };
         }
 
         private static List<Append> CreateAppends(int numberOfFileItems)
