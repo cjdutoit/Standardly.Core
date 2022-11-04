@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -86,6 +87,47 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedTemplateProcessingDependencyException))),
+                        Times.Once);
+
+            this.templateServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnConvertStringTemplateIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string randomString = GetRandomString();
+            string inputContent = randomString;
+
+            var serviceException = new Exception();
+
+            var failedTemplateProcessingServiceException =
+                new FailedTemplateProcessingServiceException(serviceException);
+
+            var expectedTemplateProcessingServiveException =
+                new TemplateProcessingServiceException(
+                    failedTemplateProcessingServiceException);
+
+            this.templateServiceMock.Setup(service =>
+                service.ConvertStringToTemplateAsync(inputContent))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
+
+            // then
+            TemplateProcessingServiceException actualException =
+                await Assert.ThrowsAsync<TemplateProcessingServiceException>(convertStringToTemplateTask.AsTask);
+
+            this.templateServiceMock.Verify(service =>
+                service.ConvertStringToTemplateAsync(inputContent),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTemplateProcessingServiveException))),
                         Times.Once);
 
             this.templateServiceMock.VerifyNoOtherCalls();
