@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
+using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Xeptions;
 
@@ -15,6 +16,7 @@ namespace Standardly.Core.Services.Foundations.Templates
     public partial class TemplateService
     {
         private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<Template> ReturningTemplateFunction();
         private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
@@ -26,6 +28,29 @@ namespace Standardly.Core.Services.Foundations.Templates
             catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateException);
+            }
+            catch (Exception exception)
+            {
+                var failedTemplateServiceException =
+                    new FailedTemplateServiceException(exception.InnerException as Xeption);
+
+                throw CreateAndLogServiceException(failedTemplateServiceException);
+            }
+        }
+
+        private async ValueTask<Template> TryCatchAsync(ReturningTemplateFunction returningTemplateFunction)
+        {
+            try
+            {
+                return await returningTemplateFunction();
+            }
+            catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentTemplateException);
+            }
+            catch (InvalidTemplateException invalidTemplateException)
+            {
+                throw CreateAndLogValidationException(invalidTemplateException);
             }
             catch (Exception exception)
             {

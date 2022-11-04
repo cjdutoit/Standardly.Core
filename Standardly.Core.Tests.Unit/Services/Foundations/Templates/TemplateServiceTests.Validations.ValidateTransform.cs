@@ -37,7 +37,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             ValueTask validateTransformationAction =
-                this.templateService.ValidateTransformation(invalidContent, tagCharacter);
+                this.templateService.ValidateTransformationAsync(invalidContent, tagCharacter);
 
             TemplateValidationException actualTemplateValidationException =
                 await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationAction.AsTask);
@@ -74,7 +74,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             ValueTask validateTransformationAction =
-                this.templateService.ValidateTransformation(randomContent, invalidTagCharacter);
+                this.templateService.ValidateTransformationAsync(randomContent, invalidTagCharacter);
 
             TemplateValidationException actualTemplateValidationException =
                 await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationAction.AsTask);

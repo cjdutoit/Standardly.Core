@@ -27,9 +27,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
                 // when then
                 string transformedTemplate =
-                    await this.templateService.TransformString(inputStringTemplate, inputReplacementDictionary);
+                    await this.templateService.TransformStringAsync(inputStringTemplate, inputReplacementDictionary);
 
-                await this.templateService.ValidateTransformation(transformedTemplate, replacementTag);
+                await this.templateService.ValidateTransformationAsync(transformedTemplate, replacementTag);
                 Assert.True(true);
             }
             catch (Exception ex)

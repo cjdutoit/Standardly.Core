@@ -38,7 +38,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             ValueTask<string> transformStringTask =
-                this.templateService.TransformString(content, inputReplacementDictionary);
+                this.templateService.TransformStringAsync(content, inputReplacementDictionary);
 
             var actualException =
                 await Assert.ThrowsAsync<TemplateValidationException>(transformStringTask.AsTask);
@@ -68,7 +68,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             ValueTask<string> transformStringTask =
-                this.templateService.TransformString(content, inputReplacementDictionary);
+                this.templateService.TransformStringAsync(content, inputReplacementDictionary);
 
             var actualException =
                 await Assert.ThrowsAsync<TemplateValidationException>(transformStringTask.AsTask);

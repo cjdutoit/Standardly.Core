@@ -7,8 +7,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
+using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Foundations.Templates
 {
@@ -23,7 +25,7 @@ namespace Standardly.Core.Services.Foundations.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> TransformString(
+        public ValueTask<string> TransformStringAsync(
             string content,
             Dictionary<string, string> replacementDictionary) =>
                 TryCatchAsync(async () =>
@@ -43,12 +45,26 @@ namespace Standardly.Core.Services.Foundations.Templates
                     return await Task.FromResult(template);
                 });
 
-        public ValueTask ValidateTransformation(string content, char tagCharacter) =>
+        public ValueTask ValidateTransformationAsync(string content, char tagCharacter) =>
             TryCatchAsync(async () =>
             {
                 ValidateTransformationArguments(content, tagCharacter);
 
                 await Task.Run(() => CheckAllTagsHasBeenReplaced(content, tagCharacter));
+            });
+
+        public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
+            TryCatchAsync(async () =>
+            {
+                ValidateConvertStringToTemplateArguments(content);
+
+                Template template =
+                    JsonConvert.DeserializeObject<Template>(content);
+
+                template.RawTemplate = content;
+                ValidateTemplate(template);
+
+                return await Task.FromResult(template);
             });
     }
 }
