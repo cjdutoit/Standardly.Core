@@ -94,6 +94,30 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateOrchestrationException);
             }
+            catch (FileProcessingValidationException fileServiceValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileServiceValidationException);
+            }
+            catch (FileProcessingDependencyValidationException fileServiceDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileServiceDependencyValidationException);
+            }
+            catch (ExecutionProcessingValidationException executionValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(executionValidationException);
+            }
+            catch (ExecutionProcessingDependencyValidationException executionDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(executionDependencyValidationException);
+            }
+            catch (TemplateProcessingValidationException templateValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateValidationException);
+            }
+            catch (TemplateProcessingDependencyValidationException templateDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateDependencyValidationException);
+            }
         }
 
         private TemplateOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
