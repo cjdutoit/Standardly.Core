@@ -51,8 +51,15 @@ namespace Standardly.Core.Services.Processings.Templates
                     return transformedTemplate;
                 });
 
-        public ValueTask<string> TransformStringAsync(
-            string content, Dictionary<string, string> replacementDictionary) =>
-               throw new System.NotImplementedException();
+        public async ValueTask<string> TransformStringAsync(
+            string content, Dictionary<string, string> replacementDictionary)
+        {
+            var transformedStringTemplate =
+                await this.templateService.TransformStringAsync(content, replacementDictionary);
+
+            await this.templateService.ValidateTransformationAsync(transformedStringTemplate);
+
+            return transformedStringTemplate;
+        }
     }
 }
