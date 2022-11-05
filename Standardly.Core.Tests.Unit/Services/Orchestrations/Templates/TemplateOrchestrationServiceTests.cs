@@ -186,6 +186,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             return tasks;
         }
 
+        private static Dictionary<string, string> CreateReplacementDictionary()
+        {
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                dictionary.Add($"${GetRandomString(1)}$", GetRandomString(1));
+            }
+
+            return dictionary;
+        }
+
         private static Dictionary<string, string> CreateDictionary()
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -215,6 +227,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
         private static string GetRandomString() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+        private static List<Template> GetRandomTemplateList(int itemsToGenerate, bool replaceFiles = true)
+        {
+            return Enumerable.Range(start: 0, count: itemsToGenerate)
+                .Select(item =>
+                {
+                    return CreateRandomTemplate(replaceFiles);
+                }).ToList();
+        }
 
         private static Template CreateRandomTemplate(bool replaceFiles = true) =>
             CreateTemplateFiller(replaceFiles).Create();

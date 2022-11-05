@@ -44,6 +44,8 @@ namespace Standardly.Core.Services.Processings.Templates
                     var transformedStringTemplate = await this.templateService
                         .TransformStringAsync(template.RawTemplate, replacementDictionary);
 
+                    transformedStringTemplate = transformedStringTemplate.Replace("##n##", "\\n");
+
                     await this.templateService
                         .ValidateTransformationAsync(transformedStringTemplate, tagCharacter);
 

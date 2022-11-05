@@ -12,6 +12,7 @@ namespace Standardly.Core.Models.Foundations.Templates.Tasks
     public class Task
     {
         public string Name { get; set; }
+        public string BranchName { get; set; }
         public List<Action> Actions { get; set; } = new List<Action>();
     }
 }
