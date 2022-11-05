@@ -96,7 +96,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         {
             var transformedTemplate =
                 await this.templateProcessingService
-                    .TransformTemplateAsync(template, replacementDictionary, '$');
+                    .TransformTemplateAsync(template, replacementDictionary);
 
             this.LogMessage(
                 DateTimeOffset.UtcNow,
@@ -104,11 +104,14 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
             transformedTemplate.Tasks.ForEach(task =>
             {
-                PerformTasks(task, transformedTemplate);
+                PerformTasks(task, transformedTemplate, replacementDictionary);
             });
         }
 
-        private void PerformTasks(Models.Foundations.Templates.Tasks.Task task, Template transformedTemplate)
+        private void PerformTasks(
+            Models.Foundations.Templates.Tasks.Task task,
+            Template transformedTemplate,
+            Dictionary<string, string> replacementDictionary)
         {
             previousBranch = task.BranchName;
 
@@ -116,44 +119,68 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                 DateTimeOffset.UtcNow,
                 $"Staring with {transformedTemplate.Name} > {task.Name}");
 
-            PerformActions(task, transformedTemplate);
+            PerformActions(task, transformedTemplate, replacementDictionary);
         }
 
-        private void PerformActions(Models.Foundations.Templates.Tasks.Task task, Template transformedTemplate)
+        private void PerformActions(
+            Models.Foundations.Templates.Tasks.Task task,
+            Template transformedTemplate,
+            Dictionary<string, string> replacementDictionary)
         {
-            task.Actions.ForEach(action =>
+            task.Actions.ForEach(async action =>
             {
                 this.LogMessage(
                     DateTimeOffset.UtcNow,
                     $"Staring with {transformedTemplate.Name} > {task.Name} > {action.Name}");
 
-                this.PerformFileCreations(action.Files);
+                this.PerformFileCreations(action.Files, replacementDictionary);
                 this.PerformAppendOpperations(action.Appends);
-                this.PerformExecutions(action.Executions);
+                await this.PerformExecutionsAsync(action.Executions, action.ExecutionFolder);
             });
         }
 
-        private void PerformFileCreations(List<Models.Foundations.Templates.Tasks.Actions.Files.File> files)
+        private void PerformFileCreations(
+            List<Models.Foundations.Templates.Tasks.Actions.Files.File> files,
+            Dictionary<string, string> replacementDictionary)
         {
             files.ForEach(async file =>
             {
 
                 string sourceString = await this.fileProcessingService.ReadFromFileAsync(file.Template);
 
-                string transformedSourceString = await this.templateProcessingService..TransformString(sourceString, replacementDictionary)
-                                                    .Replace("##n##", "\\n");
+                string transformedSourceString =
+                    await this.templateProcessingService
+                        .TransformStringAsync(sourceString, replacementDictionary);
 
+                transformedSourceString = transformedSourceString.Replace("##n##", "\\n");
+
+                var fileExists = await this.fileProcessingService.CheckIfFileExistsAsync(file.Target);
+                if (fileExists == false
+                    || (fileExists == true && file.Replace == true))
+                {
+                    this.LogMessage(
+                        DateTimeOffset.UtcNow,
+                        $"Adding file '{file.Target}'");
+
+                    await this.fileProcessingService.WriteToFileAsync(file.Target, transformedSourceString);
+                }
             });
         }
 
-        private void PerformAppendOpperations(Models.Foundations.Templates.Tasks.Actions.Appends.Append appends)
+        private void PerformAppendOpperations(List<Models.Foundations.Templates.Tasks.Actions.Appends.Append> appends)
         {
-            appends.ForEach(append => { });
+            appends.ForEach(append =>
+            {
+                // TODO: Add Append Operations 
+            });
         }
 
-        private void PerformExecutions(List<Models.Foundations.Executions.Execution> executions)
+        private async ValueTask PerformExecutionsAsync(
+            List<Models.Foundations.Executions.Execution> executions,
+            string executionFolder)
         {
-            executions.ForEach(execution => { });
+            string outcome = await this.executionProcessingService.RunAsync(executions, executionFolder);
+            this.LogMessage(DateTimeOffset.UtcNow, $"{outcome}");
         }
 
         private void LogMessage(DateTimeOffset date, string message)
@@ -172,7 +199,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 var transformedTemplate =
                     await this.templateProcessingService
-                        .TransformTemplateAsync(template, replacementDictionary, '$');
+                        .TransformTemplateAsync(template, replacementDictionary);
 
                 bool templateRequired = CheckIfTemplateIsRequired(transformedTemplate);
 

@@ -12,6 +12,6 @@ namespace Standardly.Core.Services.Processings.Executions
 {
     public interface IExecutionProcessingService
     {
-        ValueTask<string> Run(List<Execution> executions, string executionFolder);
+        ValueTask<string> RunAsync(List<Execution> executions, string executionFolder);
     }
 }

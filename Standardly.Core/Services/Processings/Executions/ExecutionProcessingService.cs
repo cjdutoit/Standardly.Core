@@ -23,7 +23,7 @@ namespace Standardly.Core.Services.Processings.Executions
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
+        public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
             TryCatchAsync(async () =>
             {
                 ValidateRunArguments(executions, executionFolder);

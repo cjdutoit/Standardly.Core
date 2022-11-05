@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             // when
             string actualResult = await this.executionProcessingService
-                .Run(inputExecutions, inputExecutionFolder);
+                .RunAsync(inputExecutions, inputExecutionFolder);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);

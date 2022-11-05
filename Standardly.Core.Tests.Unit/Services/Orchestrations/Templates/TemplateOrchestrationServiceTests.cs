@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
+using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
@@ -32,6 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         private readonly Mock<IExecutionProcessingService> executionProcessingServiceMock;
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
         private readonly Mock<ITemplateConfig> templateConfigMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateOrchestrationService templateOrchestrationService;
 
         public TemplateOrchestrationServiceTests()
@@ -51,7 +53,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 fileProcessingService: fileProcessingServiceMock.Object,
                 executionProcessingService: executionProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,
-                templateConfig: templateConfigMock.Object);
+                templateConfig: templateConfigMock.Object,
+                loggingBroker: loggingBrokerMock.Object);
         }
 
         private static List<string> CreateListOfStrings()

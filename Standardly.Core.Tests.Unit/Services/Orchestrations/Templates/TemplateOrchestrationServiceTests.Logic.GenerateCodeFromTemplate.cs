@@ -5,9 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
 using Xunit;
@@ -21,364 +19,96 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         {
             // given
             int randomNumber = GetRandomNumber();
-            List<Template> randomTemplates = GetRandomTemplateList(randomNumber);
+            List<Template> randomTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> inputTemplates = randomTemplates;
-            List<Template> randomTransformedTemplates = GetRandomTemplateList(randomNumber);
-            List<Template> outputTemplates = randomTemplates;
-
-            string randomTransformedStringTemplate = GetRandomString();
-            string transformedStringTemplate = randomTransformedStringTemplate;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Template randomTransformedTemplate = CreateRandomTemplate();
-            Template transformedTemplate = randomTemplate;
-
-            string sourceTemplateString = GetRandomString();
-            string targetTemplateString = GetRandomString();
-            string executionMessage = GetRandomString();
+            List<Template> randomTransformedTemplates = GetRandomTemplateList(randomNumber, true);
+            List<Template> outputTemplates = randomTemplates;
+            string randomExecutionOutcome = GetRandomString();
+            string randomTemplateString = GetRandomString();
+            string randomTransformedTemplateString = GetRandomString();
 
             for (int i = 0; i < inputTemplates.Count; i++)
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                    templateProcessingService.TransformTemplateAsync(inputTemplates[0], randomReplacementDictionary, '$'))
-                        .ReturnsAsync(outputTemplates[0]);
-            }
+                    templateProcessingService
+                        .TransformTemplateAsync(inputTemplates[i], randomReplacementDictionary))
+                            .ReturnsAsync(outputTemplates[i]);
 
-
-            if (transformedTemplate.Tasks.Any())
-            {
-                foreach (Task task in transformedTemplate.Tasks)
+                outputTemplates[i].Tasks.ForEach(task =>
                 {
-                    if (task.Actions.Any())
+                    task.Actions.ForEach(action =>
                     {
-                        foreach (Action action in task.Actions)
+                        action.Files.ForEach(file =>
                         {
-                            if (action.FileItems.Any())
-                            {
-                                foreach (FileItem fileItem in action.FileItems)
-                                {
-                                    if (!string.IsNullOrEmpty(fileItem.Template))
-                                    {
-                                        this.fileServiceMock.Setup(fileService =>
-                                        fileService.ReadFromFile(fileItem.Template))
-                                            .Returns(sourceTemplateString);
+                            this.fileProcessingServiceMock.Setup(fileProcessingService =>
+                                fileProcessingService.CheckIfFileExistsAsync(file.Target))
+                                    .ReturnsAsync(true);
 
-                                        this.templateServiceMock.Setup(templateService =>
-                                            templateService
-                                                .TransformString(sourceTemplateString, randomReplacementDictionary))
-                                                    .Returns(targetTemplateString);
-                                    }
-                                }
-                            }
+                            this.fileProcessingServiceMock.Setup(fileProcessingService =>
+                                fileProcessingService.ReadFromFileAsync(file.Template))
+                                    .ReturnsAsync(randomTemplateString);
+                        });
 
-                            if (action.Executions.Any())
-                            {
-                                this.executionServiceMock.Setup(executionService =>
-                                    executionService.Run(action.Executions, action.ExecutionFolder))
-                                        .Returns(executionMessage);
-                            }
-                        }
-                    }
-                }
+                        // TODO:  Add code for Appends
+
+                        this.executionProcessingServiceMock.Setup(executionProcessingService =>
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
+                                .ReturnsAsync(randomExecutionOutcome);
+                    });
+                });
             }
+
 
             // when
-            string actualGenerateCodeFromTemplateResult = templateOrchestrationService
-                .GenerateCodeFromTemplate(inputTemplate, randomReplacementDictionary);
+            await templateOrchestrationService
+                .GenerateCodeAsync(inputTemplates, randomReplacementDictionary);
 
             // then
-            actualGenerateCodeFromTemplateResult.Should().NotBeNullOrEmpty();
 
-            inputTemplate.Tasks.Count.Should().BeGreaterThan(0);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.TransformString(inputTemplate.RawTemplate, randomReplacementDictionary),
-                    Times.Once);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.ValidateTransformation(transformedStringTemplate),
-                    Times.Once);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.ConvertStringToTemplate(transformedStringTemplate),
-                    Times.Once);
-
-            if (transformedTemplate.Tasks.Any())
+            for (int i = 0; i < inputTemplates.Count; i++)
             {
-                foreach (Task task in transformedTemplate.Tasks)
+                this.templateProcessingServiceMock.Verify(templateProcessingService =>
+                    templateProcessingService
+                        .TransformTemplateAsync(inputTemplates[i], randomReplacementDictionary),
+                            Times.Exactly(2));
+
+                outputTemplates[i].Tasks.ForEach(task =>
                 {
-                    if (task.Actions.Any())
+                    task.Actions.ForEach(action =>
                     {
-                        foreach (Action action in task.Actions)
+                        action.Files.ForEach(file =>
                         {
-                            if (action.FileItems.Any())
-                            {
-                                foreach (FileItem fileItem in action.FileItems)
-                                {
-                                    if (!string.IsNullOrEmpty(fileItem.Template))
-                                    {
-                                        this.fileServiceMock.Verify(fileService =>
-                                            fileService.CheckIfFileExists(fileItem.Target),
-                                                Times.AtLeastOnce);
+                            this.fileProcessingServiceMock.Verify(fileProcessingService =>
+                                fileProcessingService.CheckIfFileExistsAsync(file.Target),
+                                    Times.Exactly(2));
 
-                                        this.fileServiceMock.Verify(fileService =>
-                                            fileService.CheckIfFileExists(fileItem.Target),
-                                                Times.AtMost(2));
-
-                                        this.fileServiceMock.Verify(fileService =>
-                                        fileService.ReadFromFile(fileItem.Template),
-                                            Times.Once);
-
-                                        this.templateServiceMock.Verify(templateService =>
-                                            templateService
-                                                .TransformString(sourceTemplateString, randomReplacementDictionary),
-                                                    Times.AtLeastOnce);
-
-                                        this.templateServiceMock.Verify(templateService =>
-                                            templateService
-                                                .ValidateTransformation(targetTemplateString),
-                                                    Times.AtLeastOnce);
-
-                                        this.fileServiceMock.Verify(fileService =>
-                                            fileService.WriteToFile(fileItem.Target, targetTemplateString),
-                                                Times.AtLeastOnce);
-                                    }
-                                }
-                            }
-
-                            if (action.Executions.Any())
-                            {
-                                this.executionServiceMock.Verify(executionService =>
-                                executionService.Run(action.Executions, action.ExecutionFolder),
+                            this.fileProcessingServiceMock.Verify(fileProcessingService =>
+                                fileProcessingService.ReadFromFileAsync(file.Template),
                                     Times.Once);
-                            }
-                        }
-                    }
-                }
-            }
 
-            this.templateServiceMock.VerifyNoOtherCalls();
-            this.fileServiceMock.VerifyNoOtherCalls();
-            this.executionServiceMock.VerifyNoOtherCalls();
-        }
-
-        [Fact]
-        public void ShouldNotExecuteActionWhereFilesExistsAndReplaceSetToFalse()
-        {
-            // given
-            bool replaceFiles = false;
-            Template randomTemplate = CreateRandomTemplate(replaceFiles);
-            Template inputTemplate = randomTemplate;
-            string randomTransformedStringTemplate = GetRandomString();
-            string transformedStringTemplate = randomTransformedStringTemplate;
-            Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
-            Template randomTransformedTemplate = CreateRandomTemplate();
-            Template transformedTemplate = randomTemplate;
-
-            string sourceTemplateString = GetRandomString();
-            string targetTemplateString = GetRandomString();
-            string executionMessage = GetRandomString();
-
-            this.templateServiceMock.Setup(templateService =>
-                templateService.TransformString(inputTemplate.RawTemplate, randomReplacementDictionary))
-                    .Returns(transformedStringTemplate);
-
-            this.templateServiceMock.Setup(templateService =>
-                templateService.ConvertStringToTemplate(transformedStringTemplate))
-                    .Returns(transformedTemplate);
-
-            if (transformedTemplate.Tasks.Any())
-            {
-                foreach (Task task in transformedTemplate.Tasks)
-                {
-                    if (task.Actions.Any())
-                    {
-                        foreach (Action action in task.Actions)
-                        {
-                            if (action.FileItems.Any())
-                            {
-                                foreach (FileItem fileItem in action.FileItems)
-                                {
-                                    this.fileServiceMock.Setup(fileService =>
-                                        fileService.CheckIfFileExists(fileItem.Target))
-                                            .Returns(true);
-
-                                    this.fileServiceMock.Setup(fileService =>
-                                        fileService.ReadFromFile(fileItem.Template))
-                                            .Returns(sourceTemplateString);
-
-                                    this.templateServiceMock.Setup(templateService =>
-                                        templateService
-                                            .TransformString(sourceTemplateString, randomReplacementDictionary))
-                                                .Returns(targetTemplateString);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // when
-            string actualGenerateCodeFromTemplateResult = templateOrchestrationService
-                .GenerateCodeFromTemplate(inputTemplate, randomReplacementDictionary);
-
-            // then
-            actualGenerateCodeFromTemplateResult.Should().NotBeNullOrEmpty();
-
-            inputTemplate.Tasks.Count.Should().BeGreaterThan(0);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.TransformString(inputTemplate.RawTemplate, randomReplacementDictionary),
-                    Times.Once);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.ValidateTransformation(transformedStringTemplate),
-                    Times.Once);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.ConvertStringToTemplate(transformedStringTemplate),
-                    Times.Once);
-
-            if (transformedTemplate.Tasks.Any())
-            {
-                foreach (Task task in transformedTemplate.Tasks)
-                {
-                    if (task.Actions.Any())
-                    {
-                        foreach (Action action in task.Actions)
-                        {
-                            if (action.FileItems.Any())
-                            {
-                                foreach (FileItem fileItem in action.FileItems)
-                                {
-                                    this.fileServiceMock.Verify(fileService =>
-                                        fileService.CheckIfFileExists(fileItem.Target),
-                                            Times.Once);
-
-                                    if (!string.IsNullOrEmpty(fileItem.Template))
-                                    {
-                                        this.fileServiceMock.Verify(fileService =>
-                                        fileService.ReadFromFile(fileItem.Template),
-                                            Times.Never);
-
-                                        this.templateServiceMock.Verify(templateService =>
-                                            templateService
-                                                .TransformString(sourceTemplateString, randomReplacementDictionary),
-                                                    Times.Never);
-
-                                        this.templateServiceMock.Verify(templateService =>
-                                            templateService
-                                                .ValidateTransformation(targetTemplateString),
-                                                    Times.Never);
-
-                                        this.fileServiceMock.Verify(fileService =>
-                                            fileService.WriteToFile(fileItem.Target, targetTemplateString),
-                                                Times.Never);
-                                    }
-                                }
-                            }
-
-                            if (action.Executions.Any())
-                            {
-                                this.executionServiceMock.Verify(executionService =>
-                                executionService.Run(action.Executions, action.ExecutionFolder),
-                                    Times.Never);
-                            }
-                        }
-                    }
-                }
-            }
-
-            this.templateServiceMock.VerifyNoOtherCalls();
-            this.fileServiceMock.VerifyNoOtherCalls();
-            this.executionServiceMock.VerifyNoOtherCalls();
-        }
-
-        [Fact]
-        public void ShouldExecuteActionIfNoFilesPresentOnAction()
-        {
-            // given
-            bool replaceFiles = false;
-            Template randomTemplate = CreateRandomTemplate(replaceFiles);
-            Template inputTemplate = randomTemplate;
-            string randomTransformedStringTemplate = GetRandomString();
-            string transformedStringTemplate = randomTransformedStringTemplate;
-            Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
-            Template randomTransformedTemplate = CreateRandomTemplate();
-            Template transformedTemplate = randomTemplate;
-
-            string sourceTemplateString = GetRandomString();
-            string targetTemplateString = GetRandomString();
-            string executionMessage = GetRandomString();
-
-            this.templateServiceMock.Setup(templateService =>
-                templateService.TransformString(inputTemplate.RawTemplate, randomReplacementDictionary))
-                    .Returns(transformedStringTemplate);
-
-            this.templateServiceMock.Setup(templateService =>
-                templateService.ConvertStringToTemplate(transformedStringTemplate))
-                    .Returns(transformedTemplate);
-
-            if (transformedTemplate.Tasks.Any())
-            {
-                foreach (Task task in transformedTemplate.Tasks)
-                {
-                    if (task.Actions.Any())
-                    {
-                        foreach (Action action in task.Actions)
-                        {
-                            if (action.FileItems.Any())
-                            {
-                                action.FileItems.Clear();
-                            }
-                        }
-                    }
-                }
-            }
-
-            // when
-            string actualGenerateCodeFromTemplateResult = templateOrchestrationService
-                .GenerateCodeFromTemplate(inputTemplate, randomReplacementDictionary);
-
-            // then
-            actualGenerateCodeFromTemplateResult.Should().NotBeNullOrEmpty();
-
-            inputTemplate.Tasks.Count.Should().BeGreaterThan(0);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.TransformString(inputTemplate.RawTemplate, randomReplacementDictionary),
-                    Times.Once);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.ValidateTransformation(transformedStringTemplate),
-                    Times.Once);
-
-            this.templateServiceMock.Verify(templateService =>
-                templateService.ConvertStringToTemplate(transformedStringTemplate),
-                    Times.Once);
-
-            if (transformedTemplate.Tasks.Any())
-            {
-                foreach (Task task in transformedTemplate.Tasks)
-                {
-                    if (task.Actions.Any())
-                    {
-                        foreach (Action action in task.Actions)
-                        {
-                            if (action.Executions.Any())
-                            {
-                                this.executionServiceMock.Verify(executionService =>
-                                executionService.Run(action.Executions, action.ExecutionFolder),
+                            this.fileProcessingServiceMock.Verify(fileProcessingService =>
+                                fileProcessingService.WriteToFileAsync(file.Target, randomTransformedTemplateString),
                                     Times.Once);
-                            }
-                        }
-                    }
-                }
+                        });
+
+                        // TODO:  Add code for Appends
+
+                        this.executionProcessingServiceMock.Verify(executionProcessingService =>
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder),
+                                Times.Once);
+                    });
+                });
             }
 
-            this.templateServiceMock.VerifyNoOtherCalls();
-            this.fileServiceMock.VerifyNoOtherCalls();
-            this.executionServiceMock.VerifyNoOtherCalls();
-        }
+            this.loggingBrokerMock.Verify(loggingBroker =>
+                loggingBroker.LogInformation(It.IsAny<string>()),
+                    Times.AtLeastOnce());
 
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
