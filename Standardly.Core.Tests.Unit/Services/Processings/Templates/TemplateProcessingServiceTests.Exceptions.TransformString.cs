@@ -63,5 +63,54 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyOnTransformStringIfDependencyErrorOccursAndLogItAsync(
+            Xeption dependencyException)
+        {
+            // given
+            string randomInputString = GetRandomString();
+            string inputString = randomInputString;
+            Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
+            Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
+
+            var expectedTemplateProcessingDependencyException =
+                new TemplateProcessingDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.templateServiceMock.Setup(service =>
+                service.TransformStringAsync(inputString, inputReplacementDictionary))
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<string> transformTemplateTask =
+                this.templateProcessingService
+                    .TransformStringAsync(inputString, inputReplacementDictionary);
+
+            // then
+            TemplateProcessingDependencyException actualException =
+                await Assert.ThrowsAsync<TemplateProcessingDependencyException>(transformTemplateTask.AsTask);
+
+            this.templateServiceMock.Verify(service =>
+                service.TransformStringAsync(inputString, inputReplacementDictionary),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTemplateProcessingDependencyException))),
+                        Times.Once);
+
+            this.templateServiceMock.Verify(service =>
+                service.ValidateTransformationAsync(It.IsAny<string>()),
+                    Times.Never());
+
+            this.templateServiceMock.Verify(service =>
+                service.ConvertStringToTemplateAsync(It.IsAny<string>()),
+                    Times.Never());
+
+            this.templateServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
