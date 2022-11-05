@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xunit;
 
@@ -16,19 +15,23 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 {
     public partial class TemplateProcessingServiceTests
     {
-        [Fact]
-        public async Task ShouldThrowValidationExceptionOnTransformTemplateIfArgumentsIsInvalidAndLogItAsync()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnTransformStringIfArgumentsIsInvalidAndLogItAsync(
+            string invalidInput)
         {
             // given
-            Template nullTemplate = null;
+            string invalidContent = invalidInput;
             Dictionary<string, string> nullDictionary = null;
 
             var invalidArgumentTemplateProcessingException =
                 new InvalidArgumentTemplateProcessingException();
 
             invalidArgumentTemplateProcessingException.AddData(
-                key: "template",
-                values: "Template is required");
+                key: "content",
+                values: "Text is required");
 
             invalidArgumentTemplateProcessingException.AddData(
                 key: "replacementDictionary",
@@ -38,12 +41,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
 
             // when
-            ValueTask<Template> transformTemplateTask =
+            ValueTask<string> transformStringTask =
                 this.templateProcessingService
-                    .TransformTemplateAsync(nullTemplate, nullDictionary);
+                    .TransformStringAsync(invalidContent, nullDictionary);
 
             TemplateProcessingValidationException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingValidationException>(transformTemplateTask.AsTask);
+                await Assert.ThrowsAsync<TemplateProcessingValidationException>(transformStringTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
@@ -59,10 +62,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
             this.templateServiceMock.Verify(service =>
                 service.ValidateTransformationAsync(It.IsAny<string>()),
-                    Times.Never());
-
-            this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.VerifyNoOtherCalls();
