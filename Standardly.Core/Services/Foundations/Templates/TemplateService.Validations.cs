@@ -27,13 +27,10 @@ namespace Standardly.Core.Services.Foundations.Templates
                 (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
         }
 
-        private static void ValidateTransformationArguments(
-            string content,
-            char tagCharacter)
+        private static void ValidateTransformationArguments(string content)
         {
             Validate<InvalidArgumentTemplateException>(
-                (Rule: IsInvalid(content), Parameter: nameof(content)),
-                (Rule: IsInvalid(tagCharacter), Parameter: nameof(tagCharacter)));
+                (Rule: IsInvalid(content), Parameter: nameof(content)));
         }
 
         private static void ValidateConvertStringToTemplateArguments(string content)
@@ -218,9 +215,9 @@ namespace Standardly.Core.Services.Foundations.Templates
             Message = "Executions is required"
         };
 
-        private void CheckAllTagsHasBeenReplaced(string template, char tagCharacter = '$')
+        private void CheckAllTagsHasBeenReplaced(string template)
         {
-            var regex = $@"\{tagCharacter}([a-zA-Z]*)\{tagCharacter}";
+            var regex = $@"\$([a-zA-Z]*)\$";
             var matches = Regex.Matches(template, regex);
             List<string> tags = new List<string>();
 

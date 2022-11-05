@@ -16,7 +16,6 @@ namespace Standardly.Core.Services.Processings.Templates
 
         ValueTask<Template> TransformTemplateAsync(
             Template template,
-            Dictionary<string, string> replacementDictionary,
-            char tagCharacter);
+            Dictionary<string, string> replacementDictionary);
     }
 }

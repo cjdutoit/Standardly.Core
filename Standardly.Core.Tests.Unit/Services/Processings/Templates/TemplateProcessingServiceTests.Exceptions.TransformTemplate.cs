@@ -27,7 +27,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             Template inputTemplate = randomInputTemplate;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
-            char inputTagCharacter = '$';
 
             var expectedTemplateProcessingDependencyValidationException =
                 new TemplateProcessingDependencyValidationException(
@@ -40,7 +39,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             // when
             ValueTask<Template> transformTemplateTask =
                 this.templateProcessingService
-                    .TransformTemplateAsync(inputTemplate, inputReplacementDictionary, inputTagCharacter);
+                    .TransformTemplateAsync(inputTemplate, inputReplacementDictionary);
 
             // then
             TemplateProcessingDependencyValidationException actualException =
@@ -56,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         Times.Once);
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(It.IsAny<string>(), inputTagCharacter),
+                service.ValidateTransformationAsync(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.Verify(service =>
@@ -77,7 +76,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             Template inputTemplate = randomInputTemplate;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
-            char inputTagCharacter = '$';
 
             var expectedTemplateProcessingDependencyException =
                 new TemplateProcessingDependencyException(
@@ -90,7 +88,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             // when
             ValueTask<Template> transformTemplateTask =
                 this.templateProcessingService
-                    .TransformTemplateAsync(inputTemplate, inputReplacementDictionary, inputTagCharacter);
+                    .TransformTemplateAsync(inputTemplate, inputReplacementDictionary);
 
             // then
             TemplateProcessingDependencyException actualException =
@@ -106,7 +104,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         Times.Once);
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(It.IsAny<string>(), inputTagCharacter),
+                service.ValidateTransformationAsync(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.Verify(service =>
@@ -125,7 +123,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             Template inputTemplate = randomInputTemplate;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
-            char inputTagCharacter = '$';
 
             var serviceException = new Exception();
 
@@ -143,7 +140,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             // when
             ValueTask<Template> transformTemplateTask =
                 this.templateProcessingService
-                    .TransformTemplateAsync(inputTemplate, inputReplacementDictionary, inputTagCharacter);
+                    .TransformTemplateAsync(inputTemplate, inputReplacementDictionary);
 
             // then
             TemplateProcessingServiceException actualException =
@@ -159,7 +156,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         Times.Once);
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(It.IsAny<string>(), inputTagCharacter),
+                service.ValidateTransformationAsync(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.Verify(service =>

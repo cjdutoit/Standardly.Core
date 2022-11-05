@@ -16,12 +16,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 {
     public partial class TemplateProcessingServiceTests
     {
-        [Theory]
-        [MemberData(nameof(InvalidCharacters))]
-        public async Task ShouldThrowValidationExceptionIfArgumentsIsInvalidAndLogItAsync(char invalidInput)
+        [Fact]
+        public async Task ShouldThrowValidationExceptionIfArgumentsIsInvalidAndLogItAsync()
         {
             // given
-            char invalidTagCharacter = invalidInput;
             Template nullTemplate = null;
             Dictionary<string, string> nullDictionary = null;
 
@@ -36,17 +34,13 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 key: "replacementDictionary",
                 values: "Dictionary values is required");
 
-            invalidArgumentTemplateProcessingException.AddData(
-                key: "tagCharacter",
-                values: "Character is required");
-
             var expectedTemplateProcessingValidationException =
                 new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
 
             // when
             ValueTask<Template> transformTemplateTask =
                 this.templateProcessingService
-                    .TransformTemplateAsync(nullTemplate, nullDictionary, invalidTagCharacter);
+                    .TransformTemplateAsync(nullTemplate, nullDictionary);
 
             TemplateProcessingValidationException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingValidationException>(transformTemplateTask.AsTask);
@@ -64,7 +58,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     Times.Never);
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(It.IsAny<string>(), invalidTagCharacter),
+                service.ValidateTransformationAsync(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.Verify(service =>

@@ -35,17 +35,15 @@ namespace Standardly.Core.Services.Processings.Templates
 
         public ValueTask<Template> TransformTemplateAsync(
             Template template,
-            Dictionary<string, string> replacementDictionary,
-            char tagCharacter) =>
+            Dictionary<string, string> replacementDictionary) =>
                 TryCatchAsync(async () =>
                 {
-                    ValidateTransformTemplate(template, replacementDictionary, tagCharacter);
+                    ValidateTransformTemplate(template, replacementDictionary);
 
                     var transformedStringTemplate = await this.templateService
                         .TransformStringAsync(template.RawTemplate, replacementDictionary);
 
-                    await this.templateService
-                        .ValidateTransformationAsync(transformedStringTemplate, tagCharacter);
+                    await this.templateService.ValidateTransformationAsync(transformedStringTemplate);
 
                     var transformedTemplate = await this.templateService
                         .ConvertStringToTemplateAsync(transformedStringTemplate);

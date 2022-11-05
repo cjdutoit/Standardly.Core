@@ -23,13 +23,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
                 string randomStringTemplate = CreateStringTemplate(randomReplacementDictionary);
                 string inputStringTemplate = randomStringTemplate;
-                char replacementTag = '$';
 
                 // when then
                 string transformedTemplate =
                     await this.templateService.TransformStringAsync(inputStringTemplate, inputReplacementDictionary);
 
-                await this.templateService.ValidateTransformationAsync(transformedTemplate, replacementTag);
+                await this.templateService.ValidateTransformationAsync(transformedTemplate);
                 Assert.True(true);
             }
             catch (Exception ex)

@@ -23,7 +23,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string inputString = randomString;
             string randomTransformedString = GetRandomString();
             string transformedString = randomTransformedString;
-            char inputTagCharacter = '$';
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
             Template randomInputTemplate = CreateRandomTemplate();
@@ -41,7 +40,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
             // when
             Template actualTemplate = await this.templateProcessingService
-                .TransformTemplateAsync(inputTemplate, inputReplacementDictionary, inputTagCharacter);
+                .TransformTemplateAsync(inputTemplate, inputReplacementDictionary);
 
             // then
             actualTemplate.Should().BeEquivalentTo(expectedTemplate);
@@ -51,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     Times.Once());
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(transformedString, inputTagCharacter),
+                service.ValidateTransformationAsync(transformedString),
                     Times.Once());
 
             this.templateServiceMock.Verify(service =>
