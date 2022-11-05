@@ -80,6 +80,13 @@ namespace Standardly.Core.Services.Processings.Templates
             {
                 throw CreateAndLogDependencyException(templateServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedTemplateProcessingServiceException =
+                    new FailedTemplateProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedTemplateProcessingServiceException);
+            }
         }
 
         private TemplateProcessingValidationException CreateAndLogValidationException(Xeption exception)
