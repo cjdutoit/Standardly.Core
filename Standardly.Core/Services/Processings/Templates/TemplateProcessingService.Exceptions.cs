@@ -64,6 +64,14 @@ namespace Standardly.Core.Services.Processings.Templates
             {
                 throw CreateAndLogValidationException(invalidContentTemplateProcessingException);
             }
+            catch (TemplateValidationException templateValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateValidationException);
+            }
+            catch (TemplateDependencyValidationException templateDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateDependencyValidationException);
+            }
         }
 
         private TemplateProcessingValidationException CreateAndLogValidationException(Xeption exception)
