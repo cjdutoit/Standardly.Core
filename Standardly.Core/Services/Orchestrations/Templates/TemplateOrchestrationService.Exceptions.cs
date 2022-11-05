@@ -142,6 +142,13 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 throw CreateAndLogDependencyException(executionDependencyException);
             }
+            catch (Exception exception)
+            {
+                var failedTemplateOrchestrationServiceException =
+                    new FailedTemplateOrchestrationServiceException(exception.InnerException as Xeption);
+
+                throw CreateAndLogServiceException(failedTemplateOrchestrationServiceException);
+            }
         }
 
         private TemplateOrchestrationValidationException CreateAndLogValidationException(Xeption exception)

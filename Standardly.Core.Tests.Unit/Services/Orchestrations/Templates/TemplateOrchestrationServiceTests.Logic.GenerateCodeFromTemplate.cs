@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldGenerateCodeAsync()
         {
             // given
-            int randomNumber = 1; //GetRandomNumber();
+            int randomNumber = GetRandomNumber();
             List<Template> randomTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
@@ -97,7 +97,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
                                 templateProcessingService
                                     .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
-                                        Times.Once);
+                                        Times.AtLeastOnce);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
                                 fileProcessingService.WriteToFileAsync(file.Target, randomTransformedTemplateString),

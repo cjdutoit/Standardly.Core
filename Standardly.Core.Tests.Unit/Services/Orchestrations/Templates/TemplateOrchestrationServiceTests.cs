@@ -227,7 +227,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         private static int GetRandomNumber() =>
-            new IntRange(min: 2, max: 10).GetValue();
+            new IntRange(min: 2, max: 5).GetValue();
 
         private static string GetRandomString(int wordCount) =>
             new MnemonicString(wordCount: wordCount).GetValue();

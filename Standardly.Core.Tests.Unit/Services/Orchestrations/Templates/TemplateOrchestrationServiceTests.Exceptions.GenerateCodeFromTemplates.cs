@@ -24,7 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Exception dependencyValidationException)
         {
             // given
-            int randomNumber = 1; //GetRandomNumber();
+            int randomNumber = GetRandomNumber();
             List<Template> randomTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
@@ -66,7 +66,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Exception dependencyException)
         {
             // given
-            int randomNumber = 1; //GetRandomNumber();
+            int randomNumber = GetRandomNumber();
             List<Template> randomTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
@@ -104,7 +104,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShoudThrowServiceExceptionOnGenerateCodeFromTemplateAndLogItAsync()
         {
             // given
-            int randomNumber = 1; //GetRandomNumber();
+            int randomNumber = GetRandomNumber();
             List<Template> randomTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
@@ -124,11 +124,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         .ThrowsAsync(serviceException);
 
             // when
-            ValueTask<List<Template>> findAllTemplatesTask =
-                this.templateOrchestrationService.FindAllTemplatesAsync();
+            ValueTask generateCodeTask =
+                this.templateOrchestrationService.GenerateCodeAsync(inputTemplates, inputDictionary);
 
             TemplateOrchestrationServiceException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationServiceException>(findAllTemplatesTask.AsTask);
+                await Assert.ThrowsAsync<TemplateOrchestrationServiceException>(generateCodeTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationServiceException);

@@ -61,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldRemoveTemplatesOnGenerateCodeIfNotRequiredAsync()
         {
             // given
-            int randomNumber = 1; //GetRandomNumber();
+            int randomNumber = GetRandomNumber();
             List<Template> randomTemplates = GetRandomTemplateList(randomNumber, false);
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
