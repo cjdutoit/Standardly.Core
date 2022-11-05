@@ -27,7 +27,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             List<Template> randomTransformedTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> outputTemplates = randomTransformedTemplates;
 
-
             string randomExecutionOutcome = GetRandomString();
             string randomTemplateString = GetRandomString();
             string randomTransformedTemplateString = GetRandomString();

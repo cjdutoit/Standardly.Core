@@ -71,25 +71,28 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                 return templates;
             });
 
-        public async ValueTask GenerateCodeAsync(
+        public ValueTask GenerateCodeAsync(
             List<Template> templates,
-            Dictionary<string, string> replacementDictionary)
-        {
-            this.previousBranch = !string.IsNullOrWhiteSpace(replacementDictionary["$previousBranch$"])
-                ? replacementDictionary["$previousBranch$"]
-                : replacementDictionary["$basebranch$"];
+            Dictionary<string, string> replacementDictionary) =>
+            TryCatchAsync(async () =>
+                {
+                    ValidateTemplateArguments(templates, replacementDictionary);
 
-            List<Template> templatesToGenerate = new List<Template>();
+                    this.previousBranch = !string.IsNullOrWhiteSpace(replacementDictionary["$previousBranch$"])
+                        ? replacementDictionary["$previousBranch$"]
+                        : replacementDictionary["$basebranch$"];
 
-            templatesToGenerate.AddRange(
-                await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
+                    List<Template> templatesToGenerate = new List<Template>();
 
-            templatesToGenerate.ForEach(async template =>
-            {
-                replacementDictionary["$previousBranch$"] = previousBranch;
-                await GenerateTemplateAsync(template, replacementDictionary);
-            });
-        }
+                    templatesToGenerate.AddRange(
+                        await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
+
+                    templatesToGenerate.ForEach(async template =>
+                    {
+                        replacementDictionary["$previousBranch$"] = previousBranch;
+                        await GenerateTemplateAsync(template, replacementDictionary);
+                    });
+                });
 
         private async ValueTask GenerateTemplateAsync(
             Template template,

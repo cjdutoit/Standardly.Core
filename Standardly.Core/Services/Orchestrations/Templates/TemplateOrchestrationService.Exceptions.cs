@@ -19,6 +19,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
     public partial class TemplateOrchestrationService
     {
         private delegate ValueTask<List<Template>> ReturningTemplateListFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask<List<Template>> TryCatchAsync(ReturningTemplateListFunction returningTemplateListFunction)
         {
@@ -81,6 +82,28 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
                 throw CreateAndLogServiceException(failedTemplateOrchestrationServiceException);
             }
+        }
+
+        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
+        {
+            try
+            {
+                await returningNothingFunction();
+            }
+            catch (InvalidArgumentTemplateOrchestrationException invalidArgumentTemplateOrchestrationException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentTemplateOrchestrationException);
+            }
+        }
+
+        private TemplateOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
+        {
+            var templateOrchestrationValidationException =
+                new TemplateOrchestrationValidationException(exception);
+
+            this.loggingBroker.LogError(templateOrchestrationValidationException);
+
+            return templateOrchestrationValidationException;
         }
 
         private TemplateOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(
