@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     public partial class TemplateOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionIfArgumentsIsNull()
+        public async Task ShouldThrowValidationExceptionIfArgumentsIsNullAsync()
         {
             // given
             List<Template> nullTemplateList = null;
