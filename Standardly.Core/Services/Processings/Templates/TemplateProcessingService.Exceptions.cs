@@ -17,6 +17,8 @@ namespace Standardly.Core.Services.Processings.Templates
     {
         private delegate ValueTask<Template> ReturningTemplateFunction();
 
+        private delegate ValueTask<string> ReturningStringFunction();
+
         private async ValueTask<Template> TryCatchAsync(ReturningTemplateFunction returningTemplateFunction)
         {
             try
@@ -49,6 +51,18 @@ namespace Standardly.Core.Services.Processings.Templates
                     new FailedTemplateProcessingServiceException(exception);
 
                 throw CreateAndLogServiceException(failedTemplateProcessingServiceException);
+            }
+        }
+
+        private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
+        {
+            try
+            {
+                return await returningStringFunction();
+            }
+            catch (InvalidArgumentTemplateProcessingException invalidContentTemplateProcessingException)
+            {
+                throw CreateAndLogValidationException(invalidContentTemplateProcessingException);
             }
         }
 
