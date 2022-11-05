@@ -39,6 +39,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             this.executionProcessingService = executionProcessingService;
             this.templateProcessingService = templateProcessingService;
             this.templateConfig = templateConfig;
+            this.loggingBroker = loggingBroker;
         }
 
         public ValueTask<List<Template>> FindAllTemplatesAsync() =>
@@ -100,7 +101,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
             this.LogMessage(
                 DateTimeOffset.UtcNow,
-                $"Staring code generation for {transformedTemplate.Name}");
+                $"Starting code generation for {transformedTemplate.Name}");
 
             transformedTemplate.Tasks.ForEach(task =>
             {
@@ -117,7 +118,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
             this.LogMessage(
                 DateTimeOffset.UtcNow,
-                $"Staring with {transformedTemplate.Name} > {task.Name}");
+                $"Starting with {transformedTemplate.Name} > {task.Name}");
 
             PerformActions(task, transformedTemplate, replacementDictionary);
         }
@@ -131,7 +132,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 this.LogMessage(
                     DateTimeOffset.UtcNow,
-                    $"Staring with {transformedTemplate.Name} > {task.Name} > {action.Name}");
+                    $"Starting with {transformedTemplate.Name} > {task.Name} > {action.Name}");
 
                 this.PerformFileCreations(action.Files, replacementDictionary);
                 this.PerformAppendOpperations(action.Appends);
@@ -145,18 +146,17 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         {
             files.ForEach(async file =>
             {
-
                 string sourceString = await this.fileProcessingService.ReadFromFileAsync(file.Template);
 
                 string transformedSourceString =
-                    await this.templateProcessingService
-                        .TransformStringAsync(sourceString, replacementDictionary);
+                    await this.templateProcessingService.TransformStringAsync(sourceString, replacementDictionary);
 
                 transformedSourceString = transformedSourceString.Replace("##n##", "\\n");
 
-                var fileExists = await this.fileProcessingService.CheckIfFileExistsAsync(file.Target);
-                if (fileExists == false
-                    || (fileExists == true && file.Replace == true))
+                var fileExists = this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result;
+                var isRequired = !fileExists || file.Replace == true;
+
+                if (isRequired)
                 {
                     this.LogMessage(
                         DateTimeOffset.UtcNow,
@@ -216,7 +216,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         {
             var tasks = template.Tasks;
 
-            tasks.ForEach(task =>
+            tasks.ToList().ForEach(task =>
             {
                 tasks.Remove(RemoveTaskIfNotrequired(task));
             });
@@ -250,20 +250,21 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             List<Models.Foundations.Templates.Tasks.Actions.Action> actionsToRemove =
                 new List<Models.Foundations.Templates.Tasks.Actions.Action>();
 
-            actions.ForEach(async action =>
+            actions.ForEach(action =>
             {
-                List<Models.Foundations.Templates.Tasks.Actions.Files.File> files = action.Files;
-
-                foreach (Models.Foundations.Templates.Tasks.Actions.Files.File file in action.Files)
+                foreach (Models.Foundations.Templates.Tasks.Actions.Files.File file in action.Files.ToList())
                 {
-                    if (await this.fileProcessingService
-                        .CheckIfFileExistsAsync(file.Target) && file.Replace == false)
+                    bool isRequired =
+                        this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result
+                        && file.Replace == true;
+
+                    if (!isRequired)
                     {
-                        files.Remove(file);
+                        action.Files.Remove(file);
                     }
                 }
 
-                if (files.Count == 0)
+                if (action.Files.Count == 0)
                 {
                     actionsToRemove.Add(action);
                 }

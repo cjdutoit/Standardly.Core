@@ -18,13 +18,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldGenerateCodeAsync()
         {
             // given
-            int randomNumber = GetRandomNumber();
+            int randomNumber = 1; //GetRandomNumber();
             List<Template> randomTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
-            Template randomTransformedTemplate = CreateRandomTemplate();
+            Dictionary<string, string> inputDictionary = randomReplacementDictionary;
+
             List<Template> randomTransformedTemplates = GetRandomTemplateList(randomNumber, true);
-            List<Template> outputTemplates = randomTemplates;
+            List<Template> outputTemplates = randomTransformedTemplates;
+
+
             string randomExecutionOutcome = GetRandomString();
             string randomTemplateString = GetRandomString();
             string randomTransformedTemplateString = GetRandomString();
@@ -33,7 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplateAsync(inputTemplates[i], randomReplacementDictionary))
+                        .TransformTemplateAsync(inputTemplates[i], inputDictionary))
                             .ReturnsAsync(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
@@ -49,6 +52,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
                                 fileProcessingService.ReadFromFileAsync(file.Template))
                                     .ReturnsAsync(randomTemplateString);
+
+                            this.templateProcessingServiceMock.Setup(templateProcessingService =>
+                                templateProcessingService
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()))
+                                        .ReturnsAsync(randomTransformedTemplateString);
                         });
 
                         // TODO:  Add code for Appends
@@ -59,7 +67,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     });
                 });
             }
-
 
             // when
             await templateOrchestrationService
@@ -87,6 +94,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
                                 fileProcessingService.ReadFromFileAsync(file.Template),
                                     Times.Once);
+
+                            this.templateProcessingServiceMock.Verify(templateProcessingService =>
+                                templateProcessingService
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
+                                        Times.Once);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
                                 fileProcessingService.WriteToFileAsync(file.Target, randomTransformedTemplateString),
