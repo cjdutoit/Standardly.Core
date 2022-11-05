@@ -45,12 +45,12 @@ namespace Standardly.Core.Services.Foundations.Templates
                     return await Task.FromResult(template);
                 });
 
-        public ValueTask ValidateTransformationAsync(string content, char tagCharacter) =>
+        public ValueTask ValidateTransformationAsync(string content) =>
             TryCatchAsync(async () =>
             {
-                ValidateTransformationArguments(content, tagCharacter);
+                ValidateTransformationArguments(content);
 
-                await Task.Run(() => CheckAllTagsHasBeenReplaced(content, tagCharacter));
+                await Task.Run(() => CheckAllTagsHasBeenReplaced(content));
             });
 
         public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>

@@ -17,11 +17,48 @@ namespace Standardly.Core.Services.Processings.Templates
     {
         private delegate ValueTask<Template> ReturningTemplateFunction();
 
+        private delegate ValueTask<string> ReturningStringFunction();
+
         private async ValueTask<Template> TryCatchAsync(ReturningTemplateFunction returningTemplateFunction)
         {
             try
             {
                 return await returningTemplateFunction();
+            }
+            catch (InvalidArgumentTemplateProcessingException invalidContentTemplateProcessingException)
+            {
+                throw CreateAndLogValidationException(invalidContentTemplateProcessingException);
+            }
+            catch (TemplateValidationException templateValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateValidationException);
+            }
+            catch (TemplateDependencyValidationException templateDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(templateDependencyValidationException);
+            }
+            catch (TemplateDependencyException templateDependencyException)
+            {
+                throw CreateAndLogDependencyException(templateDependencyException);
+            }
+            catch (TemplateServiceException templateServiceException)
+            {
+                throw CreateAndLogDependencyException(templateServiceException);
+            }
+            catch (Exception exception)
+            {
+                var failedTemplateProcessingServiceException =
+                    new FailedTemplateProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedTemplateProcessingServiceException);
+            }
+        }
+
+        private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
+        {
+            try
+            {
+                return await returningStringFunction();
             }
             catch (InvalidArgumentTemplateProcessingException invalidContentTemplateProcessingException)
             {
