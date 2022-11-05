@@ -13,7 +13,7 @@ namespace Standardly.Core.Services.Foundations.Templates
     public interface ITemplateService
     {
         ValueTask<string> TransformStringAsync(string content, Dictionary<string, string> replacementDictionary);
-        ValueTask ValidateTransformationAsync(string content, char tagCharacter);
+        ValueTask ValidateTransformationAsync(string content);
         ValueTask<Template> ConvertStringToTemplateAsync(string content);
     }
 }

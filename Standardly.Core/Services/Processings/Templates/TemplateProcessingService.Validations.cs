@@ -20,13 +20,20 @@ namespace Standardly.Core.Services.Processings.Templates
 
         private static void ValidateTransformTemplate(
             Template template,
-            Dictionary<string, string> replacementDictionary,
-            char tagCharacter)
+            Dictionary<string, string> replacementDictionary)
         {
             Validate(
                 (Rule: IsInvalid(template), Parameter: nameof(template)),
-                (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)),
-                (Rule: IsInvalid(tagCharacter), Parameter: nameof(tagCharacter)));
+                (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
+        }
+
+        private static void ValidateTransformString(
+            string content,
+            Dictionary<string, string> replacementDictionary)
+        {
+            Validate(
+                (Rule: IsInvalid(content), Parameter: nameof(content)),
+                (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
         }
 
         private static dynamic IsInvalid(string text) => new

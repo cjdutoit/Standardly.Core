@@ -23,7 +23,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         {
             // given
             string invalidContent = invalidString;
-            char tagCharacter = '$';
 
             var invalidArgumentTemplateException =
                new InvalidArgumentTemplateException();
@@ -37,43 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             ValueTask validateTransformationAction =
-                this.templateService.ValidateTransformationAsync(invalidContent, tagCharacter);
-
-            TemplateValidationException actualTemplateValidationException =
-                await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationAction.AsTask);
-
-            // then
-            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateValidationException))),
-                        Times.Once);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
-        }
-
-        [Theory]
-        [MemberData(nameof(InvalidCharacters))]
-        public async Task ShouldThrowValidationExceptionOnValidateTransformIfCharArgumentsInvalid(char invalidCharacter)
-        {
-            // given
-            string randomContent = GetRandomString();
-            char invalidTagCharacter = invalidCharacter;
-
-            var invalidArgumentTemplateException =
-               new InvalidArgumentTemplateException();
-
-            invalidArgumentTemplateException.AddData(
-                key: "tagCharacter",
-                values: "Character is required");
-
-            var expectedTemplateValidationException =
-                new TemplateValidationException(invalidArgumentTemplateException);
-
-            // when
-            ValueTask validateTransformationAction =
-                this.templateService.ValidateTransformationAsync(randomContent, invalidTagCharacter);
+                this.templateService.ValidateTransformationAsync(invalidContent);
 
             TemplateValidationException actualTemplateValidationException =
                 await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationAction.AsTask);
