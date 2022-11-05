@@ -20,6 +20,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldFindAllTemplatesAsync()
         {
             // given
+            int itemsToGenerate = GetRandomNumber();
             string templatefolder = this.templateConfigMock.Object.TemplateFolder;
             string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFile;
             List<string> randomFileList = GetRandomStringList();
@@ -28,7 +29,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             string inputTemplateString = randomTemplateString;
             string expectedTemplateString = inputTemplateString;
             string rawTemplateString = expectedTemplateString;
-            Template randomTemplate = CreateRandomTemplate();
+            Template randomTemplate = CreateRandomTemplate(itemsToGenerate);
             Template outputTemplate = randomTemplate;
 
 

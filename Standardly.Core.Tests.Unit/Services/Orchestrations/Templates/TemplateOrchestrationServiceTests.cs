@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
+using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
@@ -32,6 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         private readonly Mock<IExecutionProcessingService> executionProcessingServiceMock;
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
         private readonly Mock<ITemplateConfig> templateConfigMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateOrchestrationService templateOrchestrationService;
 
         public TemplateOrchestrationServiceTests()
@@ -40,18 +42,20 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             this.executionProcessingServiceMock = new Mock<IExecutionProcessingService>();
             this.templateProcessingServiceMock = new Mock<ITemplateProcessingService>();
             this.templateConfigMock = new Mock<ITemplateConfig>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.templateConfigMock
                 .Setup(config => config.TemplateFolder).Returns("c:\\Standardly\\Templates");
 
             this.templateConfigMock
-                .Setup(config => config.TemplateFolder).Returns("Template.json");
+                .Setup(config => config.TemplateDefinitionFile).Returns("Template.json");
 
             templateOrchestrationService = new TemplateOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
                 executionProcessingService: executionProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,
-                templateConfig: templateConfigMock.Object);
+                templateConfig: templateConfigMock.Object,
+                loggingBroker: loggingBrokerMock.Object);
         }
 
         private static List<string> CreateListOfStrings()
@@ -98,11 +102,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             };
         }
 
-        private static List<Append> CreateAppends(int numberOfFileItems)
+        private static List<Append> CreateAppends(int itemsToGenerate)
         {
             var appends = new List<Append>();
 
-            for (int i = 0; i < numberOfFileItems; i++)
+            for (int i = 0; i < itemsToGenerate; i++)
             {
                 appends.Add(new Append()
                 {
@@ -116,11 +120,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             return appends;
         }
 
-        private static List<File> CreateFiles(int numberOfFileItems, bool replaceFiles)
+        private static List<File> CreateFiles(int itemsToGenerate, bool replaceFiles)
         {
             var files = new List<File>();
 
-            for (int i = 0; i < numberOfFileItems; i++)
+            for (int i = 0; i < itemsToGenerate; i++)
             {
                 files.Add(new File()
                 {
@@ -133,11 +137,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             return files;
         }
 
-        private static List<Execution> CreateExecutions(int numberOfExecutions)
+        private static List<Execution> CreateExecutions(int itemsToGenerate)
         {
             var executions = new List<Execution>();
 
-            for (int i = 0; i < numberOfExecutions; i++)
+            for (int i = 0; i < itemsToGenerate; i++)
             {
                 executions.Add(new Models.Foundations.Executions.Execution()
                 {
@@ -150,40 +154,55 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         private static List<Models.Foundations.Templates.Tasks.Actions.Action> CreateActions(
-            int numberOfActions,
+            int itemsToGenerate,
             bool replaceFiles)
         {
             var actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>();
 
-            for (int i = 0; i < numberOfActions; i++)
+            for (int i = 0; i < itemsToGenerate; i++)
             {
                 actions.Add(new Models.Foundations.Templates.Tasks.Actions.Action()
                 {
                     Name = GetRandomString(),
                     ExecutionFolder = GetRandomString(),
-                    Files = CreateFiles(2, replaceFiles),
-                    Appends = CreateAppends(2),
-                    Executions = CreateExecutions(2)
+                    Files = CreateFiles(itemsToGenerate, replaceFiles),
+                    Appends = CreateAppends(itemsToGenerate),
+                    Executions = CreateExecutions(itemsToGenerate)
                 });
             }
 
             return actions;
         }
 
-        private static List<Models.Foundations.Templates.Tasks.Task> CreateTasks(int numberOfTasks, bool replaceFiles)
+        private static List<Models.Foundations.Templates.Tasks.Task> CreateTasks(int itemsToGenerate, bool replaceFiles)
         {
             var tasks = new List<Models.Foundations.Templates.Tasks.Task>();
 
-            for (int i = 0; i < numberOfTasks; i++)
+            for (int i = 0; i < itemsToGenerate; i++)
             {
                 tasks.Add(new Models.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(),
-                    Actions = CreateActions(2, replaceFiles)
+                    Actions = CreateActions(itemsToGenerate, replaceFiles)
                 });
             }
 
             return tasks;
+        }
+
+        private static Dictionary<string, string> CreateReplacementDictionary()
+        {
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                dictionary.Add($"${GetRandomString(1)}$", GetRandomString(1));
+            }
+
+            dictionary.Add("$previousBranch$", GetRandomString(1));
+            dictionary.Add("$basebranch$", GetRandomString(1));
+
+            return dictionary;
         }
 
         private static Dictionary<string, string> CreateDictionary()
@@ -208,7 +227,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         private static int GetRandomNumber() =>
-            new IntRange(min: 2, max: 10).GetValue();
+            new IntRange(min: 2, max: 5).GetValue();
 
         private static string GetRandomString(int wordCount) =>
             new MnemonicString(wordCount: wordCount).GetValue();
@@ -216,14 +235,23 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         private static string GetRandomString() =>
             new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
-        private static Template CreateRandomTemplate(bool replaceFiles = true) =>
-            CreateTemplateFiller(replaceFiles).Create();
+        private static List<Template> GetRandomTemplateList(int itemsToGenerate, bool replaceFiles = true)
+        {
+            return Enumerable.Range(start: 0, count: itemsToGenerate)
+                .Select(item =>
+                {
+                    return CreateRandomTemplate(itemsToGenerate, replaceFiles);
+                }).ToList();
+        }
 
-        private static Filler<Template> CreateTemplateFiller(bool replaceFiles = true)
+        private static Template CreateRandomTemplate(int itemsToGenerate, bool replaceFiles = true) =>
+            CreateTemplateFiller(itemsToGenerate, replaceFiles).Create();
+
+        private static Filler<Template> CreateTemplateFiller(int itemsToGenerate, bool replaceFiles = true)
         {
             var filler = new Filler<Template>();
             filler.Setup()
-                .OnType<List<Models.Foundations.Templates.Tasks.Task>>().Use(CreateTasks(2, replaceFiles))
+                .OnType<List<Models.Foundations.Templates.Tasks.Task>>().Use(CreateTasks(itemsToGenerate, replaceFiles))
                 .OnType<Dictionary<string, string>>().Use(CreateDictionary);
 
             return filler;

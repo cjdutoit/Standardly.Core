@@ -13,5 +13,6 @@ namespace Standardly.Core.Services.Orchestrations.Templates
     public interface ITemplateOrchestrationService
     {
         ValueTask<List<Template>> FindAllTemplatesAsync();
+        ValueTask GenerateCodeAsync(List<Template> templates, Dictionary<string, string> replacementDictionary);
     }
 }

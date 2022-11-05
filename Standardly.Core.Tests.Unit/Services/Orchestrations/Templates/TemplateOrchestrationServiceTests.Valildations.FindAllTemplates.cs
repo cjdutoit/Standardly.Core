@@ -21,13 +21,14 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTestsAsync()
         {
             // given
+            int itemsToGenerate = GetRandomNumber();
             List<string> randomFileList = CreateListOfStrings();
             List<string> expectedFileList = randomFileList;
             string randomTemplateString = GetRandomString();
             string inputTemplateString = randomTemplateString;
             string expectedTemplateString = inputTemplateString;
             string rawTemplateString = expectedTemplateString;
-            Template randomTemplate = CreateRandomTemplate();
+            Template randomTemplate = CreateRandomTemplate(itemsToGenerate);
             Template outputTemplate = randomTemplate;
 
             this.fileProcessingServiceMock.Setup(fileService =>
