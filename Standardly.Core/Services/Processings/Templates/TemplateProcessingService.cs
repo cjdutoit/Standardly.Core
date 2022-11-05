@@ -50,5 +50,9 @@ namespace Standardly.Core.Services.Processings.Templates
 
                     return transformedTemplate;
                 });
+
+        public ValueTask<string> TransformStringAsync(
+            string content, Dictionary<string, string> replacementDictionary) =>
+               throw new System.NotImplementedException();
     }
 }
