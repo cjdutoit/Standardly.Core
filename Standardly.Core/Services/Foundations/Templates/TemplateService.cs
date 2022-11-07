@@ -66,5 +66,15 @@ namespace Standardly.Core.Services.Foundations.Templates
 
                 return await Task.FromResult(template);
             });
+
+        public ValueTask<string> AppendContent(
+            string sourceContent,
+            string regexToMatch,
+            string appendContent,
+            bool appendToBeginning = false,
+            bool onlyAppendIfNotPresent = true)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

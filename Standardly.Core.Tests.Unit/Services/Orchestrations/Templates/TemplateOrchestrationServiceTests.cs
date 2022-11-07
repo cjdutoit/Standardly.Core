@@ -143,7 +143,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             for (int i = 0; i < itemsToGenerate; i++)
             {
-                executions.Add(new Models.Foundations.Executions.Execution()
+                executions.Add(new Standardly.Core.Models.Foundations.Executions.Execution()
                 {
                     Name = GetRandomString(),
                     Instruction = GetRandomString()
@@ -153,15 +153,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             return executions;
         }
 
-        private static List<Models.Foundations.Templates.Tasks.Actions.Action> CreateActions(
+        private static List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action> CreateActions(
             int itemsToGenerate,
             bool replaceFiles)
         {
-            var actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>();
+            var actions = new List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action>();
 
             for (int i = 0; i < itemsToGenerate; i++)
             {
-                actions.Add(new Models.Foundations.Templates.Tasks.Actions.Action()
+                actions.Add(new Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action()
                 {
                     Name = GetRandomString(),
                     ExecutionFolder = GetRandomString(),
@@ -174,13 +174,13 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             return actions;
         }
 
-        private static List<Models.Foundations.Templates.Tasks.Task> CreateTasks(int itemsToGenerate, bool replaceFiles)
+        private static List<Core.Models.Foundations.Templates.Tasks.Task> CreateTasks(int itemsToGenerate, bool replaceFiles)
         {
-            var tasks = new List<Models.Foundations.Templates.Tasks.Task>();
+            var tasks = new List<Core.Models.Foundations.Templates.Tasks.Task>();
 
             for (int i = 0; i < itemsToGenerate; i++)
             {
-                tasks.Add(new Models.Foundations.Templates.Tasks.Task()
+                tasks.Add(new Core.Models.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(),
                     Actions = CreateActions(itemsToGenerate, replaceFiles)
@@ -251,7 +251,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         {
             var filler = new Filler<Template>();
             filler.Setup()
-                .OnType<List<Models.Foundations.Templates.Tasks.Task>>().Use(CreateTasks(itemsToGenerate, replaceFiles))
+                .OnType<List<Core.Models.Foundations.Templates.Tasks.Task>>().Use(CreateTasks(itemsToGenerate, replaceFiles))
                 .OnType<Dictionary<string, string>>().Use(CreateDictionary);
 
             return filler;

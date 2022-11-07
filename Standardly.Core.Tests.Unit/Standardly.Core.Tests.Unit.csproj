@@ -32,4 +32,13 @@
     <ProjectReference Include="..\Standardly.Core\Standardly.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\Startup.cs.Result.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Startup.cs.Source.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
