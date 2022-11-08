@@ -38,6 +38,14 @@ namespace Standardly.Core.Services.Foundations.Templates
             Validate<InvalidArgumentTemplateException>((Rule: IsInvalid(content), Parameter: nameof(content)));
         }
 
+        private static void ValidateExpressionMatch(bool matchFound)
+        {
+            if (!matchFound)
+            {
+                throw new RegExTemplateException("No match found. Please verify the expression and source");
+            }
+        }
+
         private static void ValidateAppendContent(
             string sourceContent,
             string regexToMatch,

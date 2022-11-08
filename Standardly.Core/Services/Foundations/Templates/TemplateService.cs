@@ -7,11 +7,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
+using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Foundations.Templates
@@ -19,11 +19,16 @@ namespace Standardly.Core.Services.Foundations.Templates
     public partial class TemplateService : ITemplateService
     {
         private readonly IFileBroker fileBroker;
+        private readonly IRegularExpressionBroker regularExpressionBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        public TemplateService(IFileBroker fileBroker, ILoggingBroker loggingBroker)
+        public TemplateService(
+            IFileBroker fileBroker,
+            IRegularExpressionBroker regularExpressionBroker,
+            ILoggingBroker loggingBroker)
         {
             this.fileBroker = fileBroker;
+            this.regularExpressionBroker = regularExpressionBroker;
             this.loggingBroker = loggingBroker;
         }
 
@@ -79,22 +84,24 @@ namespace Standardly.Core.Services.Foundations.Templates
                 {
                     ValidateAppendContent(sourceContent, regexToMatch, appendContent);
 
-                    Regex regex = new Regex(regexToMatch, RegexOptions.Multiline);
-                    Match match = regex.Match(sourceContent);
+                    var (matchFound, match) =
+                        this.regularExpressionBroker
+                            .CheckForExpressionMatch(regexToMatch, sourceContent);
 
                     StringBuilder builder = new StringBuilder();
                     if (appendToBeginning)
                     {
                         builder.AppendLine(appendContent);
-                        builder.Append(match.Value);
+                        builder.Append(match);
                     }
                     else
                     {
-                        builder.AppendLine(match.Value);
+                        builder.AppendLine(match);
                         builder.Append(appendContent);
                     }
 
-                    string result = Regex.Replace(sourceContent, regexToMatch, builder.ToString());
+                    string result = this.regularExpressionBroker
+                        .Replace(sourceContent, regexToMatch, builder.ToString());
 
                     return await Task.FromResult(result);
                 });
