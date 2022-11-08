@@ -55,6 +55,16 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             };
         }
 
+        public static TheoryData AppendContentDependencyValidationExceptions()
+        {
+            return new TheoryData<Exception>()
+            {
+                new ArgumentNullException(),
+                new ArgumentOutOfRangeException(),
+                new ArgumentException()
+            };
+        }
+
         private static string CreateStringTemplate(Dictionary<string, string> dictionary)
         {
             var stringBuilder = new StringBuilder();
