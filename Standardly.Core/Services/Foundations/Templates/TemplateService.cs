@@ -6,6 +6,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
@@ -67,14 +69,31 @@ namespace Standardly.Core.Services.Foundations.Templates
                 return await Task.FromResult(template);
             });
 
-        public ValueTask<string> AppendContent(
+        public async ValueTask<string> AppendContent(
             string sourceContent,
             string regexToMatch,
             string appendContent,
             bool appendToBeginning = false,
             bool onlyAppendIfNotPresent = true)
         {
-            throw new System.NotImplementedException();
+            Regex regex = new Regex(regexToMatch, RegexOptions.Multiline);
+            Match match = regex.Match(sourceContent);
+
+            StringBuilder builder = new StringBuilder();
+            if (appendToBeginning)
+            {
+                builder.AppendLine(appendContent);
+                builder.Append(match.Value);
+            }
+            else
+            {
+                builder.AppendLine(match.Value);
+                builder.Append(appendContent);
+            }
+
+            string result = Regex.Replace(sourceContent, regexToMatch, builder.ToString());
+
+            return await Task.FromResult(result);
         }
     }
 }
