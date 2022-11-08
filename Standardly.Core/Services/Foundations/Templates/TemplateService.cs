@@ -88,6 +88,8 @@ namespace Standardly.Core.Services.Foundations.Templates
                         this.regularExpressionBroker
                             .CheckForExpressionMatch(regexToMatch, sourceContent);
 
+                    ValidateExpressionMatch(matchFound);
+
                     StringBuilder builder = new StringBuilder();
                     if (appendToBeginning)
                     {

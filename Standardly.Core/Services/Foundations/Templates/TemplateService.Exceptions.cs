@@ -29,6 +29,10 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateException);
             }
+            catch (RegularExpressionTemplateException regularExpressionTemplateException)
+            {
+                throw CreateAndLogValidationException(regularExpressionTemplateException);
+            }
             catch (Exception exception)
             {
                 var failedTemplateServiceException =
