@@ -27,11 +27,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             bool onlyAppendIfNotPresent = true;
             string appendContent = "            services.AddDbContext<StorageBroker>();";
 
-            string regexToMacth = @"(?<=public void ConfigureServices\(IServiceCollection services\)\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
+            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
 
             // when
             string actualResult = await this.templateService
-                .AppendContent(sourceContent, regexToMacth, appendContent, appendToBeginning, onlyAppendIfNotPresent);
+                .AppendContent(sourceContent, regexToMatch, appendContent, appendToBeginning, onlyAppendIfNotPresent);
 
             // then
             actualResult.Trim().Should().BeEquivalentTo(expectedResult);
