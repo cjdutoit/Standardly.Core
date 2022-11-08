@@ -31,7 +31,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             string actualResult = await this.templateService
-                .AppendContent(sourceContent, regexToMatch, appendContent, appendToBeginning, onlyAppendIfNotPresent);
+                .AppendContentAsync(sourceContent, regexToMatch, appendContent, appendToBeginning, onlyAppendIfNotPresent);
 
             // then
             actualResult.Trim().Should().BeEquivalentTo(expectedResult);

@@ -38,6 +38,17 @@ namespace Standardly.Core.Services.Foundations.Templates
             Validate<InvalidArgumentTemplateException>((Rule: IsInvalid(content), Parameter: nameof(content)));
         }
 
+        private static void ValidateAppendContent(
+            string sourceContent,
+            string regexToMatch,
+            string appendContent)
+        {
+            Validate<InvalidArgumentTemplateException>(
+                (Rule: IsInvalid(sourceContent), Parameter: nameof(sourceContent)),
+                (Rule: IsInvalid(regexToMatch), Parameter: nameof(regexToMatch)),
+                (Rule: IsInvalid(appendContent), Parameter: nameof(appendContent)));
+        }
+
         private void ValidateTemplate(Template template)
         {
             var templateRules = new List<(dynamic Rule, string Parameter)>()

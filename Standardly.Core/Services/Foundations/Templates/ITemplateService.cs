@@ -16,7 +16,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         ValueTask ValidateTransformationAsync(string content);
         ValueTask<Template> ConvertStringToTemplateAsync(string content);
 
-        ValueTask<string> AppendContent(
+        ValueTask<string> AppendContentAsync(
             string sourceContent,
             string regexToMatch,
             string appendContent,

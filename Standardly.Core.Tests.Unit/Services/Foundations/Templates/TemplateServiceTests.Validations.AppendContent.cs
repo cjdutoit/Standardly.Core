@@ -47,7 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // when
             ValueTask<string> appendContentTask =
-                this.templateService.AppendContent(
+                this.templateService.AppendContentAsync(
                     sourceContent,
                     regexToMatch,
                     appendContent,

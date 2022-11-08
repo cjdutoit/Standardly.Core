@@ -69,31 +69,34 @@ namespace Standardly.Core.Services.Foundations.Templates
                 return await Task.FromResult(template);
             });
 
-        public async ValueTask<string> AppendContent(
+        public ValueTask<string> AppendContentAsync(
             string sourceContent,
             string regexToMatch,
             string appendContent,
             bool appendToBeginning = false,
-            bool onlyAppendIfNotPresent = true)
-        {
-            Regex regex = new Regex(regexToMatch, RegexOptions.Multiline);
-            Match match = regex.Match(sourceContent);
+            bool onlyAppendIfNotPresent = true) =>
+            TryCatchAsync(async () =>
+                {
+                    ValidateAppendContent(sourceContent, regexToMatch, appendContent);
 
-            StringBuilder builder = new StringBuilder();
-            if (appendToBeginning)
-            {
-                builder.AppendLine(appendContent);
-                builder.Append(match.Value);
-            }
-            else
-            {
-                builder.AppendLine(match.Value);
-                builder.Append(appendContent);
-            }
+                    Regex regex = new Regex(regexToMatch, RegexOptions.Multiline);
+                    Match match = regex.Match(sourceContent);
 
-            string result = Regex.Replace(sourceContent, regexToMatch, builder.ToString());
+                    StringBuilder builder = new StringBuilder();
+                    if (appendToBeginning)
+                    {
+                        builder.AppendLine(appendContent);
+                        builder.Append(match.Value);
+                    }
+                    else
+                    {
+                        builder.AppendLine(match.Value);
+                        builder.Append(appendContent);
+                    }
 
-            return await Task.FromResult(result);
-        }
+                    string result = Regex.Replace(sourceContent, regexToMatch, builder.ToString());
+
+                    return await Task.FromResult(result);
+                });
     }
 }
