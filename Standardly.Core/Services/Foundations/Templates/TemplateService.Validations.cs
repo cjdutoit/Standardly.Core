@@ -42,7 +42,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         {
             if (!matchFound)
             {
-                throw new RegExTemplateException("No match found. Please verify the expression and source");
+                throw new RegularExpressionTemplateException("No match found. Please verify the expression and source");
             }
         }
 

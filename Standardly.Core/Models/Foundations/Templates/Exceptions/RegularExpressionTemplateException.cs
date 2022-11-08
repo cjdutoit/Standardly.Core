@@ -8,9 +8,9 @@ using Xeptions;
 
 namespace Standardly.Core.Models.Foundations.Templates.Exceptions
 {
-    public class RegExTemplateException : Xeption
+    public class RegularExpressionTemplateException : Xeption
     {
-        public RegExTemplateException(string message)
+        public RegularExpressionTemplateException(string message)
             : base(message: message)
         { }
     }

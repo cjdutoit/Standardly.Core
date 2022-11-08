@@ -60,5 +60,37 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // then
             actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAppendContentIfWithNoMatchFoundAndLogAsync()
+        {
+            // given
+            string sourceContent = GetRandomString();
+            string regexToMatch = GetRandomString();
+            string appendContent = GetRandomString();
+            bool appendToBeginning = false;
+            bool onlyAppendIfNotPresent = true;
+
+            var regularExpressionTemplateException
+                = new RegularExpressionTemplateException("No match found. Please verify the expression and source");
+
+            var expectedTemplateValidationException =
+                new TemplateValidationException(regularExpressionTemplateException);
+
+            // when
+            ValueTask<string> appendContentTask =
+                this.templateService.AppendContentAsync(
+                    sourceContent,
+                    regexToMatch,
+                    appendContent,
+                    appendToBeginning,
+                    onlyAppendIfNotPresent);
+
+            var actualTemplateValidationException =
+                await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);
+
+            // then
+            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+        }
     }
 }
