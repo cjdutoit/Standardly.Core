@@ -9,5 +9,6 @@ namespace Standardly.Core.Brokers.RegularExpressions
     public interface IRegularExpressionBroker
     {
         (bool matchFound, string match) CheckForExpressionMatch(string regexToMatch, string sourceContent);
+        string Replace(string sourceContent, string regexToMatch, string replaceMatchWithNewContent);
     }
 }

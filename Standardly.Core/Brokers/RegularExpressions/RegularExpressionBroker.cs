@@ -15,8 +15,12 @@ namespace Standardly.Core.Brokers.RegularExpressions
             Regex regex = new Regex(regexToMatch, RegexOptions.Multiline);
             Match match = regex.Match(sourceContent);
             bool matchFound = match.Success;
-
             return (matchFound, match.Value);
+        }
+
+        public string Replace(string sourceContent, string regexToMatch, string replaceMatchWithNewContent)
+        {
+            return Regex.Replace(sourceContent, regexToMatch, replaceMatchWithNewContent);
         }
     }
 }
