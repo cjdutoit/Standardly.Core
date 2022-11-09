@@ -22,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
             string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.1.Source.txt"));
             string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.1.Result.txt"));
-            string expectedResult = resultContent.Trim();
+            string expectedResult = resultContent;
             string doesNotContainContent = string.Empty;
             bool appendToBeginning = true;
             bool appendEvenIfContentAlreadyExist = false;
@@ -41,8 +41,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
+            File.WriteAllText(@"C:\Temp\expected.txt", resultContent);
+            File.WriteAllText(@"C:\Temp\actual.txt", actualResult);
+
             // then
-            actualResult.Trim().Should().BeEquivalentTo(expectedResult);
+            actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
         [Fact]
