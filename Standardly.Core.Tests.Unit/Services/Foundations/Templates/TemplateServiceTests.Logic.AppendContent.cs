@@ -41,9 +41,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
-            File.WriteAllText(@"C:\Temp\expected.txt", resultContent);
-            File.WriteAllText(@"C:\Temp\actual.txt", actualResult);
-
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
