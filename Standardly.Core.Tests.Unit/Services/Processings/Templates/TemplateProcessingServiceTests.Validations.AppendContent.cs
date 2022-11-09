@@ -23,10 +23,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         {
             // given
             string sourceContent = invalidInput;
-            string regexToMatch = invalidInput;
+            string regexToMatchForAppend = invalidInput;
             string appendContent = invalidInput;
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             var invalidArgumentTemplateProcessingException =
                 new InvalidArgumentTemplateProcessingException();
@@ -51,10 +51,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
-                        regexToMatch,
+                        regexToMatchForAppend,
                         appendContent,
                         appendToBeginning,
-                        onlyAppendIfNotPresent);
+                        appendEvenIfContentAlreadyExist);
 
             TemplateProcessingValidationException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingValidationException>(appendContentTask.AsTask);
@@ -70,10 +70,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                 service.AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent),
+                    appendEvenIfContentAlreadyExist),
                         Times.Never);
 
             this.templateServiceMock.VerifyNoOtherCalls();

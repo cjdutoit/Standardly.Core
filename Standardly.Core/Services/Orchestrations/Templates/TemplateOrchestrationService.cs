@@ -172,9 +172,15 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
         private void PerformAppendOpperations(List<Models.Foundations.Templates.Tasks.Actions.Appends.Append> appends)
         {
-            appends.ForEach(append =>
+            appends.ForEach(async append =>
             {
-                // TODO: Add Append Operations 
+                await this.templateProcessingService.AppendContentAsync(
+                    sourceContent: append.Target,
+                    regexToMatchForAppend: append.RegexToMatchForAppend,
+                    appendContent: append.ContentToAppend,
+                    appendToBeginning: append.AppendToBeginning,
+                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist
+                    );
             });
         }
 

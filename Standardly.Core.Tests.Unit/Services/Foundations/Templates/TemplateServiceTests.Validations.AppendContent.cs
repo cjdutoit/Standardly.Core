@@ -25,7 +25,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string regexToMatch = invalidString;
             string appendContent = invalidString;
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             var invalidArgumentTemplateException =
                             new InvalidArgumentTemplateException();
@@ -52,7 +52,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     regexToMatch,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent);
+                    appendEvenIfContentAlreadyExist);
 
             var actualTemplateValidationException =
                 await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);
@@ -69,7 +69,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string regexToMatch = GetRandomString();
             string appendContent = GetRandomString();
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             var regularExpressionTemplateException
                 = new RegularExpressionTemplateException("No match found. Please verify the expression and source");
@@ -84,7 +84,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     regexToMatch,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent);
+                    appendEvenIfContentAlreadyExist);
 
             var actualTemplateValidationException =
                 await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);

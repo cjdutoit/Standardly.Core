@@ -79,7 +79,7 @@ namespace Standardly.Core.Services.Foundations.Templates
             string regexToMatch,
             string appendContent,
             bool appendToBeginning = false,
-            bool onlyAppendIfNotPresent = true) =>
+            bool appendEvenIfContentAlreadyExist = false) =>
             TryCatchAsync(async () =>
                 {
                     ValidateAppendContent(sourceContent, regexToMatch, appendContent);
@@ -89,6 +89,11 @@ namespace Standardly.Core.Services.Foundations.Templates
                             .CheckForExpressionMatch(regexToMatch, sourceContent);
 
                     ValidateExpressionMatch(matchFound);
+
+                    if (appendEvenIfContentAlreadyExist == false && sourceContent.Contains(appendContent))
+                    {
+                        return await Task.FromResult(sourceContent);
+                    }
 
                     StringBuilder builder = new StringBuilder();
                     if (appendToBeginning)

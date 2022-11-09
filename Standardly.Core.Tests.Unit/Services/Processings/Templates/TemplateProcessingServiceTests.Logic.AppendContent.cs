@@ -18,30 +18,30 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         {
             // given
             string sourceContent = GetRandomString();
-            string regexToMatch = GetRandomString();
+            string regexToMatchForAppend = GetRandomString();
             string appendContent = GetRandomString();
             bool appendToBeginning = true;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
             string output = GetRandomString();
             string expectedResult = output;
 
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent))
+                    appendEvenIfContentAlreadyExist))
                         .ReturnsAsync(output);
 
             // when
             string actualResult = await this.templateProcessingService
                 .AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent);
+                    appendEvenIfContentAlreadyExist);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
@@ -49,10 +49,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                 service.AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent),
+                    appendEvenIfContentAlreadyExist),
                         Times.Once());
 
             this.templateServiceMock.VerifyNoOtherCalls();

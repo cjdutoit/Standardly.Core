@@ -20,18 +20,53 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // given
             var assembly = Assembly.GetExecutingAssembly().Location;
             var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
-            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.Source.txt"));
-            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.Result.txt"));
+            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.1.Source.txt"));
+            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.1.Result.txt"));
             string expectedResult = resultContent.Trim();
             bool appendToBeginning = true;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
             string appendContent = "            services.AddDbContext<StorageBroker>();";
 
-            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
+            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)"
+                + @"\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
 
             // when
             string actualResult = await this.templateService
-                .AppendContentAsync(sourceContent, regexToMatch, appendContent, appendToBeginning, onlyAppendIfNotPresent);
+                .AppendContentAsync(
+                    sourceContent,
+                    regexToMatch,
+                    appendContent,
+                    appendToBeginning,
+                    appendEvenIfContentAlreadyExist);
+
+            // then
+            actualResult.Trim().Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Fact]
+        public async Task ShouldNotAppendContentAsync()
+        {
+            // given
+            var assembly = Assembly.GetExecutingAssembly().Location;
+            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
+            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.2.Source.txt"));
+            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.2.Result.txt"));
+            string expectedResult = resultContent.Trim();
+            bool appendToBeginning = true;
+            bool appendEvenIfContentAlreadyExist = false;
+            string appendContent = "            services.AddDbContext<StorageBroker>();";
+
+            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)"
+                + @"\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
+
+            // when
+            string actualResult = await this.templateService
+                .AppendContentAsync(
+                    sourceContent,
+                    regexToMatch,
+                    appendContent,
+                    appendToBeginning,
+                    appendEvenIfContentAlreadyExist);
 
             // then
             actualResult.Trim().Should().BeEquivalentTo(expectedResult);

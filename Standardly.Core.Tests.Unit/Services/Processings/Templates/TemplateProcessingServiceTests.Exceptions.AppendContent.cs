@@ -22,10 +22,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         {
             // given
             string sourceContent = GetRandomString();
-            string regexToMatch = GetRandomString();
+            string regexToMatchForAppendForAppend = GetRandomString();
             string appendContent = GetRandomString();
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = true;
 
             var expectedTemplateProcessingDependencyValidationException =
                 new TemplateProcessingDependencyValidationException(
@@ -34,10 +34,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent))
+                    appendEvenIfContentAlreadyExist))
                         .ThrowsAsync(dependencyValidationException);
 
             // when
@@ -45,10 +45,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
-                        regexToMatch,
+                        regexToMatchForAppendForAppend,
                         appendContent,
                         appendToBeginning,
-                        onlyAppendIfNotPresent);
+                        appendEvenIfContentAlreadyExist);
 
             // then
             TemplateProcessingDependencyValidationException actualException =
@@ -57,10 +57,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                 service.AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent),
+                    appendEvenIfContentAlreadyExist),
                         Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -79,10 +79,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         {
             // given
             string sourceContent = GetRandomString();
-            string regexToMatch = GetRandomString();
+            string regexToMatchForAppendForAppend = GetRandomString();
             string appendContent = GetRandomString();
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             var expectedTemplateProcessingDependencyException =
                 new TemplateProcessingDependencyException(
@@ -91,10 +91,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent))
+                    appendEvenIfContentAlreadyExist))
                         .ThrowsAsync(dependencyException);
 
             // when
@@ -102,10 +102,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
-                        regexToMatch,
+                        regexToMatchForAppendForAppend,
                         appendContent,
                         appendToBeginning,
-                        onlyAppendIfNotPresent);
+                        appendEvenIfContentAlreadyExist);
 
             // then
             TemplateProcessingDependencyException actualException =
@@ -114,10 +114,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                  service.AppendContentAsync(
                      sourceContent,
-                     regexToMatch,
+                     regexToMatchForAppendForAppend,
                      appendContent,
                      appendToBeginning,
-                     onlyAppendIfNotPresent),
+                     appendEvenIfContentAlreadyExist),
                          Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -142,10 +142,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         {
             // given
             string sourceContent = GetRandomString();
-            string regexToMatch = GetRandomString();
+            string regexToMatchForAppend = GetRandomString();
             string appendContent = GetRandomString();
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             var serviceException = new Exception();
 
@@ -159,10 +159,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
-                    regexToMatch,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent))
+                    appendEvenIfContentAlreadyExist))
                         .ThrowsAsync(serviceException);
 
             // when
@@ -170,10 +170,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
-                        regexToMatch,
+                        regexToMatchForAppend,
                         appendContent,
                         appendToBeginning,
-                        onlyAppendIfNotPresent);
+                        appendEvenIfContentAlreadyExist);
 
             // then
             TemplateProcessingServiceException actualException =
@@ -182,10 +182,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                  service.AppendContentAsync(
                      sourceContent,
-                     regexToMatch,
+                     regexToMatchForAppend,
                      appendContent,
                      appendToBeginning,
-                     onlyAppendIfNotPresent),
+                     appendEvenIfContentAlreadyExist),
                          Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
