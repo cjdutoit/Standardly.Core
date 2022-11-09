@@ -52,27 +52,29 @@ namespace Standardly.Core.Services.Processings.Templates
                 });
 
         public ValueTask<string> TransformStringAsync(
-            string content, Dictionary<string, string> replacementDictionary) =>
-            TryCatchAsync(async () =>
-            {
-                ValidateTransformString(content, replacementDictionary);
+            string content,
+            Dictionary<string, string> replacementDictionary) =>
+                TryCatchAsync(async () =>
+                {
+                    ValidateTransformString(content, replacementDictionary);
 
-                var transformedStringTemplate =
-                    await this.templateService.TransformStringAsync(content, replacementDictionary);
+                    var transformedStringTemplate =
+                        await this.templateService.TransformStringAsync(content, replacementDictionary);
 
-                await this.templateService.ValidateTransformationAsync(transformedStringTemplate);
+                    await this.templateService.ValidateTransformationAsync(transformedStringTemplate);
 
-                return transformedStringTemplate;
-            });
+                    return transformedStringTemplate;
+                });
 
-        public ValueTask<string> AppendContentAsync(
+        public async ValueTask<string> AppendContentAsync(
             string sourceContent,
             string regexToMatch,
             string appendContent,
             bool appendToBeginning = false,
             bool onlyAppendIfNotPresent = true)
         {
-            throw new System.NotImplementedException();
+            return await this.templateService
+                .AppendContentAsync(sourceContent, regexToMatch, appendContent, onlyAppendIfNotPresent);
         }
     }
 }
