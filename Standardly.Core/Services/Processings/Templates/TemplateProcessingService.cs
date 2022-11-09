@@ -66,15 +66,18 @@ namespace Standardly.Core.Services.Processings.Templates
                     return transformedStringTemplate;
                 });
 
-        public async ValueTask<string> AppendContentAsync(
+        public ValueTask<string> AppendContentAsync(
             string sourceContent,
             string regexToMatch,
             string appendContent,
             bool appendToBeginning = false,
-            bool onlyAppendIfNotPresent = true)
-        {
-            return await this.templateService
-                .AppendContentAsync(sourceContent, regexToMatch, appendContent, onlyAppendIfNotPresent);
-        }
+            bool onlyAppendIfNotPresent = true) =>
+                TryCatchAsync(async () =>
+                {
+                    ValidateAppendContent(sourceContent, regexToMatch, appendContent);
+
+                    return await this.templateService
+                        .AppendContentAsync(sourceContent, regexToMatch, appendContent, onlyAppendIfNotPresent);
+                });
     }
 }

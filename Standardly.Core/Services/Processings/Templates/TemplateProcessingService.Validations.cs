@@ -36,6 +36,17 @@ namespace Standardly.Core.Services.Processings.Templates
                 (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
         }
 
+        private static void ValidateAppendContent(
+            string sourceContent,
+            string regexToMatch,
+            string appendContent)
+        {
+            Validate(
+                (Rule: IsInvalid(sourceContent), Parameter: nameof(sourceContent)),
+                (Rule: IsInvalid(regexToMatch), Parameter: nameof(regexToMatch)),
+                (Rule: IsInvalid(appendContent), Parameter: nameof(appendContent)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
