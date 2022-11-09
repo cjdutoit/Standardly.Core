@@ -77,7 +77,12 @@ namespace Standardly.Core.Services.Processings.Templates
                     ValidateAppendContent(sourceContent, regexToMatch, appendContent);
 
                     return await this.templateService
-                        .AppendContentAsync(sourceContent, regexToMatch, appendContent, onlyAppendIfNotPresent);
+                        .AppendContentAsync(
+                            sourceContent,
+                            regexToMatch,
+                            appendContent,
+                            appendToBeginning,
+                            onlyAppendIfNotPresent);
                 });
     }
 }
