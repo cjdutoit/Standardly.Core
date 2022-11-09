@@ -101,8 +101,34 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
-            File.WriteAllText(@"C:\Temp\expected.txt", resultContent);
-            File.WriteAllText(@"C:\Temp\actual.txt", actualResult);
+            // then
+            actualResult.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Fact]
+        public async Task ShouldNotAppendIfTheDoesNotContainContentIsPresentAsync()
+        {
+            // given
+            var assembly = Assembly.GetExecutingAssembly().Location;
+            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
+            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.4.Source.txt"));
+            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.4.Result.txt"));
+            string expectedResult = resultContent;
+            bool appendToBeginning = false;
+            bool appendEvenIfContentAlreadyExist = false;
+            string regexToMatch = @"(?<=public class Startup\r\n    \{\r\n)([\S\s]*?)(?=\r\n    \}\r\n)";
+            string doesNotContain = "private static void AddServices(IServiceCollection services)";
+            string appendContent = "        private static void AddServices(IServiceCollection services)\r\n        {\r\n\r\n        }";
+
+            // when
+            string actualResult = await this.templateService
+                .AppendContentAsync(
+                    sourceContent,
+                    doesNotContain,
+                    regexToMatch,
+                    appendContent,
+                    appendToBeginning,
+                    appendEvenIfContentAlreadyExist);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
