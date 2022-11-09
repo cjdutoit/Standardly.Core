@@ -64,5 +64,15 @@ namespace Standardly.Core.Services.Processings.Templates
 
                 return transformedStringTemplate;
             });
+
+        public ValueTask<string> AppendContentAsync(
+            string sourceContent,
+            string regexToMatch,
+            string appendContent,
+            bool appendToBeginning = false,
+            bool onlyAppendIfNotPresent = true)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
