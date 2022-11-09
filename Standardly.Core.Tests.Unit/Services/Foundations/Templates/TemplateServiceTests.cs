@@ -12,6 +12,7 @@ using Moq;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
+using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
@@ -26,16 +27,20 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         private readonly Mock<IFileBroker> fileBrokerMock;
+        private readonly RegularExpressionBroker regularExpressionBroker;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateService templateService;
 
         public TemplateServiceTests()
         {
             this.fileBrokerMock = new Mock<IFileBroker>();
+            this.regularExpressionBroker = new RegularExpressionBroker();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.templateService = new TemplateService(
-                fileBroker: fileBrokerMock.Object, loggingBroker: loggingBrokerMock.Object);
+                fileBroker: fileBrokerMock.Object,
+                regularExpressionBroker: regularExpressionBroker,
+                loggingBroker: loggingBrokerMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
@@ -47,6 +52,16 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             {
                 new char(),
                 ' ',
+            };
+        }
+
+        public static TheoryData AppendContentDependencyValidationExceptions()
+        {
+            return new TheoryData<Exception>()
+            {
+                new ArgumentNullException(),
+                new ArgumentOutOfRangeException(),
+                new ArgumentException()
             };
         }
 
@@ -139,14 +154,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             return list;
         }
 
-        private static List<Models.Foundations.Templates.Tasks.Actions.Action> CreateListOfActions()
+        private static List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action> CreateListOfActions()
         {
-            List<Models.Foundations.Templates.Tasks.Actions.Action> list =
-                new List<Models.Foundations.Templates.Tasks.Actions.Action>();
+            List<Core.Models.Foundations.Templates.Tasks.Actions.Action> list =
+                new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>();
 
             for (int i = 0; i < GetRandomNumber(); i++)
             {
-                list.Add(new Models.Foundations.Templates.Tasks.Actions.Action()
+                list.Add(new Core.Models.Foundations.Templates.Tasks.Actions.Action()
                 {
                     Name = GetRandomString(1),
                     ExecutionFolder = GetRandomString(1),
@@ -159,14 +174,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             return list;
         }
 
-        private static List<Models.Foundations.Templates.Tasks.Task> CreateListOfTasks()
+        private static List<Standardly.Core.Models.Foundations.Templates.Tasks.Task> CreateListOfTasks()
         {
-            List<Models.Foundations.Templates.Tasks.Task> list =
-                new List<Models.Foundations.Templates.Tasks.Task>();
+            List<Core.Models.Foundations.Templates.Tasks.Task> list =
+                new List<Core.Models.Foundations.Templates.Tasks.Task>();
 
             for (int i = 0; i < GetRandomNumber(); i++)
             {
-                list.Add(new Models.Foundations.Templates.Tasks.Task()
+                list.Add(new Core.Models.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(1),
                     Actions = CreateListOfActions()
@@ -201,7 +216,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             var filler = new Filler<Template>();
             filler.Setup()
                 .OnType<List<string>>().Use(CreateListOfStrings)
-                .OnType<List<Models.Foundations.Templates.Tasks.Task>>().Use(CreateListOfTasks);
+                .OnType<List<Core.Models.Foundations.Templates.Tasks.Task>>().Use(CreateListOfTasks);
 
             return filler;
         }

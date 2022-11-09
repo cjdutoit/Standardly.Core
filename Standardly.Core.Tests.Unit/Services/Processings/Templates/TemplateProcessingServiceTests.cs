@@ -140,7 +140,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
             for (int i = 0; i < GetRandomNumber(); i++)
             {
-                list.Add(new Models.Foundations.Templates.Tasks.Actions.Files.File()
+                list.Add(new Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files.File()
                 {
                     Template = GetRandomString(1),
                     Target = GetRandomString(1),
@@ -151,14 +151,14 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             return list;
         }
 
-        private static List<Models.Foundations.Templates.Tasks.Actions.Action> CreateListOfActions()
+        private static List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action> CreateListOfActions()
         {
-            List<Models.Foundations.Templates.Tasks.Actions.Action> list =
-                new List<Models.Foundations.Templates.Tasks.Actions.Action>();
+            List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action> list =
+                new List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action>();
 
             for (int i = 0; i < GetRandomNumber(); i++)
             {
-                list.Add(new Models.Foundations.Templates.Tasks.Actions.Action()
+                list.Add(new Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action()
                 {
                     Name = GetRandomString(1),
                     ExecutionFolder = GetRandomString(1),
@@ -171,14 +171,14 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             return list;
         }
 
-        private static List<Models.Foundations.Templates.Tasks.Task> CreateListOfTasks()
+        private static List<Core.Models.Foundations.Templates.Tasks.Task> CreateListOfTasks()
         {
-            List<Models.Foundations.Templates.Tasks.Task> list =
-                new List<Models.Foundations.Templates.Tasks.Task>();
+            List<Core.Models.Foundations.Templates.Tasks.Task> list =
+                new List<Core.Models.Foundations.Templates.Tasks.Task>();
 
             for (int i = 0; i < GetRandomNumber(); i++)
             {
-                list.Add(new Models.Foundations.Templates.Tasks.Task()
+                list.Add(new Core.Models.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(1),
                     Actions = CreateListOfActions()
@@ -216,7 +216,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             var filler = new Filler<Template>();
             filler.Setup()
                 .OnType<List<string>>().Use(CreateListOfStrings)
-                .OnType<List<Models.Foundations.Templates.Tasks.Task>>().Use(CreateListOfTasks);
+                .OnType<List<Core.Models.Foundations.Templates.Tasks.Task>>().Use(CreateListOfTasks);
 
             return filler;
         }

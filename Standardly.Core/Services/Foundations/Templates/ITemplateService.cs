@@ -15,5 +15,12 @@ namespace Standardly.Core.Services.Foundations.Templates
         ValueTask<string> TransformStringAsync(string content, Dictionary<string, string> replacementDictionary);
         ValueTask ValidateTransformationAsync(string content);
         ValueTask<Template> ConvertStringToTemplateAsync(string content);
+
+        ValueTask<string> AppendContentAsync(
+            string sourceContent,
+            string regexToMatch,
+            string appendContent,
+            bool appendToBeginning = false,
+            bool onlyAppendIfNotPresent = true);
     }
 }

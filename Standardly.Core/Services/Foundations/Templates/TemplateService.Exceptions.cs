@@ -29,6 +29,31 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateException);
             }
+            catch (RegularExpressionTemplateException regularExpressionTemplateException)
+            {
+                throw CreateAndLogValidationException(regularExpressionTemplateException);
+            }
+            catch (ArgumentNullException argumentNullException)
+            {
+                var invalidRegularExpressionTemplateException =
+                    new InvalidRegularExpressionTemplateException(argumentNullException);
+
+                throw CreateAndLogDependencyValidationException(invalidRegularExpressionTemplateException);
+            }
+            catch (ArgumentOutOfRangeException argumentOutOfRangeException)
+            {
+                var invalidRegularExpressionTemplateException =
+                    new InvalidRegularExpressionTemplateException(argumentOutOfRangeException);
+
+                throw CreateAndLogDependencyValidationException(invalidRegularExpressionTemplateException);
+            }
+            catch (ArgumentException argumentException)
+            {
+                var invalidRegularExpressionTemplateException =
+                    new InvalidRegularExpressionTemplateException(argumentException);
+
+                throw CreateAndLogDependencyValidationException(invalidRegularExpressionTemplateException);
+            }
             catch (Exception exception)
             {
                 var failedTemplateServiceException =
@@ -86,6 +111,14 @@ namespace Standardly.Core.Services.Foundations.Templates
             this.loggingBroker.LogError(templateValidationException);
 
             return templateValidationException;
+        }
+
+        private TemplateDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var templateDependencyValidationException = new TemplateDependencyValidationException(exception);
+            this.loggingBroker.LogError(templateDependencyValidationException);
+
+            return templateDependencyValidationException;
         }
 
         private TemplateServiceException CreateAndLogServiceException(Exception exception)

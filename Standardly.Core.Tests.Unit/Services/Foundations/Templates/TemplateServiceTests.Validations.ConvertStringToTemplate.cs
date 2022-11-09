@@ -120,7 +120,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = invalidString,
             };
@@ -170,12 +170,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
-                Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
+                Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
-                    new Models.Foundations.Templates.Tasks.Actions.Action()
+                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = invalidString,
                         Files = new List<File>(),
@@ -229,18 +229,18 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Models.Foundations.Templates.Tasks.Task someTask =
-                new Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Foundations.Templates.Tasks.Task someTask =
+                new Core.Models.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(),
-                    Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
+                    Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
-                    new Models.Foundations.Templates.Tasks.Actions.Action()
+                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
                         Files = new List<File>()
                         {
-                            new Models.Foundations.Templates.Tasks.Actions.Files.File()
+                            new Core.Models.Foundations.Templates.Tasks.Actions.Files.File()
                             {
                                 Template = invalidString,
                                 Target = invalidString
@@ -303,25 +303,25 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
-                Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
+                Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
-                    new Models.Foundations.Templates.Tasks.Actions.Action()
+                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
                         Files = new List<File>()
                         {
-                            new Models.Foundations.Templates.Tasks.Actions.Files.File()
+                            new Core.Models.Foundations.Templates.Tasks.Actions.Files.File()
                             {
                                 Template = GetRandomString(),
                                 Target = GetRandomString()
                             },
                         },
-                        Appends = new List<Models.Foundations.Templates.Tasks.Actions.Appends.Append>()
+                        Appends = new List<Core.Models.Foundations.Templates.Tasks.Actions.Appends.Append>()
                         {
-                            new Models.Foundations.Templates.Tasks.Actions.Appends.Append()
+                            new Core.Models.Foundations.Templates.Tasks.Actions.Appends.Append()
                             {
                                 Target = invalidString,
                                 RegexToMatch = invalidString,
@@ -389,17 +389,17 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Models.Foundations.Templates.Tasks.Task someTask = new Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
-                Actions = new List<Models.Foundations.Templates.Tasks.Actions.Action>()
+                Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
-                    new Models.Foundations.Templates.Tasks.Actions.Action()
+                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
                         Files = new List<File>()
                         {
-                            new Models.Foundations.Templates.Tasks.Actions.Files.File()
+                            new Core.Models.Foundations.Templates.Tasks.Actions.Files.File()
                             {
                                 Template = GetRandomString(),
                                 Target = GetRandomString()
