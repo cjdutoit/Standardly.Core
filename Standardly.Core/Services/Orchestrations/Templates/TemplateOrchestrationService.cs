@@ -178,6 +178,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
                 string appendedContent = await this.templateProcessingService.AppendContentAsync(
                     sourceContent: fileContent,
+                    doesNotContainContent: append.DoesNotContainContent,
                     regexToMatchForAppend: append.RegexToMatchForAppend,
                     appendContent: append.ContentToAppend,
                     appendToBeginning: append.AppendToBeginning,

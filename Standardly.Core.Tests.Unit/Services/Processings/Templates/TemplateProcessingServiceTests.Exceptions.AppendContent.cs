@@ -24,6 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string sourceContent = GetRandomString();
             string regexToMatchForAppendForAppend = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = false;
             bool appendEvenIfContentAlreadyExist = true;
 
@@ -34,6 +35,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
@@ -45,6 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
+                        doesNotContainContent,
                         regexToMatchForAppendForAppend,
                         appendContent,
                         appendToBeginning,
@@ -57,6 +60,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                 service.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
@@ -81,6 +85,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string sourceContent = GetRandomString();
             string regexToMatchForAppendForAppend = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = false;
             bool appendEvenIfContentAlreadyExist = false;
 
@@ -91,6 +96,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
@@ -102,6 +108,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
+                        doesNotContainContent,
                         regexToMatchForAppendForAppend,
                         appendContent,
                         appendToBeginning,
@@ -114,6 +121,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                  service.AppendContentAsync(
                      sourceContent,
+                     doesNotContainContent,
                      regexToMatchForAppendForAppend,
                      appendContent,
                      appendToBeginning,
@@ -144,6 +152,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string sourceContent = GetRandomString();
             string regexToMatchForAppend = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = false;
             bool appendEvenIfContentAlreadyExist = false;
 
@@ -159,6 +168,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
@@ -170,6 +180,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
+                        doesNotContainContent,
                         regexToMatchForAppend,
                         appendContent,
                         appendToBeginning,
@@ -182,6 +193,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                  service.AppendContentAsync(
                      sourceContent,
+                     doesNotContainContent,
                      regexToMatchForAppend,
                      appendContent,
                      appendToBeginning,

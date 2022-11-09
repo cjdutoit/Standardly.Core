@@ -20,6 +20,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string sourceContent = GetRandomString();
             string regexToMatchForAppend = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = true;
             bool appendEvenIfContentAlreadyExist = false;
             string output = GetRandomString();
@@ -28,6 +29,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Setup(service =>
                 service.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
@@ -38,6 +40,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string actualResult = await this.templateProcessingService
                 .AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
@@ -49,6 +52,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                 service.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,

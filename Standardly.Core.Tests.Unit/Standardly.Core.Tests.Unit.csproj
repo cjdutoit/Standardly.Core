@@ -33,6 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\Startup.cs.3.Source.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Startup.cs.3.Result.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Startup.cs.2.Source.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

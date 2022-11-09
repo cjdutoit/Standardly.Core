@@ -24,6 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string sourceContent = invalidString;
             string regexToMatch = invalidString;
             string appendContent = invalidString;
+            string doesNotContainContent = invalidString;
             bool appendToBeginning = false;
             bool appendEvenIfContentAlreadyExist = false;
 
@@ -49,6 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             ValueTask<string> appendContentTask =
                 this.templateService.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatch,
                     appendContent,
                     appendToBeginning,
@@ -68,6 +70,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string sourceContent = GetRandomString();
             string regexToMatch = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = false;
             bool appendEvenIfContentAlreadyExist = false;
 
@@ -81,6 +84,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             ValueTask<string> appendContentTask =
                 this.templateService.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatch,
                     appendContent,
                     appendToBeginning,

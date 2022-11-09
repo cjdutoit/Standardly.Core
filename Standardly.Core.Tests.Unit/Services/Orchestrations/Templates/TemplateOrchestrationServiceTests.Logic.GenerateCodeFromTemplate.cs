@@ -67,6 +67,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService.AppendContentAsync(
                                     randomFileContent,
+                                    append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
                                     append.ContentToAppend,
                                     append.AppendToBeginning,
@@ -129,6 +130,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
                                 templateProcessingService.AppendContentAsync(
                                     randomFileContent,
+                                    append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
                                     append.ContentToAppend,
                                     append.AppendToBeginning,

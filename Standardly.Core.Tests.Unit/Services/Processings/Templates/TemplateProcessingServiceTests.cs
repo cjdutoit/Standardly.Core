@@ -124,6 +124,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 list.Add(new Append()
                 {
                     Target = GetRandomString(1),
+                    DoesNotContainContent = GetRandomString(1),
                     RegexToMatchForAppend = GetRandomString(1),
                     ContentToAppend = GetRandomString(1),
                     AppendToBeginning = false,

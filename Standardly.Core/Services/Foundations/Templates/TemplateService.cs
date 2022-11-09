@@ -76,17 +76,23 @@ namespace Standardly.Core.Services.Foundations.Templates
 
         public ValueTask<string> AppendContentAsync(
             string sourceContent,
-            string regexToMatch,
+            string doesNotContain,
+            string regexToMatchForAppend,
             string appendContent,
-            bool appendToBeginning = false,
-            bool appendEvenIfContentAlreadyExist = false) =>
-            TryCatchAsync(async () =>
+            bool appendToBeginning,
+            bool appendEvenIfContentAlreadyExist) =>
+                TryCatchAsync(async () =>
                 {
-                    ValidateAppendContent(sourceContent, regexToMatch, appendContent);
+                    ValidateAppendContent(sourceContent, regexToMatchForAppend, appendContent);
+
+                    if (!string.IsNullOrWhiteSpace(doesNotContain) && sourceContent.Contains(doesNotContain))
+                    {
+                        return sourceContent;
+                    }
 
                     var (matchFound, match) =
                         this.regularExpressionBroker
-                            .CheckForExpressionMatch(regexToMatch, sourceContent);
+                            .CheckForExpressionMatch(regexToMatchForAppend, sourceContent);
 
                     ValidateExpressionMatch(matchFound);
 
@@ -108,7 +114,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                     }
 
                     string result = this.regularExpressionBroker
-                        .Replace(sourceContent, regexToMatch, builder.ToString());
+                        .Replace(sourceContent, regexToMatchForAppend, builder.ToString());
 
                     return await Task.FromResult(result);
                 });

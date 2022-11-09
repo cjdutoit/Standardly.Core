@@ -127,11 +127,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 list.Add(new Append()
                 {
                     Target = GetRandomString(1),
+                    DoesNotContainContent = GetRandomString(1),
                     RegexToMatchForAppend = GetRandomString(1),
                     ContentToAppend = GetRandomString(1),
                     AppendToBeginning = false,
                     AppendEvenIfContentAlreadyExist = false,
-                });
+                }); ;
             }
 
             return list;

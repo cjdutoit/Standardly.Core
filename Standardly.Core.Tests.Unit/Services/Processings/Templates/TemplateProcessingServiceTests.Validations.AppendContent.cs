@@ -25,6 +25,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string sourceContent = invalidInput;
             string regexToMatchForAppend = invalidInput;
             string appendContent = invalidInput;
+            string doesNotContainContent = invalidInput;
             bool appendToBeginning = false;
             bool appendEvenIfContentAlreadyExist = false;
 
@@ -51,6 +52,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .AppendContentAsync(
                         sourceContent,
+                        doesNotContainContent,
                         regexToMatchForAppend,
                         appendContent,
                         appendToBeginning,
@@ -70,6 +72,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             this.templateServiceMock.Verify(service =>
                 service.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
