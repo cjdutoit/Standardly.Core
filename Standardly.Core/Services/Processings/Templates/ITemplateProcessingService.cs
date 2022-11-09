@@ -18,6 +18,15 @@ namespace Standardly.Core.Services.Processings.Templates
             Template template,
             Dictionary<string, string> replacementDictionary);
 
-        ValueTask<string> TransformStringAsync(string content, Dictionary<string, string> replacementDictionary);
+        ValueTask<string> TransformStringAsync(
+            string content,
+            Dictionary<string, string> replacementDictionary);
+
+        ValueTask<string> AppendContentAsync(
+            string sourceContent,
+            string regexToMatch,
+            string appendContent,
+            bool appendToBeginning = false,
+            bool onlyAppendIfNotPresent = true);
     }
 }
