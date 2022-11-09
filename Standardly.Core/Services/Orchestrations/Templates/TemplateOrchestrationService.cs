@@ -174,13 +174,16 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         {
             appends.ForEach(async append =>
             {
-                await this.templateProcessingService.AppendContentAsync(
-                    sourceContent: append.Target,
+                string fileContent = await this.fileProcessingService.ReadFromFileAsync(append.Target);
+
+                string appendedContent = await this.templateProcessingService.AppendContentAsync(
+                    sourceContent: fileContent,
                     regexToMatchForAppend: append.RegexToMatchForAppend,
                     appendContent: append.ContentToAppend,
                     appendToBeginning: append.AppendToBeginning,
-                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist
-                    );
+                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
+
+                await this.fileProcessingService.WriteToFileAsync(append.Target, appendedContent);
             });
         }
 
