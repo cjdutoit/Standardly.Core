@@ -101,22 +101,31 @@ namespace Standardly.Core.Services.Foundations.Templates
                         return await Task.FromResult(sourceContent);
                     }
 
-                    StringBuilder builder = new StringBuilder();
-                    if (appendToBeginning)
-                    {
-                        builder.AppendLine(appendContent);
-                        builder.Append(match);
-                    }
-                    else
-                    {
-                        builder.AppendLine(match);
-                        builder.Append(appendContent);
-                    }
+                    string mergedContent = AppendContentToExistingContent(appendContent, appendToBeginning, match);
 
                     string result = this.regularExpressionBroker
-                        .Replace(sourceContent, regexToMatchForAppend, builder.ToString());
+                        .Replace(sourceContent, regexToMatchForAppend, mergedContent);
 
                     return await Task.FromResult(result);
                 });
+
+        private static string AppendContentToExistingContent(string appendContent, bool appendToBeginning, string match)
+        {
+            StringBuilder builder = new StringBuilder();
+            if (appendToBeginning)
+            {
+                builder.Append(appendContent);
+                builder.Append("\r\n\r\n");
+                builder.Append(match);
+            }
+            else
+            {
+                builder.Append(match);
+                builder.Append("\r\n\r\n");
+                builder.Append(appendContent);
+            }
+
+            return builder.ToString();
+        }
     }
 }

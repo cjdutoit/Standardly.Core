@@ -84,10 +84,10 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
             string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.3.Source.txt"));
             string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.3.Result.txt"));
-            string expectedResult = resultContent.Trim();
+            string expectedResult = resultContent;
             bool appendToBeginning = false;
             bool appendEvenIfContentAlreadyExist = false;
-            string regexToMatch = @"(?<=public class Startup\r\n    \{\r\n)([\S\s]*?)(?=\n    \}\r\n)";
+            string regexToMatch = @"(?<=public class Startup\r\n    \{\r\n)([\S\s]*?)(?=\r\n    \}\r\n)";
             string doesNotContain = "private static void AddServices(IServiceCollection services)";
             string appendContent = "        private static void AddServices(IServiceCollection services)\r\n        {\r\n\r\n        }";
 
@@ -101,8 +101,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
+            File.WriteAllText(@"C:\Temp\expected.txt", resultContent);
+            File.WriteAllText(@"C:\Temp\actual.txt", actualResult);
+
             // then
-            actualResult.Trim().Should().BeEquivalentTo(expectedResult);
+            actualResult.Should().BeEquivalentTo(expectedResult);
         }
     }
 }
