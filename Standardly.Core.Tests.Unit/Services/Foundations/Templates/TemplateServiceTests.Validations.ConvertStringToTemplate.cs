@@ -324,7 +324,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                             new Core.Models.Foundations.Templates.Tasks.Actions.Appends.Append()
                             {
                                 Target = invalidString,
-                                RegexToMatch = invalidString,
+                                RegexToMatchForAppend = invalidString,
                                 ContentToAppend = invalidString
                             }
                         },

@@ -9,8 +9,10 @@ namespace Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends
     public class Append
     {
         public string Target { get; set; }
-        public string RegexToMatch { get; set; }
+        public string DoesNotContainContent { get; set; }
+        public string RegexToMatchForAppend { get; set; }
         public string ContentToAppend { get; set; }
-        public bool AppendToTop { get; set; } = false;
+        public bool AppendToBeginning { get; set; } = false;
+        public bool AppendEvenIfContentAlreadyExist { get; set; } = false;
     }
 }

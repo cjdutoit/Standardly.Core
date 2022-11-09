@@ -24,9 +24,10 @@ namespace Standardly.Core.Services.Processings.Templates
 
         ValueTask<string> AppendContentAsync(
             string sourceContent,
-            string regexToMatch,
+            string doesNotContainContent,
+            string regexToMatchForAppend,
             string appendContent,
-            bool appendToBeginning = false,
-            bool onlyAppendIfNotPresent = true);
+            bool appendToBeginning,
+            bool appendEvenIfContentAlreadyExist);
     }
 }

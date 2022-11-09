@@ -162,7 +162,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                             Parameter: $"Actions[{actionIndex}].Appends[{fileItemIndex}].Target"));
 
                     appendRules.Add(
-                        (Rule: IsInvalid(appends[fileItemIndex].RegexToMatch),
+                        (Rule: IsInvalid(appends[fileItemIndex].RegexToMatchForAppend),
                             Parameter: $"Actions[{actionIndex}].Appends[{fileItemIndex}].RegexToMatch"));
 
                     appendRules.Add(

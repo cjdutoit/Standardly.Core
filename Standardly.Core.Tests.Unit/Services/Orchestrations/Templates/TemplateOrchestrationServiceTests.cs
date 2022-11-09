@@ -111,9 +111,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 appends.Add(new Append()
                 {
                     Target = GetRandomString(),
-                    RegexToMatch = GetRandomString(),
+                    DoesNotContainContent = GetRandomString(),
+                    RegexToMatchForAppend = GetRandomString(),
                     ContentToAppend = GetRandomString(),
-                    AppendToTop = false
+                    AppendToBeginning = false,
+                    AppendEvenIfContentAlreadyExist = false
                 });
             }
 

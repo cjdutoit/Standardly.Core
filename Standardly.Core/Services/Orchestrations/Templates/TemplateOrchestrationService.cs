@@ -172,9 +172,19 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
         private void PerformAppendOpperations(List<Models.Foundations.Templates.Tasks.Actions.Appends.Append> appends)
         {
-            appends.ForEach(append =>
+            appends.ForEach(async append =>
             {
-                // TODO: Add Append Operations 
+                string fileContent = await this.fileProcessingService.ReadFromFileAsync(append.Target);
+
+                string appendedContent = await this.templateProcessingService.AppendContentAsync(
+                    sourceContent: fileContent,
+                    doesNotContainContent: append.DoesNotContainContent,
+                    regexToMatchForAppend: append.RegexToMatchForAppend,
+                    appendContent: append.ContentToAppend,
+                    appendToBeginning: append.AppendToBeginning,
+                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
+
+                await this.fileProcessingService.WriteToFileAsync(append.Target, appendedContent);
             });
         }
 

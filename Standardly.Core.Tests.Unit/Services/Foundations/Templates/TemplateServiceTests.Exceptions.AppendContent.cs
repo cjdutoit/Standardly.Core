@@ -26,8 +26,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string sourceContent = GetRandomString();
             string regexToMatch = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             Mock<IRegularExpressionBroker> regularExpressionBrokerMock =
                 new Mock<IRegularExpressionBroker>();
@@ -52,10 +53,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             ValueTask<string> templateServiceExceptionTask =
                 templateService.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatch,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent);
+                    appendEvenIfContentAlreadyExist);
 
             TemplateDependencyValidationException actualTemplateDependencyValidationException =
                 await Assert.ThrowsAsync<TemplateDependencyValidationException>(templateServiceExceptionTask.AsTask);
@@ -89,8 +91,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string sourceContent = GetRandomString();
             string regexToMatch = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             Mock<IRegularExpressionBroker> regularExpressionBrokerMock =
                 new Mock<IRegularExpressionBroker>();
@@ -116,10 +119,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             ValueTask<string> templateServiceExceptionTask =
                 templateService.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatch,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent);
+                    appendEvenIfContentAlreadyExist);
 
             TemplateServiceException actualTemplateServiceException =
                 await Assert.ThrowsAsync<TemplateServiceException>(templateServiceExceptionTask.AsTask);

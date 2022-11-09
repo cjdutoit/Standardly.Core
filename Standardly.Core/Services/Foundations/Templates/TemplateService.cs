@@ -76,36 +76,56 @@ namespace Standardly.Core.Services.Foundations.Templates
 
         public ValueTask<string> AppendContentAsync(
             string sourceContent,
-            string regexToMatch,
+            string doesNotContain,
+            string regexToMatchForAppend,
             string appendContent,
-            bool appendToBeginning = false,
-            bool onlyAppendIfNotPresent = true) =>
-            TryCatchAsync(async () =>
+            bool appendToBeginning,
+            bool appendEvenIfContentAlreadyExist) =>
+                TryCatchAsync(async () =>
                 {
-                    ValidateAppendContent(sourceContent, regexToMatch, appendContent);
+                    ValidateAppendContent(sourceContent, regexToMatchForAppend, appendContent);
+
+                    if (!string.IsNullOrWhiteSpace(doesNotContain) && sourceContent.Contains(doesNotContain))
+                    {
+                        return sourceContent;
+                    }
 
                     var (matchFound, match) =
                         this.regularExpressionBroker
-                            .CheckForExpressionMatch(regexToMatch, sourceContent);
+                            .CheckForExpressionMatch(regexToMatchForAppend, sourceContent);
 
                     ValidateExpressionMatch(matchFound);
 
-                    StringBuilder builder = new StringBuilder();
-                    if (appendToBeginning)
+                    if (appendEvenIfContentAlreadyExist == false && sourceContent.Contains(appendContent))
                     {
-                        builder.AppendLine(appendContent);
-                        builder.Append(match);
-                    }
-                    else
-                    {
-                        builder.AppendLine(match);
-                        builder.Append(appendContent);
+                        return await Task.FromResult(sourceContent);
                     }
 
+                    string mergedContent = AppendContentToExistingContent(appendContent, appendToBeginning, match);
+
                     string result = this.regularExpressionBroker
-                        .Replace(sourceContent, regexToMatch, builder.ToString());
+                        .Replace(sourceContent, regexToMatchForAppend, mergedContent);
 
                     return await Task.FromResult(result);
                 });
+
+        private static string AppendContentToExistingContent(string appendContent, bool appendToBeginning, string match)
+        {
+            StringBuilder builder = new StringBuilder();
+            if (appendToBeginning)
+            {
+                builder.Append(appendContent);
+                builder.Append("\r\n\r\n");
+                builder.Append(match);
+            }
+            else
+            {
+                builder.Append(match);
+                builder.Append("\r\n\r\n");
+                builder.Append(appendContent);
+            }
+
+            return builder.ToString();
+        }
     }
 }

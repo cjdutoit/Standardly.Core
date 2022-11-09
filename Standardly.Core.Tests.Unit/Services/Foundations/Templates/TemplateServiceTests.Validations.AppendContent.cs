@@ -24,8 +24,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string sourceContent = invalidString;
             string regexToMatch = invalidString;
             string appendContent = invalidString;
+            string doesNotContainContent = invalidString;
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             var invalidArgumentTemplateException =
                             new InvalidArgumentTemplateException();
@@ -49,10 +50,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             ValueTask<string> appendContentTask =
                 this.templateService.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatch,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent);
+                    appendEvenIfContentAlreadyExist);
 
             var actualTemplateValidationException =
                 await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);
@@ -68,8 +70,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string sourceContent = GetRandomString();
             string regexToMatch = GetRandomString();
             string appendContent = GetRandomString();
+            string doesNotContainContent = string.Empty;
             bool appendToBeginning = false;
-            bool onlyAppendIfNotPresent = true;
+            bool appendEvenIfContentAlreadyExist = false;
 
             var regularExpressionTemplateException
                 = new RegularExpressionTemplateException("No match found. Please verify the expression and source");
@@ -81,10 +84,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             ValueTask<string> appendContentTask =
                 this.templateService.AppendContentAsync(
                     sourceContent,
+                    doesNotContainContent,
                     regexToMatch,
                     appendContent,
                     appendToBeginning,
-                    onlyAppendIfNotPresent);
+                    appendEvenIfContentAlreadyExist);
 
             var actualTemplateValidationException =
                 await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);

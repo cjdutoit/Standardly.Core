@@ -18,18 +18,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldGenerateCodeAsync()
         {
             // given
-            int randomNumber = GetRandomNumber();
+            int randomNumber = 1; // GetRandomNumber();
             List<Template> randomTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputDictionary = randomReplacementDictionary;
-
             List<Template> randomTransformedTemplates = GetRandomTemplateList(randomNumber, true);
             List<Template> outputTemplates = randomTransformedTemplates;
-
             string randomExecutionOutcome = GetRandomString();
             string randomTemplateString = GetRandomString();
             string randomTransformedTemplateString = GetRandomString();
+            string randomFileContent = GetRandomString();
+            string randomAppendedContent = GetRandomString();
 
             for (int i = 0; i < inputTemplates.Count; i++)
             {
@@ -58,7 +58,22 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                                         .ReturnsAsync(randomTransformedTemplateString);
                         });
 
-                        // TODO:  Add code for Appends
+                        action.Appends.ForEach(append =>
+                        {
+                            this.fileProcessingServiceMock.Setup(fileProcessingService =>
+                                fileProcessingService.ReadFromFileAsync(append.Target))
+                                    .ReturnsAsync(randomFileContent);
+
+                            this.templateProcessingServiceMock.Setup(templateProcessingService =>
+                                templateProcessingService.AppendContentAsync(
+                                    randomFileContent,
+                                    append.DoesNotContainContent,
+                                    append.RegexToMatchForAppend,
+                                    append.ContentToAppend,
+                                    append.AppendToBeginning,
+                                    append.AppendEvenIfContentAlreadyExist))
+                                        .ReturnsAsync(randomAppendedContent);
+                        });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
                             executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
@@ -105,6 +120,28 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         });
 
                         // TODO:  Add code for Appends
+
+                        action.Appends.ForEach(append =>
+                        {
+                            this.fileProcessingServiceMock.Verify(fileProcessingService =>
+                                fileProcessingService.ReadFromFileAsync(append.Target),
+                                    Times.Once);
+
+                            this.templateProcessingServiceMock.Verify(templateProcessingService =>
+                                templateProcessingService.AppendContentAsync(
+                                    randomFileContent,
+                                    append.DoesNotContainContent,
+                                    append.RegexToMatchForAppend,
+                                    append.ContentToAppend,
+                                    append.AppendToBeginning,
+                                    append.AppendEvenIfContentAlreadyExist),
+                                        Times.Once);
+
+                            this.fileProcessingServiceMock.Verify(fileProcessingService =>
+                                fileProcessingService
+                                    .WriteToFileAsync(append.Target, randomAppendedContent),
+                                        Times.Once);
+                        });
 
                         this.executionProcessingServiceMock.Verify(executionProcessingService =>
                             executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder),
