@@ -24,7 +24,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Templates\" />
+    <None Update="Services\Templates\Resources\Startup.cs.1.Result.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Templates\Resources\Startup.cs.1.Source.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Templates\Resources\Startup.cs.2.Result.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Templates\Resources\Startup.cs.2.Source.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Templates\Resources\Startup.cs.3.Result.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Templates\Resources\Startup.cs.3.Source.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Templates\Resources\Startup.cs.4.Result.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Templates\Resources\Startup.cs.4.Source.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

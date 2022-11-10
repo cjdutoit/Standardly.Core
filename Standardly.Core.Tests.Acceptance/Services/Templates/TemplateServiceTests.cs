@@ -27,19 +27,19 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         private readonly Mock<IFileBroker> fileBrokerMock;
-        private readonly Mock<IRegularExpressionBroker> regularExpressionBrokerMock;
+        private readonly RegularExpressionBroker regularExpressionBroker;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateService templateService;
 
         public TemplateServiceTests()
         {
             this.fileBrokerMock = new Mock<IFileBroker>();
-            this.regularExpressionBrokerMock = new Mock<IRegularExpressionBroker>();
+            this.regularExpressionBroker = new RegularExpressionBroker();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.templateService = new TemplateService(
                 fileBroker: fileBrokerMock.Object,
-                regularExpressionBroker: regularExpressionBrokerMock.Object,
+                regularExpressionBroker: regularExpressionBroker,
                 loggingBroker: loggingBrokerMock.Object);
         }
 
