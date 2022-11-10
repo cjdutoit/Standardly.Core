@@ -16,7 +16,6 @@ namespace Standardly
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<StorageBroker>();
-
             services.AddLogging();
 
             services.AddControllers()

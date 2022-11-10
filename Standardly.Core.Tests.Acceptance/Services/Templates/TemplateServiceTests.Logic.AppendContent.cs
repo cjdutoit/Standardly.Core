@@ -50,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         {
             // given
             var assembly = Assembly.GetExecutingAssembly().Location;
-            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
+            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), @"Services\Templates\Resources");
             string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.2.Source.txt"));
             string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.2.Result.txt"));
             string doesNotContainContent = string.Empty;
@@ -81,7 +81,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         {
             // given
             var assembly = Assembly.GetExecutingAssembly().Location;
-            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
+            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), @"Services\Templates\Resources");
             string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.3.Source.txt"));
             string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.3.Result.txt"));
             string expectedResult = resultContent;
@@ -89,7 +89,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             bool appendEvenIfContentAlreadyExist = false;
             string regexToMatch = @"(?<=public class Startup\r\n    \{\r\n)([\S\s]*?)(?=\r\n    \}\r\n)";
             string doesNotContain = "private static void AddServices(IServiceCollection services)";
-            string appendContent = "        private static void AddServices(IServiceCollection services)\r\n        {\r\n\r\n        }";
+            string appendContent = "\r\n        private static void AddServices"
+                + "(IServiceCollection services)\r\n        {\r\n\r\n        }";
 
             // when
             string actualResult = await this.templateService
@@ -110,7 +111,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         {
             // given
             var assembly = Assembly.GetExecutingAssembly().Location;
-            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
+            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), @"Services\Templates\Resources");
             string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.4.Source.txt"));
             string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.4.Result.txt"));
             string expectedResult = resultContent;
@@ -118,7 +119,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             bool appendEvenIfContentAlreadyExist = false;
             string regexToMatch = @"(?<=public class Startup\r\n    \{\r\n)([\S\s]*?)(?=\r\n    \}\r\n)";
             string doesNotContain = "private static void AddServices(IServiceCollection services)";
-            string appendContent = "        private static void AddServices(IServiceCollection services)\r\n        {\r\n\r\n        }";
+            string appendContent = "        private static void AddServices"
+                + "(IServiceCollection services)\r\n        {\r\n\r\n        }";
 
             // when
             string actualResult = await this.templateService
