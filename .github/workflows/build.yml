@@ -1,4 +1,4 @@
-name: .Net
+name: Standardly.Core Build
 on:
   push:
     branches:
