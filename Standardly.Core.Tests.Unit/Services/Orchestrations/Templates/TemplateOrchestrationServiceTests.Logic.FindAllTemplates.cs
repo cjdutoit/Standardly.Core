@@ -20,16 +20,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         public async Task ShouldFindAllTemplatesAsync()
         {
             // given
-            int itemsToGenerate = GetRandomNumber();
-            string templatefolder = this.templateConfigMock.Object.TemplateFolder;
-            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFile;
+            string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
+            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
             List<string> randomFileList = GetRandomStringList();
             List<string> expectedFileList = randomFileList;
             string randomTemplateString = GetRandomString();
             string inputTemplateString = randomTemplateString;
             string expectedTemplateString = inputTemplateString;
             string rawTemplateString = expectedTemplateString;
-            Template randomTemplate = CreateRandomTemplate(itemsToGenerate);
+            Template randomTemplate = CreateRandomTemplate(GetRandomNumber(), true);
             Template outputTemplate = randomTemplate;
 
 

@@ -45,10 +45,10 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.templateConfigMock
-                .Setup(config => config.TemplateFolder).Returns("c:\\Standardly\\Templates");
+                .Setup(config => config.TemplateFolderPath).Returns("c:\\Standardly\\Templates");
 
             this.templateConfigMock
-                .Setup(config => config.TemplateDefinitionFile).Returns("Template.json");
+                .Setup(config => config.TemplateDefinitionFileName).Returns("Template.json");
 
             templateOrchestrationService = new TemplateOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
