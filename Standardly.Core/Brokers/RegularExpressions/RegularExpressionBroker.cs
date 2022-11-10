@@ -10,7 +10,7 @@ namespace Standardly.Core.Brokers.RegularExpressions
 {
     public class RegularExpressionBroker : IRegularExpressionBroker
     {
-        public (bool matchFound, string match) CheckForExpressionMatch(string regexToMatch, string sourceContent)
+        public (bool matchFound, string matchedContent) CheckForExpressionMatch(string regexToMatch, string sourceContent)
         {
             Regex regex = new Regex(regexToMatch, RegexOptions.Multiline);
             Match match = regex.Match(sourceContent);

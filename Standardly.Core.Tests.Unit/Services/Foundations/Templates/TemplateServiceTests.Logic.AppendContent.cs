@@ -4,10 +4,9 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
@@ -18,120 +17,202 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         public async Task ShouldAppendContentAsync()
         {
             // given
-            var assembly = Assembly.GetExecutingAssembly().Location;
-            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
-            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.1.Source.txt"));
-            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.1.Result.txt"));
-            string expectedResult = resultContent;
-            string doesNotContainContent = string.Empty;
+            string sourceContent = GetRandomString();
+            string appendContent = GetRandomString();
+            string regexToMatchForAppend = GetRandomString();
             bool appendToBeginning = true;
+            string doesNotContainContent = string.Empty;
             bool appendEvenIfContentAlreadyExist = false;
-            string appendContent = "            services.AddDbContext<StorageBroker>();";
+            bool matchFound = true;
+            string matchedContent = GetRandomString();
+            var expressionMatchResult = (matchFound, matchedContent);
+            string mergedContent = appendContent + "\r\n" + matchedContent;
+            string expectedResult = GetRandomString();
 
-            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)"
-                + @"\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent))
+                       .Returns(expressionMatchResult);
+
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, It.IsAny<string>()))
+                       .Returns(expectedResult);
 
             // when
             string actualResult = await this.templateService
                 .AppendContentAsync(
                     sourceContent,
                     doesNotContainContent,
-                    regexToMatch,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent),
+                       Times.Once);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, mergedContent),
+                       Times.Once);
+
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ShouldNotAppendContentAsync()
         {
             // given
-            var assembly = Assembly.GetExecutingAssembly().Location;
-            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
-            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.2.Source.txt"));
-            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.2.Result.txt"));
-            string doesNotContainContent = string.Empty;
-            string expectedResult = resultContent.Trim();
+            string sourceContent = GetRandomString();
+            string appendContent = GetRandomString();
+            string regexToMatchForAppend = GetRandomString();
             bool appendToBeginning = true;
+            string doesNotContainContent = string.Empty;
             bool appendEvenIfContentAlreadyExist = false;
-            string appendContent = "            services.AddDbContext<StorageBroker>();";
+            bool matchFound = true;
+            string matchedContent = appendContent;
+            var expressionMatchResult = (matchFound, matchedContent);
+            string mergedContent = appendContent + "\r\n" + matchedContent;
+            string expectedResult = sourceContent;
 
-            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)"
-                + @"\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent))
+                       .Returns(expressionMatchResult);
+
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, It.IsAny<string>()))
+                       .Returns(expectedResult);
 
             // when
             string actualResult = await this.templateService
                 .AppendContentAsync(
                     sourceContent,
                     doesNotContainContent,
-                    regexToMatch,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
             // then
-            actualResult.Trim().Should().BeEquivalentTo(expectedResult);
+            actualResult.Should().BeEquivalentTo(expectedResult);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent),
+                       Times.Once);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, mergedContent),
+                       Times.Never);
+
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ShouldAppendIfTheDoesNotContainContentIsNotPresentAsync()
         {
             // given
-            var assembly = Assembly.GetExecutingAssembly().Location;
-            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
-            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.3.Source.txt"));
-            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.3.Result.txt"));
-            string expectedResult = resultContent;
-            bool appendToBeginning = false;
+            string innerContent = GetRandomString();
+            string sourceContent = GetRandomString() + innerContent + GetRandomString();
+            string appendContent = GetRandomString();
+            string regexToMatchForAppend = GetRandomString();
+            bool appendToBeginning = true;
+            string doesNotContainContent = GetRandomString();
             bool appendEvenIfContentAlreadyExist = false;
-            string regexToMatch = @"(?<=public class Startup\r\n    \{\r\n)([\S\s]*?)(?=\r\n    \}\r\n)";
-            string doesNotContain = "private static void AddServices(IServiceCollection services)";
-            string appendContent = "        private static void AddServices(IServiceCollection services)\r\n        {\r\n\r\n        }";
+            bool matchFound = true;
+            string matchedContent = GetRandomString();
+            var expressionMatchResult = (matchFound, matchedContent);
+            string mergedContent = appendContent + "\r\n" + matchedContent;
+            string expectedResult = GetRandomString();
+
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent))
+                       .Returns(expressionMatchResult);
+
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, It.IsAny<string>()))
+                       .Returns(expectedResult);
 
             // when
             string actualResult = await this.templateService
                 .AppendContentAsync(
                     sourceContent,
-                    doesNotContain,
-                    regexToMatch,
+                    doesNotContainContent,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent),
+                       Times.Once);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, mergedContent),
+                       Times.Once);
+
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ShouldNotAppendIfTheDoesNotContainContentIsPresentAsync()
         {
             // given
-            var assembly = Assembly.GetExecutingAssembly().Location;
-            var resourceFolder = Path.Combine(Path.GetDirectoryName(assembly), "Resources");
-            string sourceContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.4.Source.txt"));
-            string resultContent = File.ReadAllText(Path.Combine(resourceFolder, "Startup.cs.4.Result.txt"));
-            string expectedResult = resultContent;
-            bool appendToBeginning = false;
+            string innerContent = GetRandomString();
+            string sourceContent = GetRandomString() + innerContent + GetRandomString();
+            string appendContent = GetRandomString();
+            string regexToMatchForAppend = GetRandomString();
+            bool appendToBeginning = true;
+            string doesNotContainContent = innerContent;
             bool appendEvenIfContentAlreadyExist = false;
-            string regexToMatch = @"(?<=public class Startup\r\n    \{\r\n)([\S\s]*?)(?=\r\n    \}\r\n)";
-            string doesNotContain = "private static void AddServices(IServiceCollection services)";
-            string appendContent = "        private static void AddServices(IServiceCollection services)\r\n        {\r\n\r\n        }";
+            bool matchFound = true;
+            string matchedContent = GetRandomString();
+            var expressionMatchResult = (matchFound, matchedContent);
+            string mergedContent = appendContent + "\r\n" + matchedContent;
+            string expectedResult = sourceContent;
+
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent))
+                       .Returns(expressionMatchResult);
+
+            this.regularExpressionBrokerMock.Setup(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, It.IsAny<string>()))
+                       .Returns(expectedResult);
 
             // when
             string actualResult = await this.templateService
                 .AppendContentAsync(
                     sourceContent,
-                    doesNotContain,
-                    regexToMatch,
+                    doesNotContainContent,
+                    regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.CheckForExpressionMatch(regexToMatchForAppend, sourceContent),
+                       Times.Never);
+
+            this.regularExpressionBrokerMock.Verify(broker =>
+               broker.Replace(sourceContent, regexToMatchForAppend, mergedContent),
+                       Times.Never);
+
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

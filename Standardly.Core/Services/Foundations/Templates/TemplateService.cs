@@ -96,7 +96,7 @@ namespace Standardly.Core.Services.Foundations.Templates
 
                     ValidateExpressionMatch(matchFound);
 
-                    if (appendEvenIfContentAlreadyExist == false && sourceContent.Contains(appendContent))
+                    if (appendEvenIfContentAlreadyExist == false && match.Contains(appendContent))
                     {
                         return await Task.FromResult(sourceContent);
                     }
@@ -115,13 +115,13 @@ namespace Standardly.Core.Services.Foundations.Templates
             if (appendToBeginning)
             {
                 builder.Append(appendContent);
-                builder.Append("\r\n\r\n");
+                builder.Append("\r\n");
                 builder.Append(match);
             }
             else
             {
                 builder.Append(match);
-                builder.Append("\r\n\r\n");
+                builder.Append("\r\n");
                 builder.Append(appendContent);
             }
 
