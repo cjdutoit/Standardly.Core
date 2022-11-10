@@ -15,5 +15,6 @@ namespace Standardly.Core.Clients
     {
         event Action<DateTimeOffset, string, string> LogRaised;
         ValueTask<List<Template>> FindAllTemplatesAsync();
+        ValueTask GenerateCodeAsync(List<Template> templates, Dictionary<string, string> replacementDictionary);
     }
 }
