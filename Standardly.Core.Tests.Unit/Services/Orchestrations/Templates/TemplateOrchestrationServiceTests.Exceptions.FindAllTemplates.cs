@@ -24,8 +24,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Exception dependencyValidationException)
         {
             // given
-            string templatefolder = this.templateConfigMock.Object.TemplateFolder;
-            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFile;
+            string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
+            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
             string somePath = GetRandomString();
             string someContent = GetRandomString();
 
@@ -67,8 +67,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             // given
             string somePath = GetRandomString();
             string someContent = GetRandomString();
-            string templatefolder = this.templateConfigMock.Object.TemplateFolder;
-            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFile;
+            string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
+            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
 
             var expectedTemplateOrchestrationDependencyException =
                 new TemplateOrchestrationDependencyException(dependencyException.InnerException as Xeption);
