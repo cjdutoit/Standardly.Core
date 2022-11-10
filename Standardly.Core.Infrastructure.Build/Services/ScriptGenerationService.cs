@@ -22,7 +22,7 @@ namespace Standardly.Core.Services
         {
             var githubPipeline = new GithubPipeline
             {
-                Name = "Build",
+                Name = "Standardly.Core Build",
 
                 OnEvents = new Events
                 {
