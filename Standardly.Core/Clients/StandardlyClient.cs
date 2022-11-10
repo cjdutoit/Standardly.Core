@@ -107,6 +107,37 @@ namespace Standardly.Core.Clients
             }
         }
 
+        public async ValueTask GenerateCodeAsync(List<Template> templates, Dictionary<string, string> replacementDictionary)
+        {
+            try
+            {
+                await this.templateOrchestrationService.GenerateCodeAsync(templates, replacementDictionary);
+            }
+            catch (TemplateOrchestrationValidationException templateOrchestrationValidationException)
+            {
+                throw new StandardlyClientValidationException(
+                    templateOrchestrationValidationException.InnerException as Xeption);
+            }
+            catch (TemplateOrchestrationDependencyValidationException
+                templateOrchestrationDependencyValidationException)
+            {
+                throw new StandardlyClientValidationException(
+                    templateOrchestrationDependencyValidationException.InnerException as Xeption);
+            }
+            catch (TemplateOrchestrationDependencyException
+                templateOrchestrationDependencyException)
+            {
+                throw new StandardlyClientDependencyException(
+                    templateOrchestrationDependencyException.InnerException as Xeption);
+            }
+            catch (TemplateOrchestrationServiceException
+                templateOrchestrationServiceException)
+            {
+                throw new StandardlyClientServiceException(
+                    templateOrchestrationServiceException.InnerException as Xeption);
+            }
+        }
+
         private void LogEventSetup() =>
             this.templateOrchestrationService.LogRaised += this.LogRaised;
 
