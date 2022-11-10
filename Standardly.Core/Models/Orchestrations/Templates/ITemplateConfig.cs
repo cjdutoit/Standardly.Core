@@ -8,7 +8,7 @@ namespace Standardly.Core.Models.Orchestrations.Templates
 {
     public interface ITemplateConfig
     {
-        string TemplateFolder { get; set; }
-        string TemplateDefinitionFile { get; set; }
+        string TemplateFolderPath { get; }
+        string TemplateDefinitionFileName { get; }
     }
 }

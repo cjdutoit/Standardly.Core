@@ -49,8 +49,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
                 var fileList = await this.fileProcessingService
                     .RetrieveListOfFilesAsync(
-                    this.templateConfig.TemplateFolder,
-                    this.templateConfig.TemplateDefinitionFile);
+                    this.templateConfig.TemplateFolderPath,
+                    this.templateConfig.TemplateDefinitionFileName);
 
                 foreach (string file in fileList)
                 {
