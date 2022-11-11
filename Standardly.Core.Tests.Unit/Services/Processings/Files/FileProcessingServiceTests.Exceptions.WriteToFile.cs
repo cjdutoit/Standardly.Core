@@ -30,7 +30,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.WriteToFileAsync(inputPath, inputContent))
+                service.CheckIfDirectoryExistsAsync(inputPath))
                     .Throws(dependencyValidationException);
 
             // when
@@ -42,8 +42,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFileAsync(inputPath, inputContent),
+                service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
+
+            this.fileServiceMock.Verify(service =>
+                service.WriteToFileAsync(inputPath, inputContent),
+                    Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -69,7 +73,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.WriteToFileAsync(inputPath, inputContent))
+                service.CheckIfDirectoryExistsAsync(inputPath))
                     .Throws(dependencyException);
 
             // when
@@ -81,8 +85,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 await Assert.ThrowsAsync<FileProcessingDependencyException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFileAsync(inputPath, inputContent),
+                service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
+
+            this.fileServiceMock.Verify(service =>
+                service.WriteToFileAsync(inputPath, inputContent),
+                    Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -111,6 +119,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
+                service.CheckIfDirectoryExistsAsync(inputPath))
+                    .Throws(serviceException);
+
+            this.fileServiceMock.Setup(service =>
                 service.WriteToFileAsync(inputPath, inputContent))
                     .Throws(serviceException);
 
@@ -123,8 +135,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 await Assert.ThrowsAsync<FileProcessingServiceException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
+            service.CheckIfDirectoryExistsAsync(inputPath),
+                Times.Once);
+
+            this.fileServiceMock.Verify(service =>
                 service.WriteToFileAsync(inputPath, inputContent),
-                    Times.Once);
+                    Times.Never);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(

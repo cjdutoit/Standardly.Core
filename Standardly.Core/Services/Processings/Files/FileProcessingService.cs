@@ -34,6 +34,11 @@ namespace Standardly.Core.Services.Processings.Files
             TryCatchAsync(async () =>
             {
                 ValidateWriteToFile(path, content);
+                if (!this.fileService.CheckIfDirectoryExistsAsync(path).Result)
+                {
+                    await this.CreateDirectoryAsync(path);
+                }
+
                 await this.fileService.WriteToFileAsync(path, content);
             });
 
