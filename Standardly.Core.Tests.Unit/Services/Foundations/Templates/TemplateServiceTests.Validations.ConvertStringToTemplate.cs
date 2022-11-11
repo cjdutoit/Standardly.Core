@@ -123,6 +123,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = invalidString,
+                BranchName = invalidString,
             };
 
             someTemplate.Tasks.Add(someTask);
@@ -134,6 +135,10 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             invalidTemplateException.AddData(
                 key: "Tasks[0].Name",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Tasks[0].BranchName",
                 values: "Text is required");
 
             invalidTemplateException.AddData(

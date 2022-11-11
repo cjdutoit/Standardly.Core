@@ -78,9 +78,15 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                 {
                     ValidateTemplateArguments(templates, replacementDictionary);
 
-                    this.previousBranch = !string.IsNullOrWhiteSpace(replacementDictionary["$previousBranch$"])
-                        ? replacementDictionary["$previousBranch$"]
-                        : replacementDictionary["$basebranch$"];
+                    if (!replacementDictionary.ContainsKey("$previousBranch$"))
+                    {
+                        replacementDictionary.Add("$previousBranch$", string.Empty);
+                    }
+
+                    this.previousBranch =
+                        !string.IsNullOrWhiteSpace(replacementDictionary["$previousBranch$"])
+                            ? replacementDictionary["$previousBranch$"]
+                            : replacementDictionary["$basebranch$"];
 
                     List<Template> templatesToGenerate = new List<Template>();
 
@@ -267,9 +273,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 foreach (Models.Foundations.Templates.Tasks.Actions.Files.File file in action.Files.ToList())
                 {
-                    bool isRequired =
-                        this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result
-                        && file.Replace == true;
+                    bool fileExist = this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result;
+                    bool isRequired = fileExist == false || (fileExist && file.Replace == true);
 
                     if (!isRequired)
                     {

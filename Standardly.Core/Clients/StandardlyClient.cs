@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
@@ -39,7 +40,7 @@ namespace Standardly.Core.Clients
             string assembly = Assembly.GetExecutingAssembly().Location;
             string templateFolderPath = Path.Combine(Path.GetDirectoryName(assembly), @"Templates");
             string templateDefinitionFileName = "Template.json";
-            ILoggingBroker loggingBroker = null;
+            ILoggingBroker loggingBroker = this.InitialiseLogger();
 
             this.templateOrchestrationService =
                 this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
@@ -55,16 +56,20 @@ namespace Standardly.Core.Clients
 
             this.templateOrchestrationService =
                 this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
+
+            this.LogEventSetup();
         }
 
         public StandardlyClient(
             string templateFolderPath,
             string templateDefinitionFileName)
         {
-            ILoggingBroker loggingBroker = null;
+            ILoggingBroker loggingBroker = this.InitialiseLogger();
 
             this.templateOrchestrationService =
                 this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
+
+            this.LogEventSetup();
         }
 
         public StandardlyClient(
@@ -74,6 +79,8 @@ namespace Standardly.Core.Clients
         {
             this.templateOrchestrationService =
                 this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
+
+            this.LogEventSetup();
         }
 
         public async ValueTask<List<Template>> FindAllTemplatesAsync()
@@ -174,6 +181,20 @@ namespace Standardly.Core.Clients
                 templateProcessingService,
                 templateConfig,
                 loggingBroker);
+        }
+
+        private ILoggingBroker InitialiseLogger()
+        {
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder
+                    .AddFilter("Microsoft", LogLevel.Warning)
+                    .AddFilter("System", LogLevel.Warning)
+                    .AddFilter("Standardly", LogLevel.Warning);
+            });
+
+            ILogger<LoggingBroker> logger = loggerFactory.CreateLogger<LoggingBroker>();
+            return new LoggingBroker(logger);
         }
     }
 }
