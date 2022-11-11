@@ -1,0 +1,158 @@
+{
+  "name": "BROKERS: Logging Broker",
+  "description": "Generates a Logging Broker",
+  "templateType": "API",
+  "projectsRequired": "Api",
+  "sortOrder": 1,
+  "modelSingularName": "Logging",
+  "modelPluralName": "Loggings",
+  "tasks": [
+    {
+      "name": "001 - BROKERS: Logging - Log Information",
+      "branchName": "brokers-loggers-loginformation",
+      "actions": [
+        {
+          "name": "Add Log Information",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\001_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\001_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "002 - BROKERS: Logging - Log Trace",
+      "branchName": "brokers-loggers-logtrace",
+      "actions": [
+        {
+          "name": "Add Log Trace",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\002_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\002_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "003 - BROKERS: Logging - Log Debug",
+      "branchName": "brokers-loggers-logdebug",
+      "actions": [
+        {
+          "name": "Add Log Debug",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\003_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\003_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "004 - BROKERS: Logging - Log Warning",
+      "branchName": "brokers-loggers-logwarning",
+      "actions": [
+        {
+          "name": "Add Log Warning",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\004_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\004_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "005 - BROKERS: Logging - Log Error",
+      "branchName": "brokers-loggers-logerror",
+      "actions": [
+        {
+          "name": "Add Log Error",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\005_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\005_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "006 - BROKERS: Logging - Log Critical",
+      "branchName": "brokers-loggers-logcritical",
+      "actions": [
+        {
+          "name": "Add Log Critical",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\006_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\006_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cleanupTasks": [
+    "----------------------------------------------------",
+    "BROKERS: LoggingBroker",
+    "----------------------------------------------------",
+    "* Register the LoggingBroker in Startup.cs => AddBrokers(IServiceCollection services) then do a commit and push.",
+    "* Resolve / remove any TODO items in the task list",
+    "* Link the pull request(s) to related issues by adding e.g. #CLOSES 123 to the description",
+    "* Review Draft Pull Requests (and add more commits by pushing to any of the branches if needed):",
+    "  - BROKERS: Logging - Log Information  ->  users/$username$/brokers-loggers-loginformation",
+    "  - BROKERS: Logging - Log LogTrace  ->  users/$username$/brokers-loggers-logtrace",
+    "  - BROKERS: Logging - Log LogDebug  ->  users/$username$/brokers-loggers-logdebug",
+    "  - BROKERS: Logging - Log LogWarning  ->  users/$username$/brokers-loggers-logwarning",
+    "  - BROKERS: Logging - Log LogError  ->  users/$username$/brokers-loggers-logerror",
+    "  - BROKERS: Logging - Log LogCritical  ->  users/$username$/brokers-loggers-logcritical"
+  ]
+}

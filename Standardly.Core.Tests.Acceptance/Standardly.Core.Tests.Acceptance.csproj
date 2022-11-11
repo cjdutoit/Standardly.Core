@@ -63,102 +63,106 @@
     <None Update="Services\Templates\Resources\Startup.cs.4.Source.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\DateTimes\001_DateTimeBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\DateTimes\001_DateTimeBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\DateTimes\001_IDateTimeBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\DateTimes\001_IDateTimeBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\DateTimes\Template.json">
+    <None Update="Templates\Api\Brokers_Old\DateTimes\Template.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\001_ILoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\001_ILoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\001_LoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\001_LoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\002_ILoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\002_ILoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\002_LoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\002_LoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\003_ILoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\003_ILoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\003_LoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\003_LoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\004_ILoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\004_ILoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\004_LoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\004_LoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\005_ILoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\005_ILoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\005_LoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\005_LoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\006_ILoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\006_ILoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\006_LoggingBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Loggings\006_LoggingBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Loggings\Template.json">
+    <None Update="Templates\Api\Brokers_Old\Loggings\Template.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\001_IStorageBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\001_IStorageBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\001_StorageBroker.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\001_StorageBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\002_Item.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\002_Item.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\003_IStorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\003_IStorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\003_StorageBroker.Items.Configurations.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\003_StorageBroker.Items.Configurations.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\003_StorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\003_StorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\003_StorageBroker.Items.SeedData.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\003_StorageBroker.Items.SeedData.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\004_IStorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\004_IStorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\004_StorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\004_StorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\005_IStorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\005_IStorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\005_StorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\005_StorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\006_IStorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\006_IStorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\006_StorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\006_StorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\007_IStorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\007_IStorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\007_StorageBroker.Items.cs.txt">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\007_StorageBroker.Items.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Templates\Api\Brokers\Storages\StorageBroker\Template.json">
+    <None Update="Templates\Api\Brokers_Old\Storages\StorageBroker\Template.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Templates\Api\Brokers\" />
   </ItemGroup>
 
 </Project>

@@ -79,10 +79,20 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                 {
                     this.LogMessage(DateTimeOffset.UtcNow, $"Validating inputs");
                     ValidateTemplateArguments(templates, replacementDictionary);
+                    List<Template> templatesToGenerate = new List<Template>();
+                    this.LogMessage(DateTimeOffset.UtcNow, $"Check what needs doing on the templates");
+
+                    templatesToGenerate.AddRange(
+                        await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
+
+                    if (!replacementDictionary.ContainsKey("$currentBranch$"))
+                    {
+                        replacementDictionary.Add("$currentBranch$", replacementDictionary["$basebranch$"]);
+                    }
 
                     if (!replacementDictionary.ContainsKey("$previousBranch$"))
                     {
-                        replacementDictionary.Add("$previousBranch$", string.Empty);
+                        replacementDictionary.Add("$previousBranch$", replacementDictionary["$basebranch$"]);
                     }
 
                     this.previousBranch =
@@ -90,16 +100,9 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                             ? replacementDictionary["$previousBranch$"]
                             : replacementDictionary["$basebranch$"];
 
-                    List<Template> templatesToGenerate = new List<Template>();
-
-                    this.LogMessage(DateTimeOffset.UtcNow, $"Check what needs doing on the templates");
-                    templatesToGenerate.AddRange(
-                        await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
-
                     templatesToGenerate.ForEach(async template =>
                     {
                         this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
-                        replacementDictionary["$previousBranch$"] = previousBranch;
                         await GenerateTemplateAsync(template, replacementDictionary);
                     });
                 });
@@ -108,18 +111,24 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             Template template,
             Dictionary<string, string> replacementDictionary)
         {
-            var transformedTemplate =
-                await this.templateProcessingService
-                    .TransformTemplateAsync(template, replacementDictionary);
-
             this.LogMessage(
                 DateTimeOffset.UtcNow,
-                $"Starting code generation for {transformedTemplate.Name}");
+                $"Starting code generation for {template.Name}");
 
-            transformedTemplate.Tasks.ForEach(task =>
+            for (int taskIndex = 0; taskIndex <= template.Tasks.Count - 1; taskIndex++)
             {
-                PerformTasks(task, transformedTemplate, replacementDictionary);
-            });
+                replacementDictionary["$currentBranch$"] = template.Tasks[taskIndex].BranchName;
+
+                var transformedTemplate =
+                    await this.templateProcessingService
+                        .TransformTemplateAsync(template, replacementDictionary);
+
+                PerformTasks(
+                    transformedTemplate.Tasks[taskIndex],
+                    transformedTemplate, replacementDictionary);
+
+                this.previousBranch = transformedTemplate.Tasks[taskIndex].BranchName;
+            }
         }
 
         private void PerformTasks(

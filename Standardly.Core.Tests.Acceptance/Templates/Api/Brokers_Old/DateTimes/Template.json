@@ -12,24 +12,6 @@
       "branchName": "brokers-datetime-getcurrentdatetimeoffset",
       "actions": [
         {
-          "name": "Create branch",
-          "executionFolder": "$projectFolder$",
-          "executions": [
-            {
-              "name": "Checkout base branch",
-              "instruction": "git checkout $basebranch$"
-            },
-            {
-              "name": "Fetch the latest code",
-              "instruction": "git pull origin"
-            },
-            {
-              "name": "Create new branch",
-              "instruction": "git checkout -b users/$username$/brokers-datetime-getcurrentdatetimeoffset"
-            }
-          ]
-        },
-        {
           "name": "001 - BROKERS: DateTime - Get Current DateTime Offset",
           "executionFolder": "$projectFolder$",
           "files": [
@@ -117,36 +99,6 @@
               "appendToBeginning": true,
               "appendEvenIfContentAlreadyExist": false
             }
-          ],
-          "executions": [
-            {
-              "name": "Stage all changes",
-              "instruction": "git add -A"
-            },
-            {
-              "name": "Commit staged changes",
-              "instruction": "git commit -m \"BROKERS: DateTime - Get Current DateTime Offset\""
-            }
-          ]
-        },
-        {
-          "name": "Push branch",
-          "executionFolder": "$projectFolder$",
-          "executions": [
-            {
-              "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-datetime-getcurrentdatetimeoffset"
-            }
-          ]
-        },
-        {
-          "name": "Create Pull Request",
-          "executionFolder": "$projectFolder$",
-          "executions": [
-            {
-              "name": "Create Pull Request",
-              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: DateTime - Get Current DateTime Offset\" -b \" \""
-            }
           ]
         }
       ]
@@ -156,7 +108,10 @@
     "----------------------------------------------------",
     "BROKERS: DateTimeBroker",
     "----------------------------------------------------",
+    "* Register the DateTimeBroker in Startup.cs => AddBrokers(IServiceCollection services) then do a commit and push.",
+    "* Resolve / remove any TODO items in the task list if any",
     "* Link the pull request(s) to related issues by adding e.g. #CLOSES 123 to the description",
-    "* Review Draft Pull Requests (and add more commits by pushing to any of the branches if needed):"
+    "* Review Draft Pull Requests (and add more commits by pushing to any of the branches if needed):",
+    "  - BROKERS: DateTime - Get Current DateTime Offset  ->  users/$username$/brokers-datetime-getcurrentdatetimeoffset"
   ]
 }

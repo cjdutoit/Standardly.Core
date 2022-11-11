@@ -9,8 +9,29 @@
   "tasks": [
     {
       "name": "001 - BROKERS: Logging - Log Information",
-      "branchName": "brokers-loggers-loginformation",
       "actions": [
+        {
+          "name": "Create branch for Log Information",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Checkout base branch",
+              "instruction": "git checkout $basebranch$"
+            },
+            {
+              "name": "Fetch the latest code",
+              "instruction": "git pull origin"
+            },
+            {
+              "name": "Create new branch",
+              "instruction": "git checkout -b users/$username$/brokers-loggers-loginformation"
+            },
+            {
+              "name": "Install Microsoft.Extensions.Logging from NuGet",
+              "instruction": "dotnet add $projectFile$ package Microsoft.Extensions.Logging"
+            }
+          ]
+        },
         {
           "name": "Add Log Information",
           "executionFolder": "$projectFolder$",
@@ -25,14 +46,53 @@
               "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
               "replace": true
             }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log Information\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Information",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/brokers-loggers-loginformation"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Information\" -b \" \""
+            }
           ]
         }
       ]
     },
     {
       "name": "002 - BROKERS: Logging - Log Trace",
-      "branchName": "brokers-loggers-logtrace",
       "actions": [
+        {
+          "name": "Create branch for Log Trace",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/brokers-loggers-logtrace users/$username$/brokers-loggers-loginformation"
+            }
+          ]
+        },
         {
           "name": "Add Log Trace",
           "executionFolder": "$projectFolder$",
@@ -47,14 +107,53 @@
               "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
               "replace": true
             }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogTrace\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log LogTrace",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/brokers-loggers-logtrace"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Trace\" -b \" \""
+            }
           ]
         }
       ]
     },
     {
       "name": "003 - BROKERS: Logging - Log Debug",
-      "branchName": "brokers-loggers-logdebug",
       "actions": [
+        {
+          "name": "Create branch for Log Debug",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/brokers-loggers-logdebug users/$username$/brokers-loggers-logtrace"
+            }
+          ]
+        },
         {
           "name": "Add Log Debug",
           "executionFolder": "$projectFolder$",
@@ -69,14 +168,53 @@
               "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
               "replace": true
             }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogDebug\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Debug",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/brokers-loggers-logdebug"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Debug\" -b \" \""
+            }
           ]
         }
       ]
     },
     {
       "name": "004 - BROKERS: Logging - Log Warning",
-      "branchName": "brokers-loggers-logwarning",
       "actions": [
+        {
+          "name": "Create branch for Log Warning",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/brokers-loggers-logwarning users/$username$/brokers-loggers-logdebug"
+            }
+          ]
+        },
         {
           "name": "Add Log Warning",
           "executionFolder": "$projectFolder$",
@@ -91,14 +229,53 @@
               "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
               "replace": true
             }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogWarning\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Warning",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/brokers-loggers-logwarning"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Warning\" -b \" \""
+            }
           ]
         }
       ]
     },
     {
       "name": "005 - BROKERS: Logging - Log Error",
-      "branchName": "brokers-loggers-logerror",
       "actions": [
+        {
+          "name": "Create branch for Log Error",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/brokers-loggers-logerror users/$username$/brokers-loggers-logwarning"
+            }
+          ]
+        },
         {
           "name": "Add Log Error",
           "executionFolder": "$projectFolder$",
@@ -113,14 +290,53 @@
               "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
               "replace": true
             }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogError\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Error",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/brokers-loggers-logerror"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Error\" -b \" \""
+            }
           ]
         }
       ]
     },
     {
       "name": "006 - BROKERS: Logging - Log Critical",
-      "branchName": "brokers-loggers-logcritical",
       "actions": [
+        {
+          "name": "Create branch for Log Critical",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/brokers-loggers-logcritical users/$username$/brokers-loggers-logerror"
+            }
+          ]
+        },
         {
           "name": "Add Log Critical",
           "executionFolder": "$projectFolder$",
@@ -134,6 +350,36 @@
               "template": "$templateFolder$\\Api\\Brokers\\Loggings\\006_LoggingBroker.cs.txt",
               "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
               "replace": true
+            }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogCritical\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Critical",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/brokers-loggers-logcritical"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Critical\" -b \" \""
             }
           ]
         }
