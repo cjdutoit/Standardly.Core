@@ -22,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             string inputContent = randomContent;
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExistsAsync(inputFilePath))
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
                     .ReturnsAsync(false);
 
             // when
@@ -30,11 +30,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             // then
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExistsAsync(inputFilePath),
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectoryAsync(inputFilePath),
+                service.CreateDirectoryAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
