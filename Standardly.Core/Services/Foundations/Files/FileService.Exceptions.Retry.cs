@@ -54,5 +54,110 @@ namespace Standardly.Core.Services.Foundations.Files
                 }
             }
         }
+
+        private async ValueTask<string> WithRetry(ReturningStringFunction returningStringFunction)
+        {
+            var attempts = 0;
+
+            while (true)
+            {
+                try
+                {
+                    attempts++;
+                    return await returningStringFunction();
+                }
+                catch (Exception ex)
+                {
+                    if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
+                    {
+                        this.loggingBroker
+                            .LogInformation(
+                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
+                                    $"Exception: {ex.Message}");
+
+                        if (attempts == this.retryConfig.MaxRetryAttempts)
+                        {
+                            throw;
+                        }
+
+                        Task.Delay(this.retryConfig.PauseBetweenFailures).Wait();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private async ValueTask<List<string>> WithRetry(ReturningStringListFunction returningStringListFunction)
+        {
+            var attempts = 0;
+
+            while (true)
+            {
+                try
+                {
+                    attempts++;
+                    return await returningStringListFunction();
+                }
+                catch (Exception ex)
+                {
+                    if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
+                    {
+                        this.loggingBroker
+                            .LogInformation(
+                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
+                                    $"Exception: {ex.Message}");
+
+                        if (attempts == this.retryConfig.MaxRetryAttempts)
+                        {
+                            throw;
+                        }
+
+                        Task.Delay(this.retryConfig.PauseBetweenFailures).Wait();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private async ValueTask WithRetry(ReturningNothingFunction returningNothingFunction)
+        {
+            var attempts = 0;
+
+            while (true)
+            {
+                try
+                {
+                    attempts++;
+                    await returningNothingFunction();
+                }
+                catch (Exception ex)
+                {
+                    if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
+                    {
+                        this.loggingBroker
+                            .LogInformation(
+                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
+                                    $"Exception: {ex.Message}");
+
+                        if (attempts == this.retryConfig.MaxRetryAttempts)
+                        {
+                            throw;
+                        }
+
+                        Task.Delay(this.retryConfig.PauseBetweenFailures).Wait();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
     }
 }

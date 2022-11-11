@@ -25,7 +25,10 @@ namespace Standardly.Core.Services.Foundations.Files
         {
             try
             {
-                return await returningBooleanFunction();
+                return await WithRetry(async () =>
+                    {
+                        return await returningBooleanFunction();
+                    });
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -93,7 +96,10 @@ namespace Standardly.Core.Services.Foundations.Files
         {
             try
             {
-                return await returningStringFunction();
+                return await WithRetry(async () =>
+                {
+                    return await returningStringFunction();
+                });
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -161,7 +167,10 @@ namespace Standardly.Core.Services.Foundations.Files
         {
             try
             {
-                return await returningStringListFunction();
+                return await WithRetry(async () =>
+                {
+                    return await returningStringListFunction();
+                });
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
