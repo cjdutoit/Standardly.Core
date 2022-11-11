@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Services.Foundations.Files;
@@ -34,9 +35,12 @@ namespace Standardly.Core.Services.Processings.Files
             TryCatchAsync(async () =>
             {
                 ValidateWriteToFile(path, content);
-                if (!this.fileService.CheckIfDirectoryExistsAsync(path).Result)
+                FileInfo fileName = new FileInfo(path);
+                string directoryPath = fileName.DirectoryName;
+
+                if (!this.fileService.CheckIfDirectoryExistsAsync(directoryPath).Result)
                 {
-                    await this.CreateDirectoryAsync(path);
+                    await this.CreateDirectoryAsync(directoryPath);
                 }
 
                 await this.fileService.WriteToFileAsync(path, content);
