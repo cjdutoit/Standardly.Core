@@ -194,7 +194,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                     appendToBeginning: append.AppendToBeginning,
                     appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist).Result;
 
-                this.fileProcessingService.WriteToFileAsync(append.Target, appendedContent);
+                bool result = this.fileProcessingService.WriteToFileAsync(append.Target, appendedContent).Result;
             }
         }
 
