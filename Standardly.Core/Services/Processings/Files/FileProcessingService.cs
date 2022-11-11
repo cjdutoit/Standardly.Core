@@ -31,7 +31,7 @@ namespace Standardly.Core.Services.Processings.Files
                 return await this.fileService.CheckIfFileExistsAsync(path);
             });
 
-        public ValueTask WriteToFileAsync(string path, string content) =>
+        public ValueTask<bool> WriteToFileAsync(string path, string content) =>
             TryCatchAsync(async () =>
             {
                 ValidateWriteToFile(path, content);
@@ -40,10 +40,10 @@ namespace Standardly.Core.Services.Processings.Files
 
                 if (!this.fileService.CheckIfDirectoryExistsAsync(directoryPath).Result)
                 {
-                    await this.CreateDirectoryAsync(directoryPath);
+                    await this.fileService.CreateDirectoryAsync(directoryPath);
                 }
 
-                await this.fileService.WriteToFileAsync(path, content);
+                return await this.fileService.WriteToFileAsync(path, content);
             });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
@@ -54,12 +54,12 @@ namespace Standardly.Core.Services.Processings.Files
                 return await this.fileService.ReadFromFileAsync(path);
             });
 
-        public ValueTask DeleteFileAsync(string path) =>
+        public ValueTask<bool> DeleteFileAsync(string path) =>
              TryCatchAsync(async () =>
              {
                  ValidateDeleteFile(path);
 
-                 await this.fileService.DeleteFileAsync(path);
+                 return await this.fileService.DeleteFileAsync(path);
              });
 
         public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
@@ -78,18 +78,18 @@ namespace Standardly.Core.Services.Processings.Files
                 return await this.fileService.CheckIfDirectoryExistsAsync(path);
             });
 
-        public ValueTask CreateDirectoryAsync(string path) =>
+        public ValueTask<bool> CreateDirectoryAsync(string path) =>
             TryCatchAsync(async () =>
             {
                 ValidateCreateDirectory(path);
-                await this.fileService.CreateDirectoryAsync(path);
+                return await this.fileService.CreateDirectoryAsync(path);
             });
 
-        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
+        public ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
             TryCatchAsync(async () =>
             {
                 ValidateDeleteDirectory(path);
-                await this.fileService.DeleteDirectoryAsync(path, recursive);
+                return await this.fileService.DeleteDirectoryAsync(path, recursive);
             });
     }
 }

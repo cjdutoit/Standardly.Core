@@ -33,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask createDirectoryTask =
+            ValueTask<bool> createDirectoryTask =
                 this.fileProcessingService.CreateDirectoryAsync(inputPath);
 
             // then
@@ -71,7 +71,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask createDirectoryTask =
+            ValueTask<bool> createDirectoryTask =
                 this.fileProcessingService.CreateDirectoryAsync(inputPath);
 
             // then
@@ -113,7 +113,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask createDirectoryTask =
+            ValueTask<bool> createDirectoryTask =
                 this.fileProcessingService.CreateDirectoryAsync(inputPath);
 
             // then

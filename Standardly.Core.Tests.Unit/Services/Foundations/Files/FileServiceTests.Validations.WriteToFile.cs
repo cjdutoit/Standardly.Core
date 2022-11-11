@@ -39,7 +39,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileService.WriteToFileAsync(invalidPath, invalidContent);
 
             FileValidationException actualException =

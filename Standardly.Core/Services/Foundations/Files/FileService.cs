@@ -33,11 +33,12 @@ namespace Standardly.Core.Services.Foundations.Files
                 return await this.fileBroker.CheckIfFileExistsAsync(path);
             });
 
-        public ValueTask WriteToFileAsync(string path, string content) =>
+        public ValueTask<bool> WriteToFileAsync(string path, string content) =>
             TryCatchAsync(async () =>
             {
                 ValidateWriteToFileArguments(path, content);
-                await this.fileBroker.WriteToFileAsync(path, content);
+
+                return await this.fileBroker.WriteToFileAsync(path, content);
             });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
@@ -48,11 +49,12 @@ namespace Standardly.Core.Services.Foundations.Files
                  return await this.fileBroker.ReadFileAsync(path);
              });
 
-        public ValueTask DeleteFileAsync(string path) =>
+        public ValueTask<bool> DeleteFileAsync(string path) =>
             TryCatchAsync(async () =>
             {
                 ValidateDeleteFileArguments(path);
-                await this.fileBroker.DeleteFileAsync(path);
+
+                return await this.fileBroker.DeleteFileAsync(path);
             });
 
         public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
@@ -71,18 +73,20 @@ namespace Standardly.Core.Services.Foundations.Files
                 return await this.fileBroker.CheckIfDirectoryExistsAsync(path);
             });
 
-        public ValueTask CreateDirectoryAsync(string path) =>
+        public ValueTask<bool> CreateDirectoryAsync(string path) =>
             TryCatchAsync(async () =>
             {
                 ValidateCreateDirectoryArguments(path);
-                await this.fileBroker.CreateDirectoryAsync(path);
+
+                return await this.fileBroker.CreateDirectoryAsync(path);
             });
 
-        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
+        public ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
             TryCatchAsync(async () =>
             {
                 ValidateDeleteDirectoryArguments(path);
-                await this.fileBroker.DeleteDirectoryAsync(path, recursive);
+
+                return await this.fileBroker.DeleteDirectoryAsync(path, recursive);
             });
     }
 }

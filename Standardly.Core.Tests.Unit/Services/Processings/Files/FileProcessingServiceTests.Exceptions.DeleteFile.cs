@@ -33,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileProcessingService.DeleteFileAsync(inputPath);
 
             // then
@@ -71,7 +71,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileProcessingService.DeleteFileAsync(inputPath);
 
             // then
@@ -113,7 +113,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileProcessingService.DeleteFileAsync(inputPath);
 
             // then

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
+namespace Standardly.Core.Tests.Acceptance.Services.Foundations.Templates
 {
     public partial class TemplateServiceTests
     {
@@ -59,8 +59,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             bool appendEvenIfContentAlreadyExist = false;
             string appendContent = "            services.AddDbContext<StorageBroker>();";
 
-            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)"
-                + @"\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
+            string regexToMatch = @"(?<=public void ConfigureServices\(IServiceCollection services\)\r\n        \{\r\n)([\S\s]*?)(?=\n        \}\r\n)";
 
             // when
             string actualResult = await this.templateService

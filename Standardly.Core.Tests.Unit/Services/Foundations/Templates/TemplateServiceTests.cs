@@ -186,6 +186,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 list.Add(new Core.Models.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(1),
+                    BranchName = GetRandomString(1),
                     Actions = CreateListOfActions()
                 });
             }

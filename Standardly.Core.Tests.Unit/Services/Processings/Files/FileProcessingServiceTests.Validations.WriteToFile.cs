@@ -40,7 +40,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(path: invalidPath, content: invalidContent);
 
             FileProcessingValidationException actualException =

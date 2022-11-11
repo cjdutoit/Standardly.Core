@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Orchestrations.Templates;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
@@ -76,6 +77,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             Dictionary<string, string> replacementDictionary) =>
             TryCatchAsync(async () =>
                 {
+                    this.LogMessage(DateTimeOffset.UtcNow, $"Validating inputs");
                     ValidateTemplateArguments(templates, replacementDictionary);
 
                     if (!replacementDictionary.ContainsKey("$previousBranch$"))
@@ -90,11 +92,13 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
                     List<Template> templatesToGenerate = new List<Template>();
 
+                    this.LogMessage(DateTimeOffset.UtcNow, $"Check what needs doing on the templates");
                     templatesToGenerate.AddRange(
                         await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
 
                     templatesToGenerate.ForEach(async template =>
                     {
+                        this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
                         replacementDictionary["$previousBranch$"] = previousBranch;
                         await GenerateTemplateAsync(template, replacementDictionary);
                     });
@@ -176,22 +180,22 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             });
         }
 
-        private void PerformAppendOpperations(List<Models.Foundations.Templates.Tasks.Actions.Appends.Append> appends)
+        private void PerformAppendOpperations(List<Append> appends)
         {
-            appends.ForEach(async append =>
+            foreach (Append append in appends)
             {
-                string fileContent = await this.fileProcessingService.ReadFromFileAsync(append.Target);
+                string fileContent = this.fileProcessingService.ReadFromFileAsync(append.Target).Result;
 
-                string appendedContent = await this.templateProcessingService.AppendContentAsync(
+                string appendedContent = this.templateProcessingService.AppendContentAsync(
                     sourceContent: fileContent,
                     doesNotContainContent: append.DoesNotContainContent,
                     regexToMatchForAppend: append.RegexToMatchForAppend,
                     appendContent: append.ContentToAppend,
                     appendToBeginning: append.AppendToBeginning,
-                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
+                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist).Result;
 
-                await this.fileProcessingService.WriteToFileAsync(append.Target, appendedContent);
-            });
+                this.fileProcessingService.WriteToFileAsync(append.Target, appendedContent);
+            }
         }
 
         private async ValueTask PerformExecutionsAsync(

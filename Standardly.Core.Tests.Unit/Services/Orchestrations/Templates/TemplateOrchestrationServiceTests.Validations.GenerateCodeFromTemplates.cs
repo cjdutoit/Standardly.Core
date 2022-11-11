@@ -73,7 +73,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             string randomTransformedTemplateString = GetRandomString();
             List<string> targets = new List<string>();
 
-
             for (int i = 0; i < inputTemplates.Count; i++)
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
@@ -93,8 +92,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
                             targets.Add(file.Target);
                         });
-
-                        // TODO:  Add code for Appends
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
                             executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
@@ -126,7 +123,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             this.loggingBrokerMock.Verify(loggingBroker =>
                 loggingBroker.LogInformation(It.IsAny<string>()),
-                    Times.Never());
+                    Times.AtLeastOnce());
 
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

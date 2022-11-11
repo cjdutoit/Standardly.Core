@@ -35,7 +35,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask createDirectoryTask =
+            ValueTask<bool> createDirectoryTask =
                 this.fileProcessingService.CreateDirectoryAsync(path: invalidPath);
 
             FileProcessingValidationException actualException =

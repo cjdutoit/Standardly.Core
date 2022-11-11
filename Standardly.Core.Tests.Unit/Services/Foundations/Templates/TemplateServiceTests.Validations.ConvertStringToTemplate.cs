@@ -178,6 +178,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
+                BranchName = GetRandomString(),
                 Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
                     new Core.Models.Foundations.Templates.Tasks.Actions.Action()
@@ -197,12 +198,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new InvalidTemplateException();
 
             invalidTemplateException.AddData(
-                key: "Actions[0].Name",
+                key: "Tasks[0].Actions[0].Name",
                 values: "Text is required");
-
-            invalidTemplateException.AddData(
-                key: "Actions[0].Executions",
-                values: "Executions is required");
 
             var expectedTemplateValidationException =
                 new TemplateValidationException(invalidTemplateException);
@@ -238,6 +235,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new Core.Models.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(),
+                    BranchName = GetRandomString(),
                     Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
                     new Core.Models.Foundations.Templates.Tasks.Actions.Action()
@@ -311,6 +309,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
+                BranchName = GetRandomString(),
                 Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
                     new Core.Models.Foundations.Templates.Tasks.Actions.Action()
@@ -397,6 +396,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
+                BranchName = GetRandomString(),
                 Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
                 {
                     new Core.Models.Foundations.Templates.Tasks.Actions.Action()

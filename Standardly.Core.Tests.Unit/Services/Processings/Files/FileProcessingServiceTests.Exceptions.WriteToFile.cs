@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
@@ -77,7 +77,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
@@ -127,7 +127,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then

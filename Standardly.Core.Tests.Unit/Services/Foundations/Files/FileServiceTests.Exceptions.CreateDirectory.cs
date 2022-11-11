@@ -35,7 +35,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.CreateDirectoryAsync(somePath);
 
             FileDependencyValidationException actualException =
@@ -81,7 +81,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.CreateDirectoryAsync(somePath);
 
             FileDependencyException actualException =
@@ -92,7 +92,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Verify(broker =>
                 broker.CreateDirectoryAsync(somePath),
-                    Times.Once);
+                    Times.AtLeastOnce);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogInformation(It.IsAny<string>()),
+                        Times.Between(0, 3, Moq.Range.Inclusive));
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -127,7 +131,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.CreateDirectoryAsync(somePath);
 
             FileDependencyException actualException =
@@ -167,7 +171,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.CreateDirectoryAsync(somePath);
 
             FileServiceException actualException =

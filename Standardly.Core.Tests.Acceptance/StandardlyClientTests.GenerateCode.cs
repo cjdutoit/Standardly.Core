@@ -39,14 +39,18 @@ namespace Standardly.Core.Tests.Acceptance
             var standardlyClient = new StandardlyClient(templateFolderPath, templateDefinitionFileName);
             List<Template> templates = await standardlyClient.FindAllTemplatesAsync();
 
+            standardlyClient.LogRaised += (date, message, type) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"{date} - {type} - {message}");
+            };
+
             List<Template> selectedTemplates =
-                templates.Where(template => template.Name == "BROKERS: Storage Broker").ToList();
+                templates.Where(template => template.Name == "BROKERS: DateTime Broker").ToList();
 
             //when
             await standardlyClient.GenerateCodeAsync(templates: selectedTemplates, replacementDictionary);
 
             //then
-
         }
     }
 }

@@ -25,6 +25,48 @@
               "target": "$projectFolder$\\$brokers$\\DateTimes\\DateTimeBroker.cs",
               "replace": true
             }
+          ],
+          "appends": [
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddBrokers(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n        private static void AddBrokers(IServiceCollection services)\r\n        {\r\n\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddServices(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n        private static void AddServices(IServiceCollection services)\r\n        {\r\n\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddServices(services);\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddBrokers(services);\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void AddBrokers\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            services.AddTransient<IDateTimeBroker, DateTimeBroker>();\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            }
           ]
         }
       ]

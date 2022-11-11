@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask deleteDirectoryTask =
+            ValueTask<bool> deleteDirectoryTask =
                 this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
             // then
@@ -73,7 +73,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteDirectoryTask =
+            ValueTask<bool> deleteDirectoryTask =
                 this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
             // then
@@ -115,7 +115,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask deleteDirectoryTask =
+            ValueTask<bool> deleteDirectoryTask =
                 this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
             // then

@@ -12,12 +12,12 @@ namespace Standardly.Core.Brokers.Files
     public interface IFileBroker
     {
         ValueTask<bool> CheckIfFileExistsAsync(string path);
-        ValueTask WriteToFileAsync(string path, string content);
+        ValueTask<bool> WriteToFileAsync(string path, string content);
         ValueTask<string> ReadFileAsync(string path);
-        ValueTask DeleteFileAsync(string path);
+        ValueTask<bool> DeleteFileAsync(string path);
         ValueTask<List<string>> GetListOfFilesAsync(string path, string searchPattern = "*");
         ValueTask<bool> CheckIfDirectoryExistsAsync(string path);
-        ValueTask CreateDirectoryAsync(string path);
-        ValueTask DeleteDirectoryAsync(string path, bool recursive = false);
+        ValueTask<bool> CreateDirectoryAsync(string path);
+        ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false);
     }
 }

@@ -36,7 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask deleteDirectoryTask =
+            ValueTask<bool> deleteDirectoryTask =
                 this.fileProcessingService.DeleteDirectoryAsync(path: invalidPath, recursive);
 
             FileProcessingValidationException actualException =
