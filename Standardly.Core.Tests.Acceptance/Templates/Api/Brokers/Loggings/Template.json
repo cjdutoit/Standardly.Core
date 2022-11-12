@@ -9,6 +9,7 @@
   "tasks": [
     {
       "name": "001 - BROKERS: Logging - Log Information",
+      "branchName": "brokers-loggers-loginformation",
       "actions": [
         {
           "name": "Create branch for Log Information",
@@ -24,7 +25,7 @@
             },
             {
               "name": "Create new branch",
-              "instruction": "git checkout -b users/$username$/brokers-loggers-loginformation"
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
             },
             {
               "name": "Install Microsoft.Extensions.Logging from NuGet",
@@ -47,6 +48,80 @@
               "replace": true
             }
           ],
+          "appends": [
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddBrokers(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n        private static void AddBrokers(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddFoundations(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n        private static void AddFoundations(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddProcessings(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n        private static void AddProcessings(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddOrchestrations(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n        private static void AddOrchestrations(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddOrchestrations(services);\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddProcessings(services);",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddFoundations(services);",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddBrokers(services);",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=private static void AddBrokers\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=        \\}\\r\\n)",
+              "contentToAppend": "            services.AddTransient<ILoggingBroker, LoggingBroker>();",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            }
+          ],
           "executions": [
             {
               "name": "Stage all changes",
@@ -64,7 +139,7 @@
           "executions": [
             {
               "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-loggers-loginformation"
+              "instruction": "git push origin users/$username$/$currentBranch$"
             }
           ]
         },
@@ -82,6 +157,7 @@
     },
     {
       "name": "002 - BROKERS: Logging - Log Trace",
+      "branchName": "brokers-loggers-logtrace",
       "actions": [
         {
           "name": "Create branch for Log Trace",
@@ -89,7 +165,7 @@
           "executions": [
             {
               "name": "Create new branch based on the current branch",
-              "instruction": "git checkout -b users/$username$/brokers-loggers-logtrace users/$username$/brokers-loggers-loginformation"
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
             }
           ]
         },
@@ -125,7 +201,7 @@
           "executions": [
             {
               "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-loggers-logtrace"
+              "instruction": "git push origin users/$username$/$currentBranch$"
             }
           ]
         },
@@ -143,6 +219,7 @@
     },
     {
       "name": "003 - BROKERS: Logging - Log Debug",
+      "branchName": "brokers-loggers-logdebug",
       "actions": [
         {
           "name": "Create branch for Log Debug",
@@ -150,7 +227,7 @@
           "executions": [
             {
               "name": "Create new branch based on the current branch",
-              "instruction": "git checkout -b users/$username$/brokers-loggers-logdebug users/$username$/brokers-loggers-logtrace"
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
             }
           ]
         },
@@ -186,7 +263,7 @@
           "executions": [
             {
               "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-loggers-logdebug"
+              "instruction": "git push origin users/$username$/$currentBranch$"
             }
           ]
         },
@@ -204,6 +281,7 @@
     },
     {
       "name": "004 - BROKERS: Logging - Log Warning",
+      "branchName": "brokers-loggers-logwarning",
       "actions": [
         {
           "name": "Create branch for Log Warning",
@@ -211,7 +289,7 @@
           "executions": [
             {
               "name": "Create new branch based on the current branch",
-              "instruction": "git checkout -b users/$username$/brokers-loggers-logwarning users/$username$/brokers-loggers-logdebug"
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
             }
           ]
         },
@@ -247,7 +325,7 @@
           "executions": [
             {
               "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-loggers-logwarning"
+              "instruction": "git push origin users/$username$/$currentBranch$"
             }
           ]
         },
@@ -265,6 +343,7 @@
     },
     {
       "name": "005 - BROKERS: Logging - Log Error",
+      "branchName": "brokers-loggers-logerror",
       "actions": [
         {
           "name": "Create branch for Log Error",
@@ -272,7 +351,7 @@
           "executions": [
             {
               "name": "Create new branch based on the current branch",
-              "instruction": "git checkout -b users/$username$/brokers-loggers-logerror users/$username$/brokers-loggers-logwarning"
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
             }
           ]
         },
@@ -308,7 +387,7 @@
           "executions": [
             {
               "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-loggers-logerror"
+              "instruction": "git push origin users/$username$/$currentBranch$"
             }
           ]
         },
@@ -326,6 +405,7 @@
     },
     {
       "name": "006 - BROKERS: Logging - Log Critical",
+      "branchName": "brokers-loggers-logcritical",
       "actions": [
         {
           "name": "Create branch for Log Critical",
@@ -333,7 +413,7 @@
           "executions": [
             {
               "name": "Create new branch based on the current branch",
-              "instruction": "git checkout -b users/$username$/brokers-loggers-logcritical users/$username$/brokers-loggers-logerror"
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
             }
           ]
         },
@@ -369,7 +449,7 @@
           "executions": [
             {
               "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-loggers-logcritical"
+              "instruction": "git push origin users/$username$/$currentBranch$"
             }
           ]
         },
@@ -390,15 +470,8 @@
     "----------------------------------------------------",
     "BROKERS: LoggingBroker",
     "----------------------------------------------------",
-    "* Register the LoggingBroker in Startup.cs => AddBrokers(IServiceCollection services) then do a commit and push.",
     "* Resolve / remove any TODO items in the task list",
     "* Link the pull request(s) to related issues by adding e.g. #CLOSES 123 to the description",
     "* Review Draft Pull Requests (and add more commits by pushing to any of the branches if needed):",
-    "  - BROKERS: Logging - Log Information  ->  users/$username$/brokers-loggers-loginformation",
-    "  - BROKERS: Logging - Log LogTrace  ->  users/$username$/brokers-loggers-logtrace",
-    "  - BROKERS: Logging - Log LogDebug  ->  users/$username$/brokers-loggers-logdebug",
-    "  - BROKERS: Logging - Log LogWarning  ->  users/$username$/brokers-loggers-logwarning",
-    "  - BROKERS: Logging - Log LogError  ->  users/$username$/brokers-loggers-logerror",
-    "  - BROKERS: Logging - Log LogCritical  ->  users/$username$/brokers-loggers-logcritical"
   ]
 }

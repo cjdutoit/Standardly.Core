@@ -25,7 +25,7 @@
             },
             {
               "name": "Create new branch",
-              "instruction": "git checkout -b users/$username$/brokers-datetime-getcurrentdatetimeoffset"
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
             }
           ]
         },
@@ -135,7 +135,7 @@
           "executions": [
             {
               "name": "Push changes to <remote>",
-              "instruction": "git push origin users/$username$/brokers-datetime-getcurrentdatetimeoffset"
+              "instruction": "git push origin users/$username$/$currentBranch$"
             }
           ]
         },
