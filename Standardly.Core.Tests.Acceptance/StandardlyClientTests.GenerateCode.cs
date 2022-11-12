@@ -6,10 +6,8 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Standardly.Core.Clients;
 using Standardly.Core.Models.Foundations.Templates;
 using Xunit;
@@ -36,21 +34,24 @@ namespace Standardly.Core.Tests.Acceptance
                 displayName: "Test User",
                 gitHubUsername: "test.user@domain.com");
 
-            var standardlyClient = new StandardlyClient(templateFolderPath, templateDefinitionFileName);
-            List<Template> templates = await standardlyClient.FindAllTemplatesAsync();
+            var standardlyClient = new StandardlyClient(templateFolderPath, templateDefinitionFileName)
+            {
+                ScriptExecutionIsEnabled = false
+            };
+
+            List<Template> templates =
+                await standardlyClient.FindAllTemplatesAsync();
 
             standardlyClient.LogRaised += (date, message, type) =>
             {
                 System.Diagnostics.Debug.WriteLine($"{date} - {type} - {message}");
             };
 
-            List<Template> selectedTemplates =
-                templates.Where(template => template.Name == "BROKERS: DateTime Broker").ToList();
-
             //when
-            await standardlyClient.GenerateCodeAsync(templates: selectedTemplates, replacementDictionary);
+            await standardlyClient.GenerateCodeAsync(templates, replacementDictionary);
 
             //then
+
         }
     }
 }

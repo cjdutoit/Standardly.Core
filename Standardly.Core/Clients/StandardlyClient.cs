@@ -83,6 +83,12 @@ namespace Standardly.Core.Clients
             this.LogEventSetup();
         }
 
+        public bool ScriptExecutionIsEnabled
+        {
+            get { return this.templateOrchestrationService.ScriptExecutionIsEnabled; }
+            set { this.templateOrchestrationService.ScriptExecutionIsEnabled = value; }
+        }
+
         public async ValueTask<List<Template>> FindAllTemplatesAsync()
         {
             try
@@ -114,7 +120,9 @@ namespace Standardly.Core.Clients
             }
         }
 
-        public async ValueTask GenerateCodeAsync(List<Template> templates, Dictionary<string, string> replacementDictionary)
+        public async ValueTask GenerateCodeAsync(
+            List<Template> templates,
+            Dictionary<string, string> replacementDictionary)
         {
             try
             {

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
@@ -22,6 +23,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
     public partial class TemplateOrchestrationService : ITemplateOrchestrationService
     {
         public event Action<DateTimeOffset, string, string> LogRaised = delegate { };
+        public bool ScriptExecutionIsEnabled { get; set; } = true;
         private readonly IFileProcessingService fileProcessingService;
         private readonly IExecutionProcessingService executionProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
@@ -211,8 +213,23 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             List<Models.Foundations.Executions.Execution> executions,
             string executionFolder)
         {
-            string outcome = await this.executionProcessingService.RunAsync(executions, executionFolder);
-            this.LogMessage(DateTimeOffset.UtcNow, $"{outcome}");
+            if (this.ScriptExecutionIsEnabled == true)
+            {
+                string outcome = await this.executionProcessingService.RunAsync(executions, executionFolder);
+                this.LogMessage(DateTimeOffset.UtcNow, $"{outcome}");
+            }
+            else
+            {
+                StringBuilder scripts = new StringBuilder();
+                scripts.AppendLine("Skipping the following executions as executions currently disabled:");
+
+                foreach (var execution in executions)
+                {
+                    scripts.AppendLine(execution.Instruction);
+                }
+
+                this.LogMessage(DateTimeOffset.UtcNow, scripts.ToString());
+            }
         }
 
         private void LogMessage(DateTimeOffset date, string message)

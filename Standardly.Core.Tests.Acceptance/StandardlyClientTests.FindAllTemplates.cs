@@ -22,7 +22,10 @@ namespace Standardly.Core.Tests.Acceptance
         public async Task ShouldFindListOfTemplatesAsync()
         {
             //given
-            var standardlyClient = new StandardlyClient();
+            var standardlyClient = new StandardlyClient
+            {
+                ScriptExecutionIsEnabled = false
+            };
 
             //when
             List<Template> templates = await standardlyClient.FindAllTemplatesAsync();
@@ -41,7 +44,10 @@ namespace Standardly.Core.Tests.Acceptance
             string assembly = Assembly.GetExecutingAssembly().Location;
             string templateFolderPath = Path.Combine(Path.GetDirectoryName(assembly), @"Templates");
             string templateDefinitionFileName = "Template.json";
-            var standardlyClient = new StandardlyClient(templateFolderPath, templateDefinitionFileName);
+            var standardlyClient = new StandardlyClient(templateFolderPath, templateDefinitionFileName)
+            {
+                ScriptExecutionIsEnabled = false
+            };
 
             //when
             List<Template> templates = await standardlyClient.FindAllTemplatesAsync();
