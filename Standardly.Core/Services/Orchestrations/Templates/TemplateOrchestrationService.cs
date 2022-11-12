@@ -84,9 +84,6 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                     List<Template> templatesToGenerate = new List<Template>();
                     this.LogMessage(DateTimeOffset.UtcNow, $"Check what needs doing on the templates");
 
-                    templatesToGenerate.AddRange(
-                        await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
-
                     if (!replacementDictionary.ContainsKey("$currentBranch$"))
                     {
                         replacementDictionary.Add("$currentBranch$", replacementDictionary["$basebranch$"]);
@@ -96,6 +93,9 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                     {
                         replacementDictionary.Add("$previousBranch$", replacementDictionary["$basebranch$"]);
                     }
+
+                    templatesToGenerate.AddRange(
+                        await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
 
                     this.previousBranch =
                         !string.IsNullOrWhiteSpace(replacementDictionary["$previousBranch$"])
@@ -119,7 +119,9 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
             for (int taskIndex = 0; taskIndex <= template.Tasks.Count - 1; taskIndex++)
             {
-                replacementDictionary["$currentBranch$"] = template.Tasks[taskIndex].BranchName;
+                replacementDictionary["$currentBranch$"] =
+                    await this.templateProcessingService
+                        .TransformStringAsync(template.Tasks[taskIndex].BranchName, replacementDictionary);
 
                 var transformedTemplate =
                     await this.templateProcessingService
@@ -129,7 +131,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                     transformedTemplate.Tasks[taskIndex],
                     transformedTemplate, replacementDictionary);
 
-                this.previousBranch = transformedTemplate.Tasks[taskIndex].BranchName;
+                this.previousBranch = await this.templateProcessingService
+                        .TransformStringAsync(transformedTemplate.Tasks[taskIndex].BranchName, replacementDictionary);
             }
         }
 
