@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Xeptions;
 
@@ -16,19 +15,16 @@ namespace Standardly.Core.Services.Foundations.Files
 {
     public partial class FileService
     {
-        private delegate ValueTask<bool> ReturningBooleanFunction();
-        private delegate ValueTask<string> ReturningStringFunction();
-        private delegate ValueTask<List<string>> ReturningStringListFunction();
-        private delegate ValueTask ReturningNothingFunction();
+        private delegate bool ReturningBooleanFunction();
+        private delegate string ReturningStringFunction();
+        private delegate List<string> ReturningStringListFunction();
+        private delegate void ReturningNothingFunction();
 
-        private async ValueTask<bool> TryCatchAsync(ReturningBooleanFunction returningBooleanFunction)
+        private bool TryCatch(ReturningBooleanFunction returningBooleanFunction)
         {
             try
             {
-                return await WithRetry(async () =>
-                    {
-                        return await returningBooleanFunction();
-                    });
+                return returningBooleanFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -92,14 +88,11 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
+        private string TryCatch(ReturningStringFunction returningStringFunction)
         {
             try
             {
-                return await WithRetry(async () =>
-                {
-                    return await returningStringFunction();
-                });
+                return returningStringFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -163,14 +156,11 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private async ValueTask<List<string>> TryCatchAsync(ReturningStringListFunction returningStringListFunction)
+        private List<string> TryCatch(ReturningStringListFunction returningStringListFunction)
         {
             try
             {
-                return await WithRetry(async () =>
-                {
-                    return await returningStringListFunction();
-                });
+                return returningStringListFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -234,11 +224,11 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
+        private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
             try
             {
-                await returningNothingFunction();
+                returningNothingFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {

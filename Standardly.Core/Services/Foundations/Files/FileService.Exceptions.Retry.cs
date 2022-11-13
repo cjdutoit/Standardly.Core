@@ -20,7 +20,7 @@ namespace Standardly.Core.Services.Foundations.Files
                 typeof(IOException)
             };
 
-        private async ValueTask<bool> WithRetry(ReturningBooleanFunction returningBooleanFunction)
+        private bool WithRetry(ReturningBooleanFunction returningBooleanFunction)
         {
             var attempts = 0;
 
@@ -29,7 +29,77 @@ namespace Standardly.Core.Services.Foundations.Files
                 try
                 {
                     attempts++;
-                    return await returningBooleanFunction();
+                    return returningBooleanFunction();
+                }
+                catch (Exception ex)
+                {
+                    if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
+                    {
+                        this.loggingBroker
+                            .LogInformation(
+                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
+                                    $"Exception: {ex.Message}");
+
+                        if (attempts == this.retryConfig.MaxRetryAttempts)
+                        {
+                            throw;
+                        }
+
+                        Task.Delay(this.retryConfig.PauseBetweenFailures).Wait();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private string WithRetry(ReturningStringFunction returningStringFunction)
+        {
+            var attempts = 0;
+
+            while (true)
+            {
+                try
+                {
+                    attempts++;
+                    return returningStringFunction();
+                }
+                catch (Exception ex)
+                {
+                    if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
+                    {
+                        this.loggingBroker
+                            .LogInformation(
+                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
+                                    $"Exception: {ex.Message}");
+
+                        if (attempts == this.retryConfig.MaxRetryAttempts)
+                        {
+                            throw;
+                        }
+
+                        Task.Delay(this.retryConfig.PauseBetweenFailures).Wait();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private List<string> WithRetry(ReturningStringListFunction returningStringListFunction)
+        {
+            var attempts = 0;
+
+            while (true)
+            {
+                try
+                {
+                    attempts++;
+                    return returningStringListFunction();
                 }
                 catch (Exception ex)
                 {

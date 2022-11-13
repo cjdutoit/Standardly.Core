@@ -54,7 +54,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.WriteToFileAsync(invalidPath, invalidContent),
+                broker.WriteToFile(invalidPath, invalidContent),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

@@ -31,8 +31,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFileAsync(somePath))
-                    .ThrowsAsync(dependencyValidationException);
+                broker.ReadFile(somePath))
+                    .Throws(dependencyValidationException);
 
             // when
             ValueTask<string> readFileTask =
@@ -45,7 +45,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFileAsync(somePath),
+                broker.ReadFile(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -77,8 +77,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFileAsync(somePath))
-                    .ThrowsAsync(dependencyException);
+                broker.ReadFile(somePath))
+                    .Throws(dependencyException);
 
             // when
             ValueTask<string> readFromFileTask =
@@ -91,12 +91,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFileAsync(somePath),
+                broker.ReadFile(somePath),
                     Times.AtLeastOnce);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogInformation(It.IsAny<string>()),
-                        Times.Between(0, 3, Moq.Range.Inclusive));
+                    Times.Between(0, 3, Moq.Range.Inclusive));
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
@@ -127,8 +127,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFileAsync(somePath))
-                    .ThrowsAsync(dependencyException);
+                broker.ReadFile(somePath))
+                    .Throws(dependencyException);
 
             // when
             ValueTask<string> readFromFileTask =
@@ -141,7 +141,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFileAsync(somePath),
+                broker.ReadFile(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -167,8 +167,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFileAsync(somePath))
-                    .ThrowsAsync(serviceException);
+                broker.ReadFile(somePath))
+                    .Throws(serviceException);
 
             // when
             ValueTask<string> readFromFileTask =
@@ -181,7 +181,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFileAsync(somePath),
+                broker.ReadFile(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

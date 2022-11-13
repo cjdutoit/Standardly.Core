@@ -5,19 +5,18 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Standardly.Core.Brokers.Files
 {
     public interface IFileBroker
     {
-        ValueTask<bool> CheckIfFileExistsAsync(string path);
-        ValueTask<bool> WriteToFileAsync(string path, string content);
-        ValueTask<string> ReadFileAsync(string path);
-        ValueTask<bool> DeleteFileAsync(string path);
-        ValueTask<List<string>> GetListOfFilesAsync(string path, string searchPattern = "*");
-        ValueTask<bool> CheckIfDirectoryExistsAsync(string path);
-        ValueTask<bool> CreateDirectoryAsync(string path);
-        ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false);
+        bool CheckIfFileExists(string path);
+        bool WriteToFile(string path, string content);
+        string ReadFile(string path);
+        bool DeleteFile(string path);
+        List<string> GetListOfFiles(string path, string searchPattern = "*");
+        bool CheckIfDirectoryExists(string path);
+        bool CreateDirectory(string path);
+        bool DeleteDirectory(string path, bool recursive = false);
     }
 }
