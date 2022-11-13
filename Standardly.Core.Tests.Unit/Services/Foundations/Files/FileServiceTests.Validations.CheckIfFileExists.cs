@@ -47,7 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfFileExistsAsync(
+                broker.CheckIfFileExists(
                     It.IsAny<string>()),
                         Times.Never);
 

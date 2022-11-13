@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.DeleteFileAsync(invalidPath);
 
             FileValidationException actualException =
@@ -49,7 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteFileAsync(invalidPath),
+                broker.DeleteFile(invalidPath),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

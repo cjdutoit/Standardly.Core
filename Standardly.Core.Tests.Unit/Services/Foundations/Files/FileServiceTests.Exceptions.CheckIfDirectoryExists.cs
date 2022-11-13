@@ -31,8 +31,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath))
-                    .ThrowsAsync(dependencyValidationException);
+                broker.CheckIfDirectoryExists(somePath))
+                    .Throws(dependencyValidationException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
@@ -45,7 +45,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath),
+                broker.CheckIfDirectoryExists(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -77,8 +77,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath))
-                    .ThrowsAsync(dependencyException);
+                broker.CheckIfDirectoryExists(somePath))
+                    .Throws(dependencyException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
@@ -91,7 +91,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath),
+                broker.CheckIfDirectoryExists(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -123,8 +123,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath))
-                    .ThrowsAsync(dependencyException);
+                broker.CheckIfDirectoryExists(somePath))
+                    .Throws(dependencyException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
@@ -137,7 +137,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath),
+                broker.CheckIfDirectoryExists(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -163,8 +163,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath))
-                    .ThrowsAsync(serviceException);
+                broker.CheckIfDirectoryExists(somePath))
+                    .Throws(serviceException);
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
@@ -177,7 +177,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath),
+                broker.CheckIfDirectoryExists(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

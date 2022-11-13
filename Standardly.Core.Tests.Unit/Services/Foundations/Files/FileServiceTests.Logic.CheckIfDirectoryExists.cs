@@ -23,8 +23,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             bool expectedResult = outputResult;
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfDirectoryExistsAsync(inputFilePath))
-                    .ReturnsAsync(outputResult);
+                broker.CheckIfDirectoryExists(inputFilePath))
+                    .Returns(outputResult);
 
             // when
             bool actualResult = await this.fileService
@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualResult.Should().Be(expectedResult);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfDirectoryExistsAsync(inputFilePath),
+                broker.CheckIfDirectoryExists(inputFilePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

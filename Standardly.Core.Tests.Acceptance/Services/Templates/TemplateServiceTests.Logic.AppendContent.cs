@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
+namespace Standardly.Core.Tests.Acceptance.Services.Foundations.Templates
 {
     public partial class TemplateServiceTests
     {

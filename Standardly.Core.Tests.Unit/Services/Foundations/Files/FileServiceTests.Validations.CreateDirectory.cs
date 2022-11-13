@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileService.CreateDirectoryAsync(invalidPath);
 
             FileValidationException actualException =
@@ -49,7 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CreateDirectoryAsync(invalidPath),
+                broker.CreateDirectory(invalidPath),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

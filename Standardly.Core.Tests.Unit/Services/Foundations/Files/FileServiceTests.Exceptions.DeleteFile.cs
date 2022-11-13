@@ -31,11 +31,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteFileAsync(somePath))
+                broker.DeleteFile(somePath))
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.DeleteFileAsync(somePath);
 
             FileDependencyValidationException actualException =
@@ -45,7 +45,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteFileAsync(somePath),
+                broker.DeleteFile(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -77,11 +77,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteFileAsync(somePath))
+                broker.DeleteFile(somePath))
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.DeleteFileAsync(somePath);
 
             FileDependencyException actualException =
@@ -91,7 +91,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteFileAsync(somePath),
+                broker.DeleteFile(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -123,11 +123,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteFileAsync(somePath))
+                broker.DeleteFile(somePath))
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.DeleteFileAsync(somePath);
 
             FileDependencyException actualException =
@@ -137,7 +137,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteFileAsync(somePath),
+                broker.DeleteFile(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -163,11 +163,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteFileAsync(somePath))
+                broker.DeleteFile(somePath))
                     .Throws(serviceException);
 
             // when
-            ValueTask deleteFileTask =
+            ValueTask<bool> deleteFileTask =
                 this.fileService.DeleteFileAsync(somePath);
 
             FileServiceException actualException =
@@ -177,7 +177,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteFileAsync(somePath),
+                broker.DeleteFile(somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

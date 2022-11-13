@@ -25,7 +25,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             // then
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectoryAsync(inputFilePath, recursive),
+                broker.DeleteDirectory(inputFilePath, recursive),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

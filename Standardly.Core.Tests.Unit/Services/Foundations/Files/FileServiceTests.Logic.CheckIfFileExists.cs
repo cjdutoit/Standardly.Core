@@ -23,8 +23,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             bool expectedResult = outputResult;
 
             this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfFileExistsAsync(inputFilePath))
-                    .ReturnsAsync(outputResult);
+                broker.CheckIfFileExists(inputFilePath))
+                    .Returns(outputResult);
 
             // when
             bool actualResult = await this.fileService.CheckIfFileExistsAsync(inputFilePath);
@@ -33,7 +33,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualResult.Should().Be(expectedResult);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfFileExistsAsync(inputFilePath),
+                broker.CheckIfFileExists(inputFilePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

@@ -35,7 +35,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileService.DeleteDirectoryAsync(invalidPath, recursive);
 
             FileValidationException actualException =
@@ -50,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                         Times.Once);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectoryAsync(invalidPath, recursive),
+                broker.DeleteDirectory(invalidPath, recursive),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

@@ -32,11 +32,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive))
+                broker.DeleteDirectory(somePath, recursive))
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileService.DeleteDirectoryAsync(somePath, recursive);
 
             FileDependencyValidationException actualException =
@@ -46,7 +46,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive),
+                broker.DeleteDirectory(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -79,11 +79,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive))
+                broker.DeleteDirectory(somePath, recursive))
                     .Throws(dependencyException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileService.DeleteDirectoryAsync(somePath, recursive);
 
             FileDependencyException actualException =
@@ -93,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive),
+                broker.DeleteDirectory(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -126,11 +126,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive))
+                broker.DeleteDirectory(somePath, recursive))
                     .Throws(dependencyException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileService.DeleteDirectoryAsync(somePath, recursive);
 
             FileDependencyException actualException =
@@ -140,7 +140,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive),
+                broker.DeleteDirectory(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -167,11 +167,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive))
+                broker.DeleteDirectory(somePath, recursive))
                     .Throws(serviceException);
 
             // when
-            ValueTask writeToFileTask =
+            ValueTask<bool> writeToFileTask =
                 this.fileService.DeleteDirectoryAsync(somePath, recursive);
 
             FileServiceException actualException =
@@ -181,7 +181,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive),
+                broker.DeleteDirectory(somePath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
