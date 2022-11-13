@@ -24,7 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             // then
             this.fileBrokerMock.Verify(broker =>
-                broker.CreateDirectoryAsync(inputFilePath),
+                broker.CreateDirectory(inputFilePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

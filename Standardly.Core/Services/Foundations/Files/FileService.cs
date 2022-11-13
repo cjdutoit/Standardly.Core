@@ -25,64 +25,98 @@ namespace Standardly.Core.Services.Foundations.Files
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            TryCatchAsync(async () =>
+        public async ValueTask<bool> CheckIfFileExistsAsync(string path) =>
+            await Task.Run(() =>
+                TryCatch(() =>
+                {
+                    return WithRetry(() =>
+                    {
+                        ValidateCheckIfFileExistsArguments(path);
+
+                        return this.fileBroker.CheckIfFileExists(path);
+                    });
+                }));
+
+        public async ValueTask<bool> WriteToFileAsync(string path, string content) =>
+            await Task.Run(() =>
+                TryCatch(() =>
+                {
+                    return WithRetry(() =>
+                    {
+                        ValidateWriteToFileArguments(path, content);
+
+                        return this.fileBroker.WriteToFile(path, content);
+                    });
+                }));
+
+        public async ValueTask<string> ReadFromFileAsync(string path) =>
+            await Task.Run(() =>
+                TryCatch(() =>
+                 {
+                     return WithRetry(() =>
+                     {
+                         ValidateReadFromFileArguments(path);
+
+                         return this.fileBroker.ReadFile(path);
+                     });
+                 }));
+
+        public async ValueTask<bool> DeleteFileAsync(string path) =>
+             await Task.Run(() =>
+                TryCatch(() =>
+                {
+                    return WithRetry(() =>
+                    {
+                        ValidateDeleteFileArguments(path);
+                        return this.fileBroker.DeleteFile(path);
+                    });
+                }));
+
+        public async ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            await Task.Run(() =>
+                TryCatch(() =>
+                {
+                    return WithRetry(() =>
+                    {
+                        ValidateRetrieveListOfFilesArguments(path, searchPattern);
+                        return this.fileBroker.GetListOfFiles(path, searchPattern);
+                    });
+                }));
+
+        public async ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
+            await Task.Run(() =>
+            TryCatch(() =>
             {
-                ValidateCheckIfFileExistsArguments(path);
+                return WithRetry(() =>
+                {
+                    ValidateCheckIfDirectoryExistsArguments(path);
 
-                return await this.fileBroker.CheckIfFileExistsAsync(path);
-            });
+                    return this.fileBroker.CheckIfDirectoryExists(path);
+                });
+            }));
 
-        public ValueTask WriteToFileAsync(string path, string content) =>
-            TryCatchAsync(async () =>
-            {
-                ValidateWriteToFileArguments(path, content);
-                await this.fileBroker.WriteToFileAsync(path, content);
-            });
+        public async ValueTask<bool> CreateDirectoryAsync(string path) =>
+            await Task.Run(() =>
+                TryCatch(() =>
+                {
+                    return WithRetry(() =>
+                    {
+                        ValidateCreateDirectoryArguments(path);
 
-        public ValueTask<string> ReadFromFileAsync(string path) =>
-             TryCatchAsync(async () =>
-             {
-                 ValidateReadFromFileArguments(path);
+                        return this.fileBroker.CreateDirectory(path);
+                    });
+                }));
 
-                 return await this.fileBroker.ReadFileAsync(path);
-             });
+        public async ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
+            await Task.Run(() =>
+                TryCatch(() =>
+                {
+                    return WithRetry(() =>
+                    {
+                        ValidateDeleteDirectoryArguments(path);
 
-        public ValueTask DeleteFileAsync(string path) =>
-            TryCatchAsync(async () =>
-            {
-                ValidateDeleteFileArguments(path);
-                await this.fileBroker.DeleteFileAsync(path);
-            });
-
-        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            TryCatchAsync(async () =>
-            {
-                ValidateRetrieveListOfFilesArguments(path, searchPattern);
-
-                return await this.fileBroker.GetListOfFilesAsync(path, searchPattern);
-            });
-
-        public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
-            TryCatchAsync(async () =>
-            {
-                ValidateCheckIfDirectoryExistsArguments(path);
-
-                return await this.fileBroker.CheckIfDirectoryExistsAsync(path);
-            });
-
-        public ValueTask CreateDirectoryAsync(string path) =>
-            TryCatchAsync(async () =>
-            {
-                ValidateCreateDirectoryArguments(path);
-                await this.fileBroker.CreateDirectoryAsync(path);
-            });
-
-        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
-            TryCatchAsync(async () =>
-            {
-                ValidateDeleteDirectoryArguments(path);
-                await this.fileBroker.DeleteDirectoryAsync(path, recursive);
-            });
+                        return this.fileBroker.DeleteDirectory(path, recursive);
+                    });
+                }));
     }
 }

@@ -10,7 +10,7 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Services.Foundations.Templates;
 
-namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
+namespace Standardly.Core.Tests.Acceptance.Services.Foundations.Templates
 {
     public partial class TemplateServiceTests
     {
