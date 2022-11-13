@@ -46,12 +46,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExistsAsync(file.Target))
-                                    .ReturnsAsync(true);
+                                fileProcessingService.CheckIfFileExists(file.Target))
+                                    .Returns(true);
 
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(file.Template))
-                                    .ReturnsAsync(randomTemplateString);
+                                fileProcessingService.ReadFromFile(file.Template))
+                                    .Returns(randomTemplateString);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService
@@ -62,8 +62,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Appends.ForEach(append =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(append.Target))
-                                    .ReturnsAsync(randomFileContent);
+                                fileProcessingService.ReadFromFile(append.Target))
+                                    .Returns(randomFileContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService.AppendContentAsync(
@@ -103,11 +103,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExistsAsync(file.Target),
+                                fileProcessingService.CheckIfFileExists(file.Target),
                                     Times.Exactly(2));
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(file.Template),
+                                fileProcessingService.ReadFromFile(file.Template),
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
@@ -116,7 +116,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                                         Times.AtLeastOnce);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.WriteToFileAsync(file.Target, randomTransformedTemplateString),
+                                fileProcessingService.WriteToFile(file.Target, randomTransformedTemplateString),
                                     Times.Once);
                         });
 
@@ -125,7 +125,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Appends.ForEach(append =>
                         {
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(append.Target),
+                                fileProcessingService.ReadFromFile(append.Target),
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
@@ -140,7 +140,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
                                 fileProcessingService
-                                    .WriteToFileAsync(append.Target, randomAppendedContent),
+                                    .WriteToFile(append.Target, randomAppendedContent),
                                         Times.Once);
                         });
 
@@ -192,12 +192,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExistsAsync(file.Target))
-                                    .ReturnsAsync(true);
+                                fileProcessingService.CheckIfFileExists(file.Target))
+                                    .Returns(true);
 
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(file.Template))
-                                    .ReturnsAsync(randomTemplateString);
+                                fileProcessingService.ReadFromFile(file.Template))
+                                    .Returns(randomTemplateString);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService
@@ -208,8 +208,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Appends.ForEach(append =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(append.Target))
-                                    .ReturnsAsync(randomFileContent);
+                                fileProcessingService.ReadFromFile(append.Target))
+                                    .Returns(randomFileContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService.AppendContentAsync(
@@ -249,11 +249,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExistsAsync(file.Target),
+                                fileProcessingService.CheckIfFileExists(file.Target),
                                     Times.Exactly(2));
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(file.Template),
+                                fileProcessingService.ReadFromFile(file.Template),
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
@@ -262,7 +262,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                                         Times.AtLeastOnce);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.WriteToFileAsync(file.Target, randomTransformedTemplateString),
+                                fileProcessingService.WriteToFile(file.Target, randomTransformedTemplateString),
                                     Times.Once);
                         });
 
@@ -271,7 +271,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Appends.ForEach(append =>
                         {
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.ReadFromFileAsync(append.Target),
+                                fileProcessingService.ReadFromFile(append.Target),
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
@@ -286,7 +286,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
                                 fileProcessingService
-                                    .WriteToFileAsync(append.Target, randomAppendedContent),
+                                    .WriteToFile(append.Target, randomAppendedContent),
                                         Times.Once);
                         });
 

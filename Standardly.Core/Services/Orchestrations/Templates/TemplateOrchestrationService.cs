@@ -50,8 +50,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 List<Template> templates = new List<Template>();
 
-                var fileList = await this.fileProcessingService
-                    .RetrieveListOfFilesAsync(
+                var fileList = this.fileProcessingService
+                    .RetrieveListOfFiles(
                     this.templateConfig.TemplateFolderPath,
                     this.templateConfig.TemplateDefinitionFileName);
 
@@ -59,7 +59,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                 {
                     try
                     {
-                        string rawTemplate = await this.fileProcessingService.ReadFromFileAsync(file);
+                        string rawTemplate = this.fileProcessingService.ReadFromFile(file);
 
                         Template template = await this.templateProcessingService
                             .ConvertStringToTemplateAsync(rawTemplate);
@@ -173,14 +173,14 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         {
             files.ForEach(async file =>
             {
-                string sourceString = await this.fileProcessingService.ReadFromFileAsync(file.Template);
+                string sourceString = this.fileProcessingService.ReadFromFile(file.Template);
 
                 string transformedSourceString =
                     await this.templateProcessingService.TransformStringAsync(sourceString, replacementDictionary);
 
                 transformedSourceString = transformedSourceString.Replace("##n##", "\\n");
 
-                var fileExists = this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result;
+                var fileExists = this.fileProcessingService.CheckIfFileExists(file.Target);
                 var isRequired = !fileExists || file.Replace == true;
 
                 if (isRequired)
@@ -189,7 +189,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                         DateTimeOffset.UtcNow,
                         $"Adding file '{file.Target}'");
 
-                    await this.fileProcessingService.WriteToFileAsync(file.Target, transformedSourceString);
+                    this.fileProcessingService.WriteToFile(file.Target, transformedSourceString);
                 }
             });
         }
@@ -198,7 +198,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         {
             foreach (Append append in appends)
             {
-                string fileContent = this.fileProcessingService.ReadFromFileAsync(append.Target).Result;
+                string fileContent = this.fileProcessingService.ReadFromFile(append.Target);
 
                 string appendedContent = this.templateProcessingService.AppendContentAsync(
                     sourceContent: fileContent,
@@ -208,7 +208,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                     appendToBeginning: append.AppendToBeginning,
                     appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist).Result;
 
-                bool result = this.fileProcessingService.WriteToFileAsync(append.Target, appendedContent).Result;
+                bool result = this.fileProcessingService.WriteToFile(append.Target, appendedContent);
             }
         }
 
@@ -306,7 +306,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 foreach (Models.Foundations.Templates.Tasks.Actions.Files.File file in action.Files.ToList())
                 {
-                    bool fileExist = this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result;
+                    bool fileExist = this.fileProcessingService.CheckIfFileExists(file.Target);
                     bool isRequired = fileExist == false || (fileExist && file.Replace == true);
 
                     if (!isRequired)

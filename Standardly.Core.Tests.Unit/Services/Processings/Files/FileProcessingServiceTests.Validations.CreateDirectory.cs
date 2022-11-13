@@ -36,7 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             // when
             ValueTask<bool> createDirectoryTask =
-                this.fileProcessingService.CreateDirectoryAsync(path: invalidPath);
+                this.fileProcessingService.CreateDirectory(path: invalidPath);
 
             FileProcessingValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingValidationException>(createDirectoryTask.AsTask);
@@ -50,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectoryAsync(invalidPath),
+                service.CreateDirectory(invalidPath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

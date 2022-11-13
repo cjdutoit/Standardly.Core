@@ -30,19 +30,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteDirectoryAsync(inputPath, recursive))
+                service.DeleteDirectory(inputPath, recursive))
                     .Throws(dependencyValidationException);
 
             // when
             ValueTask<bool> deleteDirectoryTask =
-                this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
+                this.fileProcessingService.DeleteDirectory(inputPath, recursive);
 
             // then
             FileProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(deleteDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteDirectoryAsync(inputPath, recursive),
+                service.DeleteDirectory(inputPath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -69,19 +69,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteDirectoryAsync(inputPath, recursive))
+                service.DeleteDirectory(inputPath, recursive))
                     .Throws(dependencyException);
 
             // when
             ValueTask<bool> deleteDirectoryTask =
-                this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
+                this.fileProcessingService.DeleteDirectory(inputPath, recursive);
 
             // then
             FileProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyException>(deleteDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteDirectoryAsync(inputPath, recursive),
+                service.DeleteDirectory(inputPath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -111,19 +111,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteDirectoryAsync(inputPath, recursive))
+                service.DeleteDirectory(inputPath, recursive))
                     .Throws(serviceException);
 
             // when
             ValueTask<bool> deleteDirectoryTask =
-                this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
+                this.fileProcessingService.DeleteDirectory(inputPath, recursive);
 
             // then
             FileProcessingServiceException actualException =
                 await Assert.ThrowsAsync<FileProcessingServiceException>(deleteDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteDirectoryAsync(inputPath, recursive),
+                service.DeleteDirectory(inputPath, recursive),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

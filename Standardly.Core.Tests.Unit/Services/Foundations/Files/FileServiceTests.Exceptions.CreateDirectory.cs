@@ -35,11 +35,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<bool> deleteFileTask =
-                this.fileService.CreateDirectoryAsync(somePath);
+            Action deleteFileAction = () =>
+                this.fileService.CreateDirectory(somePath);
 
             FileDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileDependencyValidationException>(deleteFileTask.AsTask);
+                Assert.Throws<FileDependencyValidationException>(deleteFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
@@ -59,7 +59,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCreateDirectoryIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnCreateDirectoryIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -81,11 +81,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> deleteFileTask =
-                this.fileService.CreateDirectoryAsync(somePath);
+            System.Action deleteFileTask = () =>
+                this.fileService.CreateDirectory(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(deleteFileTask.AsTask);
+                Assert.Throws<FileDependencyException>(deleteFileTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -109,7 +109,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCreateDirectoryIfDependencyErrorOccursAndLogItCriticalAsync(
+        public void ShouldThrowDependencyExceptionOnCreateDirectoryIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -131,11 +131,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> deleteFileTask =
-                this.fileService.CreateDirectoryAsync(somePath);
+            Action deleteFileTask = () =>
+                this.fileService.CreateDirectory(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(deleteFileTask.AsTask);
+                Assert.Throws<FileDependencyException>(deleteFileTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -154,7 +154,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnCreateDirectoryIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnCreateDirectoryIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -171,11 +171,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> deleteFileTask =
-                this.fileService.CreateDirectoryAsync(somePath);
+            Action deleteFileTask = () =>
+                this.fileService.CreateDirectory(somePath);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(deleteFileTask.AsTask);
+                Assert.Throws<FileServiceException>(deleteFileTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

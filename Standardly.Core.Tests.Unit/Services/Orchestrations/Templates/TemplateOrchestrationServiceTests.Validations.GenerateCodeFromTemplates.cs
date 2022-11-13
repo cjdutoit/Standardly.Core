@@ -87,8 +87,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExistsAsync(file.Target))
-                                    .ReturnsAsync(true);
+                                fileProcessingService.CheckIfFileExists(file.Target))
+                                    .Returns(true);
 
                             targets.Add(file.Target);
                         });
@@ -117,7 +117,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             targets.ForEach(target =>
             {
                 this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                    fileProcessingService.CheckIfFileExistsAsync(target),
+                    fileProcessingService.CheckIfFileExists(target),
                         Times.Once);
             });
 

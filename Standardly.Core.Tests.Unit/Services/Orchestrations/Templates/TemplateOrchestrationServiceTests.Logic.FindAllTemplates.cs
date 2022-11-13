@@ -33,12 +33,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
 
             fileProcessingServiceMock.Setup(fileService =>
-                fileService.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile))
-                    .ReturnsAsync(expectedFileList);
+                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
+                    .Returns(expectedFileList);
 
             this.fileProcessingServiceMock.Setup(fileService =>
-                fileService.ReadFromFileAsync(It.IsAny<string>()))
-                    .ReturnsAsync(expectedTemplateString);
+                fileService.ReadFromFile(It.IsAny<string>()))
+                    .Returns(expectedTemplateString);
 
             this.templateProcessingServiceMock.Setup(templateService =>
                 templateService.ConvertStringToTemplateAsync(rawTemplateString))
@@ -51,11 +51,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             actualTemplates.Count.Should().Be(expectedFileList.Count);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
                         Times.Once);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.ReadFromFileAsync(It.IsAny<string>()),
+                fileService.ReadFromFile(It.IsAny<string>()),
                     Times.Exactly(expectedFileList.Count));
 
             this.templateProcessingServiceMock.Verify(templateService =>

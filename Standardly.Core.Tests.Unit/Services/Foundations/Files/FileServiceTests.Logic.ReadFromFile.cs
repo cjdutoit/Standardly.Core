@@ -27,7 +27,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Returns(outputResult);
 
             // when
-            string actualResult = await this.fileService.ReadFromFileAsync(inputFilePath);
+            string actualResult = this.fileService.ReadFromFile(inputFilePath);
 
             // then
             actualResult.Should().Be(expectedResult);

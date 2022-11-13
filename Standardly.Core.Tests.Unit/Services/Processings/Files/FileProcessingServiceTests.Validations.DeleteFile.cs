@@ -36,7 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             // when
             ValueTask<bool> deleteFileTask =
-                this.fileProcessingService.DeleteFileAsync(path: invalidPath);
+                this.fileProcessingService.DeleteFile(path: invalidPath);
 
             FileProcessingValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingValidationException>(deleteFileTask.AsTask);
@@ -50,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(invalidPath),
+                service.DeleteFile(invalidPath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

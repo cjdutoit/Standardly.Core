@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -35,11 +34,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfDirectoryExistsAsync(somePath);
+            Action checkIfFileExistsAction = () =>
+                this.fileService.CheckIfDirectoryExists(somePath);
 
             FileDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileDependencyValidationException>(checkIfFileExistsTask.AsTask);
+                Assert.Throws<FileDependencyValidationException>(checkIfFileExistsAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
@@ -59,7 +58,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -81,11 +80,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfDirectoryExistsAsync(somePath);
+            Action checkIfFileExistsAction = () =>
+                this.fileService.CheckIfDirectoryExists(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(checkIfFileExistsTask.AsTask);
+                Assert.Throws<FileDependencyException>(checkIfFileExistsAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -109,7 +108,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogItCriticalAsync(
+        public void ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -131,11 +130,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfDirectoryExistsAsync(somePath);
+            Action checkIfFileExistsAction = () =>
+                this.fileService.CheckIfDirectoryExists(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(checkIfFileExistsTask.AsTask);
+                Assert.Throws<FileDependencyException>(checkIfFileExistsAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -154,7 +153,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -171,11 +170,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfDirectoryExistsAsync(somePath);
+            Action checkIfFileExistsAction = () =>
+                this.fileService.CheckIfDirectoryExists(somePath);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(checkIfFileExistsTask.AsTask);
+                Assert.Throws<FileServiceException>(checkIfFileExistsAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

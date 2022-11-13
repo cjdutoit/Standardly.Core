@@ -34,10 +34,10 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(service =>
-                service.RetrieveListOfFilesAsync(
+                service.RetrieveListOfFiles(
                     templatefolder,
                     templateDefinitionFile))
-                        .ThrowsAsync(dependencyValidationException);
+                        .Throws(dependencyValidationException);
 
             // when
             ValueTask<List<Template>> findAllTemplatesTask =
@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -74,8 +74,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 new TemplateOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(broker =>
-                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile))
-                    .ThrowsAsync(dependencyException);
+                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
+                    .Throws(dependencyException);
 
             // when
             ValueTask<List<Template>> findAllTemplatesTask =
@@ -88,7 +88,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -109,7 +109,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 new TemplateOrchestrationServiceException(failedTemplateOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Setup(broker =>
-                broker.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
+                broker.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()))
                     .Throws(serviceException);
 
             // when
@@ -123,7 +123,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Verify(service =>
-                service.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()),
+                service.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -37,11 +36,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<List<string>> retrieveListOfFilesTask =
-                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
+            Action retrieveListOfFilesAction =
+                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
 
             FileDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileDependencyValidationException>(retrieveListOfFilesTask.AsTask);
+                Assert.Throws<FileDependencyValidationException>(retrieveListOfFilesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
@@ -61,7 +60,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -84,11 +83,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<List<string>> retrieveListOfFilesTask =
-                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
+            Action retrieveListOfFilesAction = () =>
+                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(retrieveListOfFilesTask.AsTask);
+                Assert.Throws<FileDependencyException>(retrieveListOfFilesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -112,7 +111,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogItCriticalAsync(
+        public void ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -135,11 +134,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<List<string>> retrieveListOfFilesTask =
-                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
+            Action retrieveListOfFilesAction = () =>
+                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(retrieveListOfFilesTask.AsTask);
+                Assert.Throws<FileDependencyException>(retrieveListOfFilesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -158,7 +157,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnRetrieveListOfFilesIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnRetrieveListOfFilesIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -176,11 +175,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<List<string>> retrieveListOfFilesTask =
-                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
+            Action retrieveListOfFilesAction = () =>
+                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(retrieveListOfFilesTask.AsTask);
+                Assert.Throws<FileServiceException>(retrieveListOfFilesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

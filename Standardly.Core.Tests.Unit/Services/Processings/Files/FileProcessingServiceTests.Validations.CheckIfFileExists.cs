@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             // when
             ValueTask<bool> checkIfFileExistsTask =
-                this.fileProcessingService.CheckIfFileExistsAsync(invalidFilePath);
+                this.fileProcessingService.CheckIfFileExists(invalidFilePath);
 
             FileProcessingValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingValidationException>(checkIfFileExistsTask.AsTask);
@@ -48,7 +48,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfFileExistsAsync(invalidFilePath),
+                service.CheckIfFileExists(invalidFilePath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

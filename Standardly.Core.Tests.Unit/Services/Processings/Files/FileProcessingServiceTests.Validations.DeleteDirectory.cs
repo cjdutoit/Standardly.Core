@@ -37,7 +37,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             // when
             ValueTask<bool> deleteDirectoryTask =
-                this.fileProcessingService.DeleteDirectoryAsync(path: invalidPath, recursive);
+                this.fileProcessingService.DeleteDirectory(path: invalidPath, recursive);
 
             FileProcessingValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingValidationException>(deleteDirectoryTask.AsTask);
@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteDirectoryAsync(invalidPath, recursive),
+                service.DeleteDirectory(invalidPath, recursive),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

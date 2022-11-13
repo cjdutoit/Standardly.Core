@@ -27,7 +27,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Returns(outputResult);
 
             // when
-            bool actualResult = await this.fileService.CheckIfFileExistsAsync(inputFilePath);
+            bool actualResult = await this.fileService.CheckIfFileExists(inputFilePath);
 
             // then
             actualResult.Should().Be(expectedResult);

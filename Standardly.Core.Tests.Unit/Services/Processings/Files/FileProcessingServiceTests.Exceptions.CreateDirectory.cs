@@ -29,19 +29,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CreateDirectoryAsync(inputPath))
+                service.CreateDirectory(inputPath))
                     .Throws(dependencyValidationException);
 
             // when
             ValueTask<bool> createDirectoryTask =
-                this.fileProcessingService.CreateDirectoryAsync(inputPath);
+                this.fileProcessingService.CreateDirectory(inputPath);
 
             // then
             FileProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(createDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectoryAsync(inputPath),
+                service.CreateDirectory(inputPath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -67,19 +67,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CreateDirectoryAsync(inputPath))
+                service.CreateDirectory(inputPath))
                     .Throws(dependencyException);
 
             // when
             ValueTask<bool> createDirectoryTask =
-                this.fileProcessingService.CreateDirectoryAsync(inputPath);
+                this.fileProcessingService.CreateDirectory(inputPath);
 
             // then
             FileProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyException>(createDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectoryAsync(inputPath),
+                service.CreateDirectory(inputPath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -109,19 +109,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
-                service.CreateDirectoryAsync(inputPath))
+                service.CreateDirectory(inputPath))
                     .Throws(serviceException);
 
             // when
             ValueTask<bool> createDirectoryTask =
-                this.fileProcessingService.CreateDirectoryAsync(inputPath);
+                this.fileProcessingService.CreateDirectory(inputPath);
 
             // then
             FileProcessingServiceException actualException =
                 await Assert.ThrowsAsync<FileProcessingServiceException>(createDirectoryTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectoryAsync(inputPath),
+                service.CreateDirectory(inputPath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

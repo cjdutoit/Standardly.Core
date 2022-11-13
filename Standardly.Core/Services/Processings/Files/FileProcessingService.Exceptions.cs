@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -15,16 +14,16 @@ namespace Standardly.Core.Services.Processings.Files
 {
     public partial class FileProcessingService
     {
-        private delegate ValueTask<bool> ReturningBooleanFunction();
-        private delegate ValueTask<string> ReturningStringFunction();
-        private delegate ValueTask<List<string>> ReturningStringListFunction();
-        private delegate ValueTask ReturningNothingFunction();
+        private delegate bool ReturningBooleanFunction();
+        private delegate string ReturningStringFunction();
+        private delegate List<string> ReturningStringListFunction();
+        private delegate void ReturningNothingFunction();
 
-        private async ValueTask<bool> TryCatchAsync(ReturningBooleanFunction returningBooleanFunction)
+        private bool TryCatch(ReturningBooleanFunction returningBooleanFunction)
         {
             try
             {
-                return await returningBooleanFunction();
+                return returningBooleanFunction();
             }
             catch (InvalidFileProcessingException invalidPathFileProcessingException)
             {
@@ -55,11 +54,11 @@ namespace Standardly.Core.Services.Processings.Files
             }
         }
 
-        private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
+        private string TryCatch(ReturningStringFunction returningStringFunction)
         {
             try
             {
-                return await returningStringFunction();
+                return returningStringFunction();
             }
             catch (InvalidFileProcessingException invalidPathFileProcessingException)
             {
@@ -90,11 +89,11 @@ namespace Standardly.Core.Services.Processings.Files
             }
         }
 
-        private async ValueTask<List<string>> TryCatchAsync(ReturningStringListFunction returningStringListFunction)
+        private List<string> TryCatch(ReturningStringListFunction returningStringListFunction)
         {
             try
             {
-                return await returningStringListFunction();
+                return returningStringListFunction();
             }
             catch (InvalidFileProcessingException invalidPathFileProcessingException)
             {
@@ -125,11 +124,11 @@ namespace Standardly.Core.Services.Processings.Files
             }
         }
 
-        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
+        private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
             try
             {
-                await returningNothingFunction();
+                returningNothingFunction();
             }
             catch (InvalidFileProcessingException invalidPathFileProcessingException)
             {

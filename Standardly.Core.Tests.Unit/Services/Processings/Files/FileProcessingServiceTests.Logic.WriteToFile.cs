@@ -22,23 +22,23 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             string inputContent = randomContent;
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
+                service.CheckIfDirectoryExists(It.IsAny<string>()))
                     .ReturnsAsync(false);
 
             // when
-            await this.fileProcessingService.WriteToFileAsync(inputFilePath, inputContent);
+            await this.fileProcessingService.WriteToFile(inputFilePath, inputContent);
 
             // then
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
+                service.CheckIfDirectoryExists(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectoryAsync(It.IsAny<string>()),
+                service.CreateDirectory(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFileAsync(inputFilePath, inputContent),
+                service.WriteToFile(inputFilePath, inputContent),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

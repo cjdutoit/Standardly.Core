@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             // when
             List<string> actualResult =
-                await this.fileService.RetrieveListOfFilesAsync(inputFilePath, inputSearchPattern);
+                this.fileService.RetrieveListOfFiles(inputFilePath, inputSearchPattern);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
