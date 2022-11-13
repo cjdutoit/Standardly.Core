@@ -92,7 +92,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             this.fileBrokerMock.Verify(broker =>
                 broker.CheckIfFileExists(somePath),
-                    Times.Once);
+                    Times.AtLeastOnce);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogInformation(It.IsAny<string>()),
+                    Times.Between(0, 3, Moq.Range.Inclusive));
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
