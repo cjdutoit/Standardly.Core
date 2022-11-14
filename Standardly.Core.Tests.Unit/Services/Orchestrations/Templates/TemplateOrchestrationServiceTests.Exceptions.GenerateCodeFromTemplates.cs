@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -20,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnGenerateCodeFromTemplateAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionOnGenerateCodeFromTemplateAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -35,24 +34,24 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     dependencyValidationException.InnerException as Xeption);
 
             this.templateProcessingServiceMock.Setup(service =>
-                service.TransformTemplateAsync(
+                service.TransformTemplate(
                     It.IsAny<Template>(),
                     inputDictionary))
-                        .ThrowsAsync(dependencyValidationException);
+                        .Throws(dependencyValidationException);
 
             // when
-            ValueTask generateCodeTask =
-                this.templateOrchestrationService.GenerateCodeAsync(inputTemplates, inputDictionary);
+            Action generateCodeAction = () =>
+                this.templateOrchestrationService.GenerateCode(inputTemplates, inputDictionary);
 
             TemplateOrchestrationDependencyValidationException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationDependencyValidationException>(
-                    generateCodeTask.AsTask);
+                Assert.Throws<TemplateOrchestrationDependencyValidationException>(
+                    generateCodeAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplateAsync(It.IsAny<Template>(), inputDictionary),
+                broker.TransformTemplate(It.IsAny<Template>(), inputDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -62,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnGenerateCodeFromTemplateAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnGenerateCodeFromTemplateAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -76,23 +75,23 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 new TemplateOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.templateProcessingServiceMock.Setup(service =>
-                service.TransformTemplateAsync(
+                service.TransformTemplate(
                     It.IsAny<Template>(),
                     inputDictionary))
-                        .ThrowsAsync(dependencyException);
+                        .Throws(dependencyException);
 
             // when
-            ValueTask generateCodeTask =
-                this.templateOrchestrationService.GenerateCodeAsync(inputTemplates, inputDictionary);
+            Action generateCodeAction = () =>
+                this.templateOrchestrationService.GenerateCode(inputTemplates, inputDictionary);
 
             TemplateOrchestrationDependencyException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationDependencyException>(generateCodeTask.AsTask);
+                Assert.Throws<TemplateOrchestrationDependencyException>(generateCodeAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplateAsync(It.IsAny<Template>(), inputDictionary),
+                broker.TransformTemplate(It.IsAny<Template>(), inputDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -101,7 +100,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnGenerateCodeFromTemplateAndLogItAsync()
+        public void ShoudThrowServiceExceptionOnGenerateCodeFromTemplateAndLogIt()
         {
             // given
             int randomNumber = GetRandomNumber();
@@ -118,23 +117,23 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 new TemplateOrchestrationServiceException(failedTemplateOrchestrationServiceException);
 
             this.templateProcessingServiceMock.Setup(service =>
-                service.TransformTemplateAsync(
+                service.TransformTemplate(
                     It.IsAny<Template>(),
                     inputDictionary))
-                        .ThrowsAsync(serviceException);
+                        .Throws(serviceException);
 
             // when
-            ValueTask generateCodeTask =
-                this.templateOrchestrationService.GenerateCodeAsync(inputTemplates, inputDictionary);
+            Action generateCodeAction = () =>
+                this.templateOrchestrationService.GenerateCode(inputTemplates, inputDictionary);
 
             TemplateOrchestrationServiceException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationServiceException>(generateCodeTask.AsTask);
+                Assert.Throws<TemplateOrchestrationServiceException>(generateCodeAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationServiceException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplateAsync(It.IsAny<Template>(), inputDictionary),
+                broker.TransformTemplate(It.IsAny<Template>(), inputDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

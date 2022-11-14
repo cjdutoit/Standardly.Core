@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
+using System;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnDeleteFileIfInputsIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionOnDeleteFileIfInputsIsInvalidAndLogIt(
             string invalidInput)
         {
             // given
@@ -35,11 +35,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask<bool> deleteFileTask =
+            Action deleteFileAction = () =>
                 this.fileProcessingService.DeleteFile(path: invalidPath);
 
             FileProcessingValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingValidationException>(deleteFileTask.AsTask);
+                Assert.Throws<FileProcessingValidationException>(deleteFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);

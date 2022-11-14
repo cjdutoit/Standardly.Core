@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
+using System;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnWriteToFileIfArgumantsIsInvalidAsync(string invalidValue)
+        public void ShouldThrowValidationExceptionOnWriteToFileIfArgumantsIsInvalid(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;
@@ -39,7 +39,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            System.Action writeToFileAction = () =>
+            Action writeToFileAction = () =>
                 this.fileService.WriteToFile(invalidPath, invalidContent);
 
             FileValidationException actualException =

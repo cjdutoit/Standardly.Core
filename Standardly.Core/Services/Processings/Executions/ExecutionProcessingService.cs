@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Services.Foundations.Executions;
@@ -23,12 +22,12 @@ namespace Standardly.Core.Services.Processings.Executions
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
-            TryCatchAsync(async () =>
+        public string Run(List<Execution> executions, string executionFolder) =>
+            TryCatch(() =>
             {
                 ValidateRunArguments(executions, executionFolder);
 
-                return await this.executionService.RunAsync(executions, executionFolder);
+                return this.executionService.Run(executions, executionFolder);
             });
     }
 }

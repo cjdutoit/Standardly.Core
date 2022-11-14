@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnDeleteFileIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionOnDeleteFileIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -59,7 +58,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnDeleteFileIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnDeleteFileIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -109,7 +108,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnDeleteFileIfDependencyErrorOccursAndLogItCriticalAsync(
+        public void ShouldThrowDependencyExceptionOnDeleteFileIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -154,7 +153,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnDeleteFileIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnDeleteFileIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -171,11 +170,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> deleteFileTask =
+            Action deleteFileAction = () =>
                 this.fileService.DeleteFile(somePath);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(deleteFileTask.AsTask);
+                Assert.Throws<FileServiceException>(deleteFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

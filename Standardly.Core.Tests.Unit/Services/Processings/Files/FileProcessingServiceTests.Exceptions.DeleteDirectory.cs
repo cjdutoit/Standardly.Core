@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnDeleteDirectoryIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationOnDeleteDirectoryIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -34,12 +33,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<bool> deleteDirectoryTask =
+            Action deleteDirectoryAction = () =>
                 this.fileProcessingService.DeleteDirectory(inputPath, recursive);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(deleteDirectoryTask.AsTask);
+                Assert.Throws<FileProcessingDependencyValidationException>(deleteDirectoryAction);
 
             this.fileServiceMock.Verify(service =>
                 service.DeleteDirectory(inputPath, recursive),
@@ -56,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnDeleteDirectoryIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyOnDeleteDirectoryIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -73,12 +72,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> deleteDirectoryTask =
+            Action deleteDirectoryAction = () =>
                 this.fileProcessingService.DeleteDirectory(inputPath, recursive);
 
             // then
             FileProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyException>(deleteDirectoryTask.AsTask);
+                Assert.Throws<FileProcessingDependencyException>(deleteDirectoryAction);
 
             this.fileServiceMock.Verify(service =>
                 service.DeleteDirectory(inputPath, recursive),
@@ -94,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnDeleteDirectoryIfServiceErrorOccursAndLogItAsync()
+        public void ShouldThrowServiceExceptionOnDeleteDirectoryIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomPath = GetRandomString();
@@ -115,12 +114,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> deleteDirectoryTask =
+            Action deleteDirectoryAction = () =>
                 this.fileProcessingService.DeleteDirectory(inputPath, recursive);
 
             // then
             FileProcessingServiceException actualException =
-                await Assert.ThrowsAsync<FileProcessingServiceException>(deleteDirectoryTask.AsTask);
+                Assert.Throws<FileProcessingServiceException>(deleteDirectoryAction);
 
             this.fileServiceMock.Verify(service =>
                 service.DeleteDirectory(inputPath, recursive),

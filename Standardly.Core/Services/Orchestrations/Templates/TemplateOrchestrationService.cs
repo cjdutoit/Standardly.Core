@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Foundations.Templates;
@@ -45,8 +44,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<List<Template>> FindAllTemplatesAsync() =>
-            TryCatchAsync(async () =>
+        public List<Template> FindAllTemplates() =>
+            TryCatch(() =>
             {
                 List<Template> templates = new List<Template>();
 
@@ -61,8 +60,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                     {
                         string rawTemplate = this.fileProcessingService.ReadFromFile(file);
 
-                        Template template = await this.templateProcessingService
-                            .ConvertStringToTemplateAsync(rawTemplate);
+                        Template template = this.templateProcessingService
+                            .ConvertStringToTemplate(rawTemplate);
 
                         templates.Add(template);
                     }
@@ -74,10 +73,10 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                 return templates;
             });
 
-        public ValueTask GenerateCodeAsync(
+        public void GenerateCode(
             List<Template> templates,
             Dictionary<string, string> replacementDictionary) =>
-            TryCatchAsync(async () =>
+            TryCatch(() =>
                 {
                     this.LogMessage(DateTimeOffset.UtcNow, $"Validating inputs");
                     ValidateTemplateArguments(templates, replacementDictionary);
@@ -95,21 +94,21 @@ namespace Standardly.Core.Services.Orchestrations.Templates
                     }
 
                     templatesToGenerate.AddRange(
-                        await GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(templates, replacementDictionary));
+                        GetOnlyTheTemplatesThatRequireGeneratingCode(templates, replacementDictionary));
 
                     this.previousBranch =
                         !string.IsNullOrWhiteSpace(replacementDictionary["$previousBranch$"])
                             ? replacementDictionary["$previousBranch$"]
                             : replacementDictionary["$basebranch$"];
 
-                    templatesToGenerate.ForEach(async template =>
+                    templatesToGenerate.ForEach(template =>
                     {
                         this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
-                        await GenerateTemplateAsync(template, replacementDictionary);
+                        GenerateTemplate(template, replacementDictionary);
                     });
                 });
 
-        private async ValueTask GenerateTemplateAsync(
+        private void GenerateTemplate(
             Template template,
             Dictionary<string, string> replacementDictionary)
         {
@@ -119,20 +118,22 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
             for (int taskIndex = 0; taskIndex <= template.Tasks.Count - 1; taskIndex++)
             {
-                replacementDictionary["$currentBranch$"] =
-                    await this.templateProcessingService
-                        .TransformStringAsync(template.Tasks[taskIndex].BranchName, replacementDictionary);
+                var currentBranchName =
+                    this.templateProcessingService
+                        .TransformString(template.Tasks[taskIndex].BranchName, replacementDictionary);
+
+                replacementDictionary["$currentBranch$"] = currentBranchName;
 
                 var transformedTemplate =
-                    await this.templateProcessingService
-                        .TransformTemplateAsync(template, replacementDictionary);
+                    this.templateProcessingService
+                        .TransformTemplate(template, replacementDictionary);
 
                 PerformTasks(
                     transformedTemplate.Tasks[taskIndex],
                     transformedTemplate, replacementDictionary);
 
-                this.previousBranch = await this.templateProcessingService
-                        .TransformStringAsync(transformedTemplate.Tasks[taskIndex].BranchName, replacementDictionary);
+                this.previousBranch = this.templateProcessingService
+                        .TransformString(transformedTemplate.Tasks[taskIndex].BranchName, replacementDictionary);
             }
         }
 
@@ -155,7 +156,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             Template transformedTemplate,
             Dictionary<string, string> replacementDictionary)
         {
-            task.Actions.ForEach(async action =>
+            task.Actions.ForEach(action =>
             {
                 this.LogMessage(
                     DateTimeOffset.UtcNow,
@@ -163,7 +164,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 
                 this.PerformFileCreations(action.Files, replacementDictionary);
                 this.PerformAppendOpperations(action.Appends);
-                await this.PerformExecutionsAsync(action.Executions, action.ExecutionFolder);
+                this.PerformExecutions(action.Executions, action.ExecutionFolder);
             });
         }
 
@@ -171,12 +172,12 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             List<Models.Foundations.Templates.Tasks.Actions.Files.File> files,
             Dictionary<string, string> replacementDictionary)
         {
-            files.ForEach(async file =>
+            files.ForEach(file =>
             {
                 string sourceString = this.fileProcessingService.ReadFromFile(file.Template);
 
                 string transformedSourceString =
-                    await this.templateProcessingService.TransformStringAsync(sourceString, replacementDictionary);
+                    this.templateProcessingService.TransformString(sourceString, replacementDictionary);
 
                 transformedSourceString = transformedSourceString.Replace("##n##", "\\n");
 
@@ -200,25 +201,25 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 string fileContent = this.fileProcessingService.ReadFromFile(append.Target);
 
-                string appendedContent = this.templateProcessingService.AppendContentAsync(
+                string appendedContent = this.templateProcessingService.AppendContent(
                     sourceContent: fileContent,
                     doesNotContainContent: append.DoesNotContainContent,
                     regexToMatchForAppend: append.RegexToMatchForAppend,
                     appendContent: append.ContentToAppend,
                     appendToBeginning: append.AppendToBeginning,
-                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist).Result;
+                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
 
-                bool result = this.fileProcessingService.WriteToFile(append.Target, appendedContent);
+                this.fileProcessingService.WriteToFile(append.Target, appendedContent);
             }
         }
 
-        private async ValueTask PerformExecutionsAsync(
+        private void PerformExecutions(
             List<Models.Foundations.Executions.Execution> executions,
             string executionFolder)
         {
             if (this.ScriptExecutionIsEnabled == true)
             {
-                string outcome = await this.executionProcessingService.RunAsync(executions, executionFolder);
+                string outcome = this.executionProcessingService.Run(executions, executionFolder);
                 this.LogMessage(DateTimeOffset.UtcNow, $"{outcome}");
             }
             else
@@ -241,7 +242,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             this.loggingBroker.LogInformation($"{date} - {message}");
         }
 
-        private async ValueTask<List<Template>> GetOnlyTheTemplatesThatRequireGeneratingCodeAsync(
+        private List<Template> GetOnlyTheTemplatesThatRequireGeneratingCode(
             List<Template> templates,
             Dictionary<string, string> replacementDictionary)
         {
@@ -250,8 +251,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             foreach (Template template in templates)
             {
                 var transformedTemplate =
-                    await this.templateProcessingService
-                        .TransformTemplateAsync(template, replacementDictionary);
+                    this.templateProcessingService
+                        .TransformTemplate(template, replacementDictionary);
 
                 bool templateRequired = CheckIfTemplateIsRequired(transformedTemplate);
 
@@ -281,7 +282,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         {
             var actions = task.Actions;
             var actionsWithFiles = actions.Where(action => action.Files.Count > 0).ToList();
-            var actionsToRemove = RemoveActionIfNotRequiredAsync(actionsWithFiles);
+            var actionsToRemove = RemoveActionIfNotRequired(actionsWithFiles);
 
             actionsToRemove.ForEach(action =>
             {
@@ -296,7 +297,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             return null;
         }
 
-        private List<Models.Foundations.Templates.Tasks.Actions.Action> RemoveActionIfNotRequiredAsync(
+        private List<Models.Foundations.Templates.Tasks.Actions.Action> RemoveActionIfNotRequired(
             List<Models.Foundations.Templates.Tasks.Actions.Action> actions)
         {
             List<Models.Foundations.Templates.Tasks.Actions.Action> actionsToRemove =

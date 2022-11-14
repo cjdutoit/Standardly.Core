@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xeptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnAppendContentIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationOnAppendContentIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -33,19 +32,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     dependencyValidationException.InnerException as Xeption);
 
             this.templateServiceMock.Setup(service =>
-                service.AppendContentAsync(
+                service.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist))
-                        .ThrowsAsync(dependencyValidationException);
+                        .Throws(dependencyValidationException);
 
             // when
-            ValueTask<string> appendContentTask =
+            Action appendContentAction = () =>
                 this.templateProcessingService
-                    .AppendContentAsync(
+                    .AppendContent(
                         sourceContent,
                         doesNotContainContent,
                         regexToMatchForAppendForAppend,
@@ -55,10 +54,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
             // then
             TemplateProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingDependencyValidationException>(appendContentTask.AsTask);
+                Assert.Throws<TemplateProcessingDependencyValidationException>(appendContentAction);
 
             this.templateServiceMock.Verify(service =>
-                service.AppendContentAsync(
+                service.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppendForAppend,
@@ -78,7 +77,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnAppendContentIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyOnAppendContentIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -94,19 +93,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     dependencyException.InnerException as Xeption);
 
             this.templateServiceMock.Setup(service =>
-                service.AppendContentAsync(
+                service.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppendForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist))
-                        .ThrowsAsync(dependencyException);
+                        .Throws(dependencyException);
 
             // when
-            ValueTask<string> appendContentTask =
+            Action appendContentAction = () =>
                 this.templateProcessingService
-                    .AppendContentAsync(
+                    .AppendContent(
                         sourceContent,
                         doesNotContainContent,
                         regexToMatchForAppendForAppend,
@@ -116,10 +115,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
             // then
             TemplateProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingDependencyException>(appendContentTask.AsTask);
+                Assert.Throws<TemplateProcessingDependencyException>(appendContentAction);
 
             this.templateServiceMock.Verify(service =>
-                 service.AppendContentAsync(
+                 service.AppendContent(
                      sourceContent,
                      doesNotContainContent,
                      regexToMatchForAppendForAppend,
@@ -134,11 +133,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         Times.Once);
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(It.IsAny<string>()),
+                service.ValidateTransformation(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(It.IsAny<string>()),
+                service.ConvertStringToTemplate(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.VerifyNoOtherCalls();
@@ -146,7 +145,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnAppendContentIfServiceErrorOccursAndLogItAsync()
+        public void ShouldThrowServiceExceptionOnAppendContentIfServiceErrorOccursAndLogIt()
         {
             // given
             string sourceContent = GetRandomString();
@@ -166,19 +165,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     failedTemplateProcessingServiceException);
 
             this.templateServiceMock.Setup(service =>
-                service.AppendContentAsync(
+                service.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist))
-                        .ThrowsAsync(serviceException);
+                        .Throws(serviceException);
 
             // when
-            ValueTask<string> appendContentTask =
+            Action appendContentAction = () =>
                 this.templateProcessingService
-                    .AppendContentAsync(
+                    .AppendContent(
                         sourceContent,
                         doesNotContainContent,
                         regexToMatchForAppend,
@@ -188,10 +187,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
             // then
             TemplateProcessingServiceException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingServiceException>(appendContentTask.AsTask);
+                Assert.Throws<TemplateProcessingServiceException>(appendContentAction);
 
             this.templateServiceMock.Verify(service =>
-                 service.AppendContentAsync(
+                 service.AppendContent(
                      sourceContent,
                      doesNotContainContent,
                      regexToMatchForAppend,

@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
@@ -15,15 +14,15 @@ namespace Standardly.Core.Services.Foundations.Templates
 {
     public partial class TemplateService
     {
-        private delegate ValueTask<string> ReturningStringFunction();
-        private delegate ValueTask<Template> ReturningTemplateFunction();
-        private delegate ValueTask ReturningNothingFunction();
+        private delegate string ReturningStringFunction();
+        private delegate Template ReturningTemplateFunction();
+        private delegate void ReturningNothingFunction();
 
-        private async ValueTask<string> TryCatchAsync(ReturningStringFunction returningStringFunction)
+        private string TryCatch(ReturningStringFunction returningStringFunction)
         {
             try
             {
-                return await returningStringFunction();
+                return returningStringFunction();
             }
             catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {
@@ -63,11 +62,11 @@ namespace Standardly.Core.Services.Foundations.Templates
             }
         }
 
-        private async ValueTask<Template> TryCatchAsync(ReturningTemplateFunction returningTemplateFunction)
+        private Template TryCatch(ReturningTemplateFunction returningTemplateFunction)
         {
             try
             {
-                return await returningTemplateFunction();
+                return returningTemplateFunction();
             }
             catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {
@@ -86,11 +85,11 @@ namespace Standardly.Core.Services.Foundations.Templates
             }
         }
 
-        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
+        private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
             try
             {
-                await returningNothingFunction();
+                returningNothingFunction();
             }
             catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {

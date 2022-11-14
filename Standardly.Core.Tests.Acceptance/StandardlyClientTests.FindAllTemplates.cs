@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Standardly.Core.Clients;
 using Standardly.Core.Models.Foundations.Templates;
@@ -19,7 +18,7 @@ namespace Standardly.Core.Tests.Acceptance
     public partial class StandardlyClientTests
     {
         [Fact]
-        public async Task ShouldFindListOfTemplatesAsync()
+        public void ShouldFindListOfTemplates()
         {
             //given
             var standardlyClient = new StandardlyClient
@@ -28,7 +27,7 @@ namespace Standardly.Core.Tests.Acceptance
             };
 
             //when
-            List<Template> templates = await standardlyClient.FindAllTemplatesAsync();
+            List<Template> templates = standardlyClient.FindAllTemplates();
 
             //then
             templates.Count().Should().Be(3);
@@ -38,7 +37,7 @@ namespace Standardly.Core.Tests.Acceptance
         }
 
         [Fact]
-        public async Task ShouldFindListOfTemplatesWithCustomConfigAsync()
+        public void ShouldFindListOfTemplatesWithCustomConfig()
         {
             //given
             string assembly = Assembly.GetExecutingAssembly().Location;
@@ -50,7 +49,7 @@ namespace Standardly.Core.Tests.Acceptance
             };
 
             //when
-            List<Template> templates = await standardlyClient.FindAllTemplatesAsync();
+            List<Template> templates = standardlyClient.FindAllTemplates();
 
             //then
             templates.Count().Should().Be(3);

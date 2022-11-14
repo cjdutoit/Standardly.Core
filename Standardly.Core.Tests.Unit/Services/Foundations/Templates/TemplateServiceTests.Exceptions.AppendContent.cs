@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Brokers.RegularExpressions;
@@ -19,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     {
         [Theory]
         [MemberData(nameof(AppendContentDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnAppendContentIfErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionOnAppendContentIfErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -50,8 +49,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<string> templateServiceExceptionTask =
-                templateService.AppendContentAsync(
+            Action templateServiceExceptionTask = () =>
+                templateService.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatch,
@@ -60,7 +59,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendEvenIfContentAlreadyExist);
 
             TemplateDependencyValidationException actualTemplateDependencyValidationException =
-                await Assert.ThrowsAsync<TemplateDependencyValidationException>(templateServiceExceptionTask.AsTask);
+                Assert.Throws<TemplateDependencyValidationException>(templateServiceExceptionTask);
 
             // then
             actualTemplateDependencyValidationException.Should()
@@ -85,7 +84,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnAppendContentIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnAppendContentIfServiceErrorOccurs()
         {
             // given
             string sourceContent = GetRandomString();
@@ -116,8 +115,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     .Throws(serviceException);
 
             // when
-            ValueTask<string> templateServiceExceptionTask =
-                templateService.AppendContentAsync(
+            Action templateServiceExceptionTask = () =>
+                templateService.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatch,
@@ -126,7 +125,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendEvenIfContentAlreadyExist);
 
             TemplateServiceException actualTemplateServiceException =
-                await Assert.ThrowsAsync<TemplateServiceException>(templateServiceExceptionTask.AsTask);
+                Assert.Throws<TemplateServiceException>(templateServiceExceptionTask);
 
             // then
             actualTemplateServiceException.Should().BeEquivalentTo(expectedTemplateServiceException);

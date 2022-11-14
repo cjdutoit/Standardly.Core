@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnWriteToFileAsyncIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationOnWriteToFileAsyncIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -34,12 +33,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<bool> writeToFileTask =
+            Action writeToFileAction = () =>
                 this.fileProcessingService.WriteToFile(inputPath, inputContent);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(writeToFileTask.AsTask);
+                Assert.Throws<FileProcessingDependencyValidationException>(writeToFileAction);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfDirectoryExists(It.IsAny<string>()),
@@ -60,7 +59,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnWriteToFileAsyncIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyOnWriteToFileAsyncIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -77,12 +76,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> writeToFileTask =
+            Action writeToFileAction = () =>
                 this.fileProcessingService.WriteToFile(inputPath, inputContent);
 
             // then
             FileProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyException>(writeToFileTask.AsTask);
+                Assert.Throws<FileProcessingDependencyException>(writeToFileAction);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfDirectoryExists(It.IsAny<string>()),
@@ -102,7 +101,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnWriteToFileAsyncIfServiceErrorOccursAndLogItAsync()
+        public void ShouldThrowServiceExceptionOnWriteToFileAsyncIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomPath = GetRandomString();
@@ -127,12 +126,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> writeToFileTask =
+            Action writeToFileAction = () =>
                 this.fileProcessingService.WriteToFile(inputPath, inputContent);
 
             // then
             FileProcessingServiceException actualException =
-                await Assert.ThrowsAsync<FileProcessingServiceException>(writeToFileTask.AsTask);
+                Assert.Throws<FileProcessingServiceException>(writeToFileAction);
 
             this.fileServiceMock.Verify(service =>
             service.CheckIfDirectoryExists(It.IsAny<string>()),

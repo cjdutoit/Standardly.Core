@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -18,14 +17,14 @@ namespace Standardly.Core.Services.Orchestrations.Templates
 {
     public partial class TemplateOrchestrationService
     {
-        private delegate ValueTask<List<Template>> ReturningTemplateListFunction();
-        private delegate ValueTask ReturningNothingFunction();
+        private delegate List<Template> ReturningTemplateListFunction();
+        private delegate void ReturningNothingFunction();
 
-        private async ValueTask<List<Template>> TryCatchAsync(ReturningTemplateListFunction returningTemplateListFunction)
+        private List<Template> TryCatch(ReturningTemplateListFunction returningTemplateListFunction)
         {
             try
             {
-                return await returningTemplateListFunction();
+                return returningTemplateListFunction();
             }
             catch (FileProcessingValidationException fileServiceValidationException)
             {
@@ -84,11 +83,11 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             }
         }
 
-        private async ValueTask TryCatchAsync(ReturningNothingFunction returningNothingFunction)
+        private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
             try
             {
-                await returningNothingFunction();
+                returningNothingFunction();
             }
             catch (InvalidArgumentTemplateOrchestrationException invalidArgumentTemplateOrchestrationException)
             {

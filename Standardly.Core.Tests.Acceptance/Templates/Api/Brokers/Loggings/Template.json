@@ -53,7 +53,7 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "private static void AddBrokers(IServiceCollection services)",
               "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
-              "contentToAppend": "\r\n        private static void AddBrokers(IServiceCollection services)\r\n        {\r\n        }",
+              "contentToAppend": "\r\n\r\n        private static void AddBrokers(IServiceCollection services)\r\n        {\r\n        }",
               "appendToBeginning": false,
               "appendEvenIfContentAlreadyExist": false
             },
@@ -61,7 +61,7 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "private static void AddFoundations(IServiceCollection services)",
               "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
-              "contentToAppend": "\r\n        private static void AddFoundations(IServiceCollection services)\r\n        {\r\n        }",
+              "contentToAppend": "\r\n\r\n        private static void AddFoundations(IServiceCollection services)\r\n        {\r\n        }",
               "appendToBeginning": false,
               "appendEvenIfContentAlreadyExist": false
             },
@@ -69,7 +69,7 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "private static void AddProcessings(IServiceCollection services)",
               "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
-              "contentToAppend": "\r\n        private static void AddProcessings(IServiceCollection services)\r\n        {\r\n        }",
+              "contentToAppend": "\r\n\r\n        private static void AddProcessings(IServiceCollection services)\r\n        {\r\n        }",
               "appendToBeginning": false,
               "appendEvenIfContentAlreadyExist": false
             },
@@ -77,7 +77,7 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "private static void AddOrchestrations(IServiceCollection services)",
               "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
-              "contentToAppend": "\r\n        private static void AddOrchestrations(IServiceCollection services)\r\n        {\r\n        }",
+              "contentToAppend": "\r\n\r\n        private static void AddOrchestrations(IServiceCollection services)\r\n        {\r\n        }",
               "appendToBeginning": false,
               "appendEvenIfContentAlreadyExist": false
             },
@@ -93,7 +93,7 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "",
               "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
-              "contentToAppend": "            AddProcessings(services);",
+              "contentToAppend": "            AddProcessings(services);\r\n",
               "appendToBeginning": true,
               "appendEvenIfContentAlreadyExist": false
             },
@@ -101,7 +101,7 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "",
               "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
-              "contentToAppend": "            AddFoundations(services);",
+              "contentToAppend": "            AddFoundations(services);\r\n",
               "appendToBeginning": true,
               "appendEvenIfContentAlreadyExist": false
             },
@@ -109,7 +109,7 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "",
               "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
-              "contentToAppend": "            AddBrokers(services);",
+              "contentToAppend": "            AddBrokers(services);\r\n",
               "appendToBeginning": true,
               "appendEvenIfContentAlreadyExist": false
             },
@@ -117,8 +117,8 @@
               "target": "$projectFolder$\\Startup.cs",
               "doesNotContainContent": "",
               "regexToMatchForAppend": "(?<=private static void AddBrokers\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=        \\}\\r\\n)",
-              "contentToAppend": "            services.AddTransient<ILoggingBroker, LoggingBroker>();",
-              "appendToBeginning": true,
+              "contentToAppend": "            services.AddTransient<ILoggingBroker, LoggingBroker>();\r\n",
+              "appendToBeginning": false,
               "appendEvenIfContentAlreadyExist": false
             }
           ],

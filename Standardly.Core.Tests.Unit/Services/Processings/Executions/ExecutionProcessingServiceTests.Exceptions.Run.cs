@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -19,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnRunIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationOnRunIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -33,19 +32,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     dependencyValidationException.InnerException as Xeption);
 
             this.executionServiceMock.Setup(service =>
-                service.RunAsync(inputExecutions, inputExecutionFolder))
-                    .ThrowsAsync(dependencyValidationException);
+                service.Run(inputExecutions, inputExecutionFolder))
+                    .Throws(dependencyValidationException);
 
             // when
-            ValueTask<string> runTask =
-                this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
+            Action runAction = () =>
+                this.executionProcessingService.Run(randomExecutions, inputExecutionFolder);
 
             // then
             ExecutionProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<ExecutionProcessingDependencyValidationException>(runTask.AsTask);
+                Assert.Throws<ExecutionProcessingDependencyValidationException>(runAction);
 
             this.executionServiceMock.Verify(service =>
-                service.RunAsync(inputExecutions, inputExecutionFolder),
+                service.Run(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -59,7 +58,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnRunIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyOnRunIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -73,19 +72,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     dependencyException.InnerException as Xeption);
 
             this.executionServiceMock.Setup(service =>
-                service.RunAsync(inputExecutions, inputExecutionFolder))
-                    .ThrowsAsync(dependencyException);
+                service.Run(inputExecutions, inputExecutionFolder))
+                    .Throws(dependencyException);
 
             // when
-            ValueTask<string> runTask =
-                this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
+            Action runAction = () =>
+                this.executionProcessingService.Run(randomExecutions, inputExecutionFolder);
 
             // then
             ExecutionProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<ExecutionProcessingDependencyException>(runTask.AsTask);
+                Assert.Throws<ExecutionProcessingDependencyException>(runAction);
 
             this.executionServiceMock.Verify(service =>
-                service.RunAsync(inputExecutions, inputExecutionFolder),
+                service.Run(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -98,7 +97,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRunIfServiceErrorOccursAndLogItAsync()
+        public void ShouldThrowServiceExceptionOnRunIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomExecutionFolder = GetRandomString();
@@ -116,19 +115,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     failedExecutionProcessingServiceException);
 
             this.executionServiceMock.Setup(service =>
-                service.RunAsync(inputExecutions, inputExecutionFolder))
-                    .ThrowsAsync(serviceException);
+                service.Run(inputExecutions, inputExecutionFolder))
+                    .Throws(serviceException);
 
             // when
-            ValueTask<string> runTask =
-                this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
+            Action runAction = () =>
+                this.executionProcessingService.Run(randomExecutions, inputExecutionFolder);
 
             // then
             ExecutionProcessingServiceException actualException =
-                await Assert.ThrowsAsync<ExecutionProcessingServiceException>(runTask.AsTask);
+                Assert.Throws<ExecutionProcessingServiceException>(runAction);
 
             this.executionServiceMock.Verify(service =>
-                service.RunAsync(inputExecutions, inputExecutionFolder),
+                service.Run(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

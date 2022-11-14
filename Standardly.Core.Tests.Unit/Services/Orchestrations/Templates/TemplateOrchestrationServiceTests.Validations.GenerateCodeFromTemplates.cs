@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     public partial class TemplateOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionIfArgumentsIsNullAsync()
+        public void ShouldThrowValidationExceptionIfArgumentsIsNull()
         {
             // given
             List<Template> nullTemplateList = null;
@@ -36,18 +36,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                 templateProcessingService
-                    .TransformTemplateAsync(It.IsAny<Template>(), It.IsAny<Dictionary<string, string>>()))
+                    .TransformTemplate(It.IsAny<Template>(), It.IsAny<Dictionary<string, string>>()))
                         .Throws(invalidArgumentTemplateOrchestrationException);
 
             var expectedTemplateOrchestrationValidationException =
                 new TemplateOrchestrationValidationException(invalidArgumentTemplateOrchestrationException);
 
             // when
-            ValueTask generateCodeTask =
-               templateOrchestrationService.GenerateCodeAsync(nullTemplateList, randomReplacementDictionary);
+            Action generateCodeAction = () =>
+               templateOrchestrationService.GenerateCode(nullTemplateList, randomReplacementDictionary);
 
             TemplateOrchestrationValidationException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationValidationException>(generateCodeTask.AsTask);
+                Assert.Throws<TemplateOrchestrationValidationException>(generateCodeAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationValidationException);
@@ -58,7 +58,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         [Fact]
-        public async Task ShouldRemoveTemplatesOnGenerateCodeIfNotRequiredAsync()
+        public void ShouldRemoveTemplatesOnGenerateCodeIfNotRequired()
         {
             // given
             int randomNumber = GetRandomNumber();
@@ -77,8 +77,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplateAsync(inputTemplates[i], inputDictionary))
-                            .ReturnsAsync(outputTemplates[i]);
+                        .TransformTemplate(inputTemplates[i], inputDictionary))
+                            .Returns(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
@@ -94,15 +94,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
-                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
-                                .ReturnsAsync(randomExecutionOutcome);
+                            executionProcessingService.Run(action.Executions, action.ExecutionFolder))
+                                .Returns(randomExecutionOutcome);
                     });
                 });
             }
 
             // when
-            await templateOrchestrationService
-                .GenerateCodeAsync(inputTemplates, randomReplacementDictionary);
+            templateOrchestrationService
+                .GenerateCode(inputTemplates, randomReplacementDictionary);
 
             // then
 
@@ -110,7 +110,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplateAsync(inputTemplates[i], randomReplacementDictionary),
+                        .TransformTemplate(inputTemplates[i], randomReplacementDictionary),
                             Times.Once);
             }
 

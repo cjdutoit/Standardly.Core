@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Standardly.Core.Models.Foundations.Templates;
@@ -15,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public async Task ShouldConvertStringToTemplateAsync()
+        public void ShouldConvertStringToTemplate()
         {
             // given
             Template randomTemplate = CreateRandomTemplate();
@@ -24,7 +23,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string inputString = randomString;
 
             // when
-            var actualTemplate = await this.templateService.ConvertStringToTemplateAsync(inputString);
+            var actualTemplate = this.templateService.ConvertStringToTemplate(inputString);
 
             // then
             actualTemplate.Should().BeEquivalentTo(expectedTemplate);

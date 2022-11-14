@@ -19,18 +19,6 @@ namespace $rootnamespace$.$brokers$.Storages
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            AddConfigurations(modelBuilder);
-            AddSeedData(modelBuilder);
-        }
-
-        private static void AddConfigurations(ModelBuilder modelBuilder)
-        { 
-            // TODO: Add your fluent configurations here i.e. Add$safeItemNameSingular$Configurations(modelBuilder);
-        }
-
-        private void AddSeedData(ModelBuilder modelBuilder)
-        {
-            // TODO: Add your seed data here i.e. Add$safeItemNameSingular$SeedData(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

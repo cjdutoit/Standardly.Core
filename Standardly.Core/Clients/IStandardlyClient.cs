@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Clients
@@ -14,7 +13,7 @@ namespace Standardly.Core.Clients
     public interface IStandardlyClient
     {
         event Action<DateTimeOffset, string, string> LogRaised;
-        ValueTask<List<Template>> FindAllTemplatesAsync();
-        ValueTask GenerateCodeAsync(List<Template> templates, Dictionary<string, string> replacementDictionary);
+        List<Template> FindAllTemplates();
+        void GenerateCode(List<Template> templates, Dictionary<string, string> replacementDictionary);
     }
 }

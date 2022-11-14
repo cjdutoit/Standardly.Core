@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -18,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     public partial class TemplateOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTestsAsync()
+        public void ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTests()
         {
             // given
             int itemsToGenerate = GetRandomNumber();
@@ -44,11 +43,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     .Throws(new FileProcessingDependencyException(new Xeption(randomFileList[0])));
 
             this.templateProcessingServiceMock.Setup(templateService =>
-                templateService.ConvertStringToTemplateAsync(rawTemplateString))
-                .ReturnsAsync(outputTemplate);
+                templateService.ConvertStringToTemplate(rawTemplateString))
+                .Returns(outputTemplate);
 
             // when
-            List<Template> actualTemplates = await this.templateOrchestrationService.FindAllTemplatesAsync();
+            List<Template> actualTemplates = this.templateOrchestrationService.FindAllTemplates();
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count - 1);
@@ -62,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     Times.Exactly(expectedFileList.Count));
 
             this.templateProcessingServiceMock.Verify(templateService =>
-                templateService.ConvertStringToTemplateAsync(rawTemplateString),
+                templateService.ConvertStringToTemplate(rawTemplateString),
                     Times.Exactly(expectedFileList.Count - 1));
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

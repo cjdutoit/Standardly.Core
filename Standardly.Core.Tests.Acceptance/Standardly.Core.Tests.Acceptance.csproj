@@ -9,11 +9,55 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Output\Standardly\Startup.cs" />
+    <Compile Remove="ActualOutput\Standardly\Startup.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\DateTimes\DateTimeBroker.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\DateTimes\IDateTimeBroker.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Loggings\ILoggingBroker.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Loggings\LoggingBroker.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Storages\IStorageBroker.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Storages\IStorageBroker.Students.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.Students.Configurations.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.Students.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.Students.SeedData.cs" />
+    <Compile Remove="ExpectedOutput\Standardly\Startup.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Output\Standardly\Startup.cs">
+    <None Include="ActualOutput\Standardly\Startup.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\DateTimes\DateTimeBroker.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\DateTimes\IDateTimeBroker.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Loggings\ILoggingBroker.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Loggings\LoggingBroker.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Storages\IStorageBroker.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Storages\IStorageBroker.Students.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.Students.Configurations.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.Students.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Brokers\Storages\StorageBroker.Students.SeedData.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ExpectedOutput\Standardly\Startup.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -39,30 +83,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Services\Templates\Resources\Startup.cs.1.Result.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Services\Templates\Resources\Startup.cs.1.Source.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Services\Templates\Resources\Startup.cs.2.Result.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Services\Templates\Resources\Startup.cs.2.Source.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Services\Templates\Resources\Startup.cs.3.Result.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Services\Templates\Resources\Startup.cs.3.Source.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Services\Templates\Resources\Startup.cs.4.Result.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Services\Templates\Resources\Startup.cs.4.Source.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Templates\Api\Brokers\DateTimes\001_DateTimeBroker.cs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

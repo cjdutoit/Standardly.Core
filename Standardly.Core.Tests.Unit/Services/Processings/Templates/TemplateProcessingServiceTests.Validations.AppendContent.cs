@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
+using System;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnAppendContentIfArgumentsIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionOnAppendContentIfArgumentsIsInvalidAndLogIt(
             string invalidInput)
         {
             // given
@@ -48,9 +48,9 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
 
             // when
-            ValueTask<string> appendContentTask =
+            Action appendContentAction = () =>
                 this.templateProcessingService
-                    .AppendContentAsync(
+                    .AppendContent(
                         sourceContent,
                         doesNotContainContent,
                         regexToMatchForAppend,
@@ -59,7 +59,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         appendEvenIfContentAlreadyExist);
 
             TemplateProcessingValidationException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingValidationException>(appendContentTask.AsTask);
+                Assert.Throws<TemplateProcessingValidationException>(appendContentAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
@@ -70,7 +70,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         Times.Once);
 
             this.templateServiceMock.Verify(service =>
-                service.AppendContentAsync(
+                service.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,

@@ -39,12 +39,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            System.Action runTask = () =>
+            System.Action retrieveListOfFilesAction = () =>
                 this.fileProcessingService
                     .RetrieveListOfFiles(path: invalidPath, searchPattern: invalidSearchPattern);
 
             FileProcessingValidationException actualException =
-                Assert.Throws<FileProcessingValidationException>(runTask);
+                Assert.Throws<FileProcessingValidationException>(retrieveListOfFilesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);

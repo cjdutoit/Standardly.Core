@@ -108,10 +108,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.ReadFromFile(inputPath))
-                    .ThrowsAsync(serviceException);
+                    .Throws(serviceException);
 
             // when
-            System.Action ReadFromFileAction =
+            Action ReadFromFileAction = () =>
                 this.fileProcessingService.ReadFromFile(inputPath);
 
             // then

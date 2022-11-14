@@ -4,10 +4,9 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
+using System;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionIfTemplateContentIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionIfTemplateContentIsInvalidAndLogIt(
             string invalidTemplateContent)
         {
             // given
@@ -34,11 +33,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
 
             // when
-            ValueTask<Template> convertStringToTemplateTask =
-                this.templateProcessingService.ConvertStringToTemplateAsync(invalidTemplateContent);
+            Action convertStringToTemplateAction = () =>
+                this.templateProcessingService.ConvertStringToTemplate(invalidTemplateContent);
 
             TemplateProcessingValidationException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingValidationException>(convertStringToTemplateTask.AsTask);
+                Assert.Throws<TemplateProcessingValidationException>(convertStringToTemplateAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
@@ -49,7 +48,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         Times.Once);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(invalidTemplateContent),
+                service.ConvertStringToTemplate(invalidTemplateContent),
                     Times.Never);
 
             this.templateServiceMock.VerifyNoOtherCalls();

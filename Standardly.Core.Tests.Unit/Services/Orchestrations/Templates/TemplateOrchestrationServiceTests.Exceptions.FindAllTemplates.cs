@@ -5,11 +5,8 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Xeptions;
 using Xunit;
@@ -20,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -40,12 +37,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                         .Throws(dependencyValidationException);
 
             // when
-            ValueTask<List<Template>> findAllTemplatesTask =
-                templateOrchestrationService.FindAllTemplatesAsync();
+            Action findAllTemplatesAction = () =>
+                templateOrchestrationService.FindAllTemplates();
 
             TemplateOrchestrationDependencyValidationException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationDependencyValidationException>(
-                    findAllTemplatesTask.AsTask);
+                Assert.Throws<TemplateOrchestrationDependencyValidationException>(findAllTemplatesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
@@ -61,7 +57,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -78,11 +74,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     .Throws(dependencyException);
 
             // when
-            ValueTask<List<Template>> findAllTemplatesTask =
-                this.templateOrchestrationService.FindAllTemplatesAsync();
+            Action findAllTemplatesAction = () =>
+                this.templateOrchestrationService.FindAllTemplates();
 
             TemplateOrchestrationDependencyException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationDependencyException>(findAllTemplatesTask.AsTask);
+                Assert.Throws<TemplateOrchestrationDependencyException>(findAllTemplatesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
@@ -97,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
         {
             // given
             var serviceException = new Exception();
@@ -113,11 +109,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     .Throws(serviceException);
 
             // when
-            ValueTask<List<Template>> findAllTemplatesTask =
-                this.templateOrchestrationService.FindAllTemplatesAsync();
+            Action findAllTemplatesAction = () =>
+                this.templateOrchestrationService.FindAllTemplates();
 
             TemplateOrchestrationServiceException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationServiceException>(findAllTemplatesTask.AsTask);
+                Assert.Throws<TemplateOrchestrationServiceException>(findAllTemplatesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationServiceException);

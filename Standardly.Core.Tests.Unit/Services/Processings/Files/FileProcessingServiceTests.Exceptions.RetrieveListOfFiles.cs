@@ -5,8 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -18,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnRetrieveListOfFilesAsyncIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationOnRetrieveListOfFilesAsyncIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -32,15 +30,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.RetrieveListOfFiles(inputPath, inputContent))
-                    .ThrowsAsync(dependencyValidationException);
+                    .Throws(dependencyValidationException);
 
             // when
-            ValueTask<List<string>> runTask =
+            Action RetrieveListOfFilesAction = () =>
                 this.fileProcessingService.RetrieveListOfFiles(inputPath, inputContent);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(runTask.AsTask);
+                Assert.Throws<FileProcessingDependencyValidationException>(RetrieveListOfFilesAction);
 
             this.fileServiceMock.Verify(service =>
                 service.RetrieveListOfFiles(inputPath, inputContent),
@@ -57,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnRetrieveListOfFilesAsyncIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyOnRetrieveListOfFilesAsyncIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -71,15 +69,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.RetrieveListOfFiles(inputPath, inputContent))
-                    .ThrowsAsync(dependencyException);
+                    .Throws(dependencyException);
 
             // when
-            ValueTask<List<string>> runTask =
+            Action RetrieveListOfFilesAction = () =>
                 this.fileProcessingService.RetrieveListOfFiles(inputPath, inputContent);
 
             // then
             FileProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyException>(runTask.AsTask);
+                Assert.Throws<FileProcessingDependencyException>(RetrieveListOfFilesAction);
 
             this.fileServiceMock.Verify(service =>
                 service.RetrieveListOfFiles(inputPath, inputContent),
@@ -95,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRetrieveListOfFilesAsyncIfServiceErrorOccursAndLogItAsync()
+        public void ShouldThrowServiceExceptionOnRetrieveListOfFilesAsyncIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomPath = GetRandomString();
@@ -113,15 +111,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
             this.fileServiceMock.Setup(service =>
                 service.RetrieveListOfFiles(inputPath, inputContent))
-                    .ThrowsAsync(serviceException);
+                    .Throws(serviceException);
 
             // when
-            ValueTask<List<string>> runTask =
+            Action RetrieveListOfFilesAction = () =>
                 this.fileProcessingService.RetrieveListOfFiles(inputPath, inputContent);
 
             // then
             FileProcessingServiceException actualException =
-                await Assert.ThrowsAsync<FileProcessingServiceException>(runTask.AsTask);
+                Assert.Throws<FileProcessingServiceException>(RetrieveListOfFilesAction);
 
             this.fileServiceMock.Verify(service =>
                 service.RetrieveListOfFiles(inputPath, inputContent),

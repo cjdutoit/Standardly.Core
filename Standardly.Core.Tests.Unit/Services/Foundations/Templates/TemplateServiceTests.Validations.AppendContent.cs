@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
+using System;
 using FluentAssertions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnAppendContentIfArgsInvalidAndLogAsync(string invalidString)
+        public void ShouldThrowValidationExceptionOnAppendContentIfArgsInvalidAndLog(string invalidString)
         {
             // given
             string sourceContent = invalidString;
@@ -47,8 +47,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidArgumentTemplateException);
 
             // when
-            ValueTask<string> appendContentTask =
-                this.templateService.AppendContentAsync(
+            Action appendContentAction = () =>
+                this.templateService.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatch,
@@ -57,14 +57,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendEvenIfContentAlreadyExist);
 
             var actualTemplateValidationException =
-                await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);
+                Assert.Throws<TemplateValidationException>(appendContentAction);
 
             // then
             actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnAppendContentIfWithNoMatchFoundAndLogAsync()
+        public void ShouldThrowValidationExceptionOnAppendContentIfWithNoMatchFoundAndLog()
         {
             // given
             string sourceContent = GetRandomString();
@@ -81,8 +81,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(regularExpressionTemplateException);
 
             // when
-            ValueTask<string> appendContentTask =
-                this.templateService.AppendContentAsync(
+            Action appendContentAction = () =>
+                this.templateService.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatch,
@@ -91,7 +91,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     appendEvenIfContentAlreadyExist);
 
             var actualTemplateValidationException =
-                await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);
+                Assert.Throws<TemplateValidationException>(appendContentAction);
 
             // then
             actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
