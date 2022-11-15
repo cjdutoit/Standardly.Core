@@ -27,6 +27,13 @@ namespace Standardly.Core.Services.Foundations.Executions
             {
                 ValidateRunArguments(executions, executionFolder);
 
+                List<Execution> executionList = new List<Execution>
+                {
+                    new Execution("Execution Folder", $"cd /d \"{executionFolder}\"")
+                };
+
+                executionList.AddRange(executions);
+
                 return this.executionBroker.Run(executions, executionFolder);
             });
     }
