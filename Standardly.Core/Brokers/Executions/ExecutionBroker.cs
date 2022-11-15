@@ -5,6 +5,8 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
+using Standardly.Commands;
 using System.Text;
 using Standardly.Core.Models.Foundations.Executions;
 
@@ -14,28 +16,13 @@ namespace Standardly.Core.Brokers.Executions
     {
         public string Run(List<Execution> executions, string executionFolder)
         {
-            List<Execution> executionList = new List<Execution>
+            using (CommandClient commandClient = new CommandClient("cmd.exe"))
             {
-                new Execution("Execution Folder", $"cd /d \"{executionFolder}\"")
-            };
+                List<string> instructions = executions
+                    .Select(execution => execution.Instruction).ToList();
 
-            executionList.AddRange(executions);
-
-            StringBuilder outputMessages = new StringBuilder();
-
-            using (CmdService cmdService =
-                new CmdService(
-                    "cmd.exe",
-                    "/k \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\Tools\\VsDevCmd.bat\""))
-            {
-                foreach (Execution execution in executionList)
-                {
-                    string output = cmdService.ExecuteCommand(execution.Instruction);
-                    outputMessages.AppendLine(output);
-                }
+                return commandClient.ExecuteCommand(instructions);
             }
-
-            return outputMessages.ToString();
         }
     }
 }
