@@ -16,7 +16,8 @@ using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
 using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.Templates;
+using Standardly.Core.Models.Orchestrations.TemplateGenerations;
+using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Services.Foundations.Executions;
 using Standardly.Core.Services.Foundations.Files;
@@ -99,7 +100,7 @@ namespace Standardly.Core.Clients
                 throw new StandardlyClientValidationException(
                     templateOrchestrationValidationException.InnerException as Xeption);
             }
-            catch (TemplateOrchestrationDependencyValidationException
+            catch (TemplateGenerationOrchestrationDependencyValidationException
                 templateOrchestrationDependencyValidationException)
             {
                 throw new StandardlyClientValidationException(
@@ -111,7 +112,7 @@ namespace Standardly.Core.Clients
                 throw new StandardlyClientDependencyException(
                     templateOrchestrationDependencyException.InnerException as Xeption);
             }
-            catch (TemplateOrchestrationServiceException
+            catch (TemplateGenerationOrchestrationServiceException
                 templateOrchestrationServiceException)
             {
                 throw new StandardlyClientServiceException(
@@ -132,7 +133,7 @@ namespace Standardly.Core.Clients
                 throw new StandardlyClientValidationException(
                     templateOrchestrationValidationException.InnerException as Xeption);
             }
-            catch (TemplateOrchestrationDependencyValidationException
+            catch (TemplateGenerationOrchestrationDependencyValidationException
                 templateOrchestrationDependencyValidationException)
             {
                 throw new StandardlyClientValidationException(
@@ -144,7 +145,7 @@ namespace Standardly.Core.Clients
                 throw new StandardlyClientDependencyException(
                     templateOrchestrationDependencyException.InnerException as Xeption);
             }
-            catch (TemplateOrchestrationServiceException
+            catch (TemplateGenerationOrchestrationServiceException
                 templateOrchestrationServiceException)
             {
                 throw new StandardlyClientServiceException(

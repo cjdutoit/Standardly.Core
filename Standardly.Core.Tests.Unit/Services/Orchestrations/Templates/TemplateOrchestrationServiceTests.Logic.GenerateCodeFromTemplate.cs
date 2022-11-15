@@ -29,7 +29,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             string randomTransformedTemplateString = GetRandomString();
             string randomFileContent = GetRandomString();
             string randomAppendedContent = GetRandomString();
-            this.templateOrchestrationService.ScriptExecutionIsEnabled = true;
+            this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = true;
 
             for (int i = 0; i < inputTemplates.Count; i++)
             {
@@ -86,7 +86,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             }
 
             // when
-            templateOrchestrationService
+            templateGenerationOrchestrationService
                 .GenerateCode(inputTemplates, randomReplacementDictionary);
 
             // then
@@ -182,7 +182,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             string randomTransformedTemplateString = GetRandomString();
             string randomFileContent = GetRandomString();
             string randomAppendedContent = GetRandomString();
-            this.templateOrchestrationService.ScriptExecutionIsEnabled = false;
+            this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = false;
 
             for (int i = 0; i < inputTemplates.Count; i++)
             {
@@ -239,7 +239,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             }
 
             // when
-            templateOrchestrationService
+            templateGenerationOrchestrationService
                 .GenerateCode(inputTemplates, randomReplacementDictionary);
 
             // then
