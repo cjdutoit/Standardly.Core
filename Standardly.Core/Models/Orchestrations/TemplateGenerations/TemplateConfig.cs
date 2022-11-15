@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-namespace Standardly.Core.Models.Orchestrations.Templates
+namespace Standardly.Core.Models.Orchestrations.TemplateGenerations
 {
     public class TemplateConfig : ITemplateConfig
     {

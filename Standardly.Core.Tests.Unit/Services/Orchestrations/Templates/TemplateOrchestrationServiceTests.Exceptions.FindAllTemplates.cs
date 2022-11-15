@@ -67,7 +67,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
 
             var expectedTemplateOrchestrationDependencyException =
-                new TemplateOrchestrationDependencyException(dependencyException.InnerException as Xeption);
+                new TemplateGenerationOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(broker =>
                 broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
@@ -77,8 +77,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Action findAllTemplatesAction = () =>
                 this.templateOrchestrationService.FindAllTemplates();
 
-            TemplateOrchestrationDependencyException actualException =
-                Assert.Throws<TemplateOrchestrationDependencyException>(findAllTemplatesAction);
+            TemplateGenerationOrchestrationDependencyException actualException =
+                Assert.Throws<TemplateGenerationOrchestrationDependencyException>(findAllTemplatesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
@@ -99,7 +99,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             var serviceException = new Exception();
 
             var failedTemplateOrchestrationServiceException =
-                new FailedTemplateOrchestrationServiceException(serviceException);
+                new FailedTemplateGenerationOrchestrationServiceException(serviceException);
 
             var expectedTemplateOrchestrationServiceException =
                 new TemplateOrchestrationServiceException(failedTemplateOrchestrationServiceException);

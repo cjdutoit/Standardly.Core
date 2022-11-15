@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
         private readonly Mock<ITemplateConfig> templateConfigMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly ITemplateOrchestrationService templateOrchestrationService;
+        private readonly ITemplateGenerationOrchestrationService templateOrchestrationService;
 
         public TemplateOrchestrationServiceTests()
         {
@@ -50,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             this.templateConfigMock
                 .Setup(config => config.TemplateDefinitionFileName).Returns("Template.json");
 
-            templateOrchestrationService = new TemplateOrchestrationService(
+            templateOrchestrationService = new TemplateGenerationOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
                 executionProcessingService: executionProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,

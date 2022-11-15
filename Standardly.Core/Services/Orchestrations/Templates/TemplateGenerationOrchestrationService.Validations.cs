@@ -10,7 +10,7 @@ using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 
 namespace Standardly.Core.Services.Orchestrations.Templates
 {
-    public partial class TemplateOrchestrationService
+    public partial class TemplateGenerationOrchestrationService
     {
         private static void ValidateTemplateArguments(
             List<Template> templates,
@@ -36,7 +36,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             var invalidArgumentTemplateOrchestrationException =
-                new InvalidArgumentTemplateOrchestrationException();
+                new InvalidArgumentTemplateGenerationOrchestrationException();
 
             foreach ((dynamic rule, string parameter) in validations)
             {

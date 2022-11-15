@@ -72,7 +72,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Dictionary<string, string> inputDictionary = randomReplacementDictionary;
 
             var expectedTemplateOrchestrationDependencyException =
-                new TemplateOrchestrationDependencyException(dependencyException.InnerException as Xeption);
+                new TemplateGenerationOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.templateProcessingServiceMock.Setup(service =>
                 service.TransformTemplate(
@@ -84,8 +84,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Action generateCodeAction = () =>
                 this.templateOrchestrationService.GenerateCode(inputTemplates, inputDictionary);
 
-            TemplateOrchestrationDependencyException actualException =
-                Assert.Throws<TemplateOrchestrationDependencyException>(generateCodeAction);
+            TemplateGenerationOrchestrationDependencyException actualException =
+                Assert.Throws<TemplateGenerationOrchestrationDependencyException>(generateCodeAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
@@ -111,7 +111,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             var serviceException = new Exception();
 
             var failedTemplateOrchestrationServiceException =
-                new FailedTemplateOrchestrationServiceException(serviceException);
+                new FailedTemplateGenerationOrchestrationServiceException(serviceException);
 
             var expectedTemplateOrchestrationServiceException =
                 new TemplateOrchestrationServiceException(failedTemplateOrchestrationServiceException);

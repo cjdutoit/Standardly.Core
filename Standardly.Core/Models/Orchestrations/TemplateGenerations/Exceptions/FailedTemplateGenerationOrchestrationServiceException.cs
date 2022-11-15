@@ -7,11 +7,11 @@
 using System;
 using Xeptions;
 
-namespace Standardly.Core.Models.Orchestrations.Templates.Exceptions
+namespace Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions
 {
-    public class FailedTemplateOrchestrationServiceException : Xeption
+    public class FailedTemplateGenerationOrchestrationServiceException : Xeption
     {
-        public FailedTemplateOrchestrationServiceException(Exception innerException)
+        public FailedTemplateGenerationOrchestrationServiceException(Exception innerException)
             : base(message: "Failed template orchestration service occurred, please contact support", innerException)
         { }
     }

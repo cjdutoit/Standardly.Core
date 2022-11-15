@@ -32,7 +32,7 @@ namespace Standardly.Core.Clients
     public class StandardlyClient : IStandardlyClient
     {
         public event Action<DateTimeOffset, string, string> LogRaised = delegate { };
-        private readonly ITemplateOrchestrationService templateOrchestrationService;
+        private readonly ITemplateGenerationOrchestrationService templateOrchestrationService;
 
         public StandardlyClient()
         {
@@ -94,7 +94,7 @@ namespace Standardly.Core.Clients
             {
                 return this.templateOrchestrationService.FindAllTemplates();
             }
-            catch (TemplateOrchestrationValidationException templateOrchestrationValidationException)
+            catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationValidationException.InnerException as Xeption);
@@ -105,7 +105,7 @@ namespace Standardly.Core.Clients
                 throw new StandardlyClientValidationException(
                     templateOrchestrationDependencyValidationException.InnerException as Xeption);
             }
-            catch (TemplateOrchestrationDependencyException
+            catch (TemplateGenerationOrchestrationDependencyException
                 templateOrchestrationDependencyException)
             {
                 throw new StandardlyClientDependencyException(
@@ -127,7 +127,7 @@ namespace Standardly.Core.Clients
             {
                 this.templateOrchestrationService.GenerateCode(templates, replacementDictionary);
             }
-            catch (TemplateOrchestrationValidationException templateOrchestrationValidationException)
+            catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationValidationException.InnerException as Xeption);
@@ -138,7 +138,7 @@ namespace Standardly.Core.Clients
                 throw new StandardlyClientValidationException(
                     templateOrchestrationDependencyValidationException.InnerException as Xeption);
             }
-            catch (TemplateOrchestrationDependencyException
+            catch (TemplateGenerationOrchestrationDependencyException
                 templateOrchestrationDependencyException)
             {
                 throw new StandardlyClientDependencyException(
@@ -155,7 +155,7 @@ namespace Standardly.Core.Clients
         private void LogEventSetup() =>
             this.templateOrchestrationService.LogRaised += this.LogRaised;
 
-        private ITemplateOrchestrationService InitialiseClient(
+        private ITemplateGenerationOrchestrationService InitialiseClient(
             string templateFolderPath,
             string templateDefinitionFileName,
             ILoggingBroker loggingBroker)
@@ -182,7 +182,7 @@ namespace Standardly.Core.Clients
 
             var templateConfig = new TemplateConfig(templateFolderPath, templateDefinitionFileName);
 
-            return new TemplateOrchestrationService(
+            return new TemplateGenerationOrchestrationService(
                 fileProcessingService,
                 executionProcessingService,
                 templateProcessingService,

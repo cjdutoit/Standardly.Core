@@ -24,7 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Dictionary<string, string> randomReplacementDictionary = null;
 
             var invalidArgumentTemplateOrchestrationException =
-                new InvalidArgumentTemplateOrchestrationException();
+                new InvalidArgumentTemplateGenerationOrchestrationException();
 
             invalidArgumentTemplateOrchestrationException.AddData(
                 key: "templates",
@@ -46,8 +46,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             Action generateCodeAction = () =>
                templateOrchestrationService.GenerateCode(nullTemplateList, randomReplacementDictionary);
 
-            TemplateOrchestrationValidationException actualException =
-                Assert.Throws<TemplateOrchestrationValidationException>(generateCodeAction);
+            TemplateGenerationOrchestrationValidationException actualException =
+                Assert.Throws<TemplateGenerationOrchestrationValidationException>(generateCodeAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationValidationException);
