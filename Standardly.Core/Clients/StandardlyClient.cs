@@ -16,6 +16,7 @@ using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Models.Orchestrations.Templates;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Services.Foundations.Executions;
@@ -119,13 +120,12 @@ namespace Standardly.Core.Clients
             }
         }
 
-        public void GenerateCode(
-            List<Template> templates,
-            Dictionary<string, string> replacementDictionary)
+        public void GenerateCode(TemplateGenerationInfo templateGenerationInfo)
         {
             try
             {
-                this.templateOrchestrationService.GenerateCode(templates, replacementDictionary);
+                this.templateOrchestrationService
+                    .GenerateCode(templateGenerationInfo.Templates, templateGenerationInfo.ReplacementDictionary);
             }
             catch (TemplateOrchestrationValidationException templateOrchestrationValidationException)
             {

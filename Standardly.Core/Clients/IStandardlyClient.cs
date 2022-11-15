@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Orchestrations;
 
 namespace Standardly.Core.Clients
 {
@@ -14,6 +15,6 @@ namespace Standardly.Core.Clients
     {
         event Action<DateTimeOffset, string, string> LogRaised;
         List<Template> FindAllTemplates();
-        void GenerateCode(List<Template> templates, Dictionary<string, string> replacementDictionary);
+        void GenerateCode(TemplateGenerationInfo templateGenerationInfo);
     }
 }
