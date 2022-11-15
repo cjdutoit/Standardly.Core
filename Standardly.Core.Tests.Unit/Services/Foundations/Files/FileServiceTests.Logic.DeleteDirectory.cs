@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
@@ -13,7 +12,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public async Task ShouldDeleteDirectoryAsync()
+        public void ShouldDeleteDirectory()
         {
             // given
             string randomFilePath = GetRandomString();
@@ -21,7 +20,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             bool recursive = true;
 
             // when
-            await this.fileService.DeleteDirectoryAsync(inputFilePath, recursive);
+            this.fileService.DeleteDirectory(inputFilePath, recursive);
 
             // then
             this.fileBrokerMock.Verify(broker =>

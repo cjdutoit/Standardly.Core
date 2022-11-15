@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -15,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public async Task ShouldRetrieveListOfFilesAsync()
+        public void ShouldRetrieveListOfFiles()
         {
             // given
             string randomFilePath = GetRandomString();
@@ -32,7 +31,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
             // when
             List<string> actualResult =
-                await this.fileService.RetrieveListOfFilesAsync(inputFilePath, inputSearchPattern);
+                this.fileService.RetrieveListOfFiles(inputFilePath, inputSearchPattern);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);

@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -14,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public async Task ShouldReadFromFileAsync()
+        public void ShouldReadFromFile()
         {
             // given
             string randomFilePath = GetRandomString();
@@ -27,7 +26,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Returns(outputResult);
 
             // when
-            string actualResult = await this.fileService.ReadFromFileAsync(inputFilePath);
+            string actualResult = this.fileService.ReadFromFile(inputFilePath);
 
             // then
             actualResult.Should().Be(expectedResult);

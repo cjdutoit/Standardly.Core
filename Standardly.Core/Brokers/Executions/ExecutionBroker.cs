@@ -6,14 +6,13 @@
 
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Executions;
 
 namespace Standardly.Core.Brokers.Executions
 {
     public class ExecutionBroker : IExecutionBroker
     {
-        public async ValueTask<string> RunAsync(List<Execution> executions, string executionFolder)
+        public string Run(List<Execution> executions, string executionFolder)
         {
             List<Execution> executionList = new List<Execution>
             {
@@ -36,7 +35,7 @@ namespace Standardly.Core.Brokers.Executions
                 }
             }
 
-            return await Task.FromResult(outputMessages.ToString());
+            return outputMessages.ToString();
         }
     }
 }

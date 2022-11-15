@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Retries;
@@ -25,66 +24,60 @@ namespace Standardly.Core.Services.Foundations.Files
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            await Task.Run(() =>
-                TryCatch(() =>
+        public bool CheckIfFileExists(string path) =>
+            TryCatch(() =>
+            {
+                return WithRetry(() =>
                 {
-                    return WithRetry(() =>
-                    {
-                        ValidateCheckIfFileExistsArguments(path);
+                    ValidateCheckIfFileExistsArguments(path);
 
-                        return this.fileBroker.CheckIfFileExists(path);
-                    });
-                }));
+                    return this.fileBroker.CheckIfFileExists(path);
+                });
+            });
 
-        public async ValueTask<bool> WriteToFileAsync(string path, string content) =>
-            await Task.Run(() =>
-                TryCatch(() =>
+        public bool WriteToFile(string path, string content) =>
+            TryCatch(() =>
+            {
+                return WithRetry(() =>
                 {
-                    return WithRetry(() =>
-                    {
-                        ValidateWriteToFileArguments(path, content);
+                    ValidateWriteToFileArguments(path, content);
 
-                        return this.fileBroker.WriteToFile(path, content);
-                    });
-                }));
+                    return this.fileBroker.WriteToFile(path, content);
+                });
+            });
 
-        public async ValueTask<string> ReadFromFileAsync(string path) =>
-            await Task.Run(() =>
-                TryCatch(() =>
-                 {
-                     return WithRetry(() =>
-                     {
-                         ValidateReadFromFileArguments(path);
-
-                         return this.fileBroker.ReadFile(path);
-                     });
-                 }));
-
-        public async ValueTask<bool> DeleteFileAsync(string path) =>
-             await Task.Run(() =>
-                TryCatch(() =>
+        public string ReadFromFile(string path) =>
+            TryCatch(() =>
+            {
+                return WithRetry(() =>
                 {
-                    return WithRetry(() =>
-                    {
-                        ValidateDeleteFileArguments(path);
-                        return this.fileBroker.DeleteFile(path);
-                    });
-                }));
+                    ValidateReadFromFileArguments(path);
 
-        public async ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            await Task.Run(() =>
-                TryCatch(() =>
+                    return this.fileBroker.ReadFile(path);
+                });
+            });
+
+        public bool DeleteFile(string path) =>
+            TryCatch(() =>
+            {
+                return WithRetry(() =>
                 {
-                    return WithRetry(() =>
-                    {
-                        ValidateRetrieveListOfFilesArguments(path, searchPattern);
-                        return this.fileBroker.GetListOfFiles(path, searchPattern);
-                    });
-                }));
+                    ValidateDeleteFileArguments(path);
+                    return this.fileBroker.DeleteFile(path);
+                });
+            });
 
-        public async ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
-            await Task.Run(() =>
+        public List<string> RetrieveListOfFiles(string path, string searchPattern = "*") =>
+            TryCatch(() =>
+            {
+                return WithRetry(() =>
+                {
+                    ValidateRetrieveListOfFilesArguments(path, searchPattern);
+                    return this.fileBroker.GetListOfFiles(path, searchPattern);
+                });
+            });
+
+        public bool CheckIfDirectoryExists(string path) =>
             TryCatch(() =>
             {
                 return WithRetry(() =>
@@ -93,30 +86,28 @@ namespace Standardly.Core.Services.Foundations.Files
 
                     return this.fileBroker.CheckIfDirectoryExists(path);
                 });
-            }));
+            });
 
-        public async ValueTask<bool> CreateDirectoryAsync(string path) =>
-            await Task.Run(() =>
-                TryCatch(() =>
+        public bool CreateDirectory(string path) =>
+            TryCatch(() =>
+            {
+                return WithRetry(() =>
                 {
-                    return WithRetry(() =>
-                    {
-                        ValidateCreateDirectoryArguments(path);
+                    ValidateCreateDirectoryArguments(path);
 
-                        return this.fileBroker.CreateDirectory(path);
-                    });
-                }));
+                    return this.fileBroker.CreateDirectory(path);
+                });
+            });
 
-        public async ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
-            await Task.Run(() =>
-                TryCatch(() =>
+        public bool DeleteDirectory(string path, bool recursive = false) =>
+            TryCatch(() =>
+            {
+                return WithRetry(() =>
                 {
-                    return WithRetry(() =>
-                    {
-                        ValidateDeleteDirectoryArguments(path);
+                    ValidateDeleteDirectoryArguments(path);
 
-                        return this.fileBroker.DeleteDirectory(path, recursive);
-                    });
-                }));
+                    return this.fileBroker.DeleteDirectory(path, recursive);
+                });
+            });
     }
 }

@@ -5,9 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using Moq;
-using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xeptions;
 using Xunit;
@@ -18,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnConvertStringTemplateIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationOnConvertStringTemplateIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -30,20 +28,20 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     dependencyValidationException.InnerException as Xeption);
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplateAsync(inputContent))
-                    .ThrowsAsync(dependencyValidationException);
+                service.ConvertStringToTemplate(inputContent))
+                    .Throws(dependencyValidationException);
 
             // when
-            ValueTask<Template> convertStringToTemplateTask =
-                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
+            Action convertStringToTemplateAction = () =>
+                this.templateProcessingService.ConvertStringToTemplate(inputContent);
 
             // then
             TemplateProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingDependencyValidationException>(
-                    convertStringToTemplateTask.AsTask);
+                Assert.Throws<TemplateProcessingDependencyValidationException>(
+                    convertStringToTemplateAction);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(inputContent),
+                service.ConvertStringToTemplate(inputContent),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -57,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnConvertStringTemplateIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyOnConvertStringTemplateIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -69,19 +67,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     dependencyException.InnerException as Xeption);
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplateAsync(inputContent))
-                    .ThrowsAsync(dependencyException);
+                service.ConvertStringToTemplate(inputContent))
+                    .Throws(dependencyException);
 
             // when
-            ValueTask<Template> convertStringToTemplateTask =
-                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
+            Action convertStringToTemplateAction = () =>
+                this.templateProcessingService.ConvertStringToTemplate(inputContent);
 
             // then
             TemplateProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingDependencyException>(convertStringToTemplateTask.AsTask);
+                Assert.Throws<TemplateProcessingDependencyException>(convertStringToTemplateAction);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(inputContent),
+                service.ConvertStringToTemplate(inputContent),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -94,7 +92,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnConvertStringTemplateIfServiceErrorOccursAndLogItAsync()
+        public void ShouldThrowServiceExceptionOnConvertStringTemplateIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomString = GetRandomString();
@@ -110,19 +108,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     failedTemplateProcessingServiceException);
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplateAsync(inputContent))
-                    .ThrowsAsync(serviceException);
+                service.ConvertStringToTemplate(inputContent))
+                    .Throws(serviceException);
 
             // when
-            ValueTask<Template> convertStringToTemplateTask =
-                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
+            Action convertStringToTemplateAction = () =>
+                this.templateProcessingService.ConvertStringToTemplate(inputContent);
 
             // then
             TemplateProcessingServiceException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingServiceException>(convertStringToTemplateTask.AsTask);
+                Assert.Throws<TemplateProcessingServiceException>(convertStringToTemplateAction);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(inputContent),
+                service.ConvertStringToTemplate(inputContent),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

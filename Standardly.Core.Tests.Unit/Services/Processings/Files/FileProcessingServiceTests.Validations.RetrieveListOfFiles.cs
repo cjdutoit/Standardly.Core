@@ -4,8 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -19,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAndLogIt(
             string invalidInput)
         {
             // given
@@ -41,12 +39,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask<List<string>> runTask =
+            System.Action retrieveListOfFilesAction = () =>
                 this.fileProcessingService
-                    .RetrieveListOfFilesAsync(path: invalidPath, searchPattern: invalidSearchPattern);
+                    .RetrieveListOfFiles(path: invalidPath, searchPattern: invalidSearchPattern);
 
             FileProcessingValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingValidationException>(runTask.AsTask);
+                Assert.Throws<FileProcessingValidationException>(retrieveListOfFilesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
@@ -57,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.RetrieveListOfFilesAsync(invalidPath, invalidSearchPattern),
+                service.RetrieveListOfFiles(invalidPath, invalidSearchPattern),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

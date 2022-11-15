@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -15,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldRetrieveListOfFilesAsync()
+        public void ShouldRetrieveListOfFiles()
         {
             // given
             string randomPath = GetRandomString();
@@ -26,19 +25,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             List<string> expectedResult = randomOutput;
 
             this.fileServiceMock.Setup(service =>
-                service.RetrieveListOfFilesAsync(inputFilePath, inputSearchPattern))
-                    .ReturnsAsync(expectedResult);
+                service.RetrieveListOfFiles(inputFilePath, inputSearchPattern))
+                    .Returns(expectedResult);
 
             // when
             List<string> actualResult =
-                await this.fileProcessingService
-                    .RetrieveListOfFilesAsync(inputFilePath, inputSearchPattern);
+                this.fileProcessingService
+                    .RetrieveListOfFiles(inputFilePath, inputSearchPattern);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.fileServiceMock.Verify(service =>
-                service.RetrieveListOfFilesAsync(inputFilePath, inputSearchPattern),
+                service.RetrieveListOfFiles(inputFilePath, inputSearchPattern),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

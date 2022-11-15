@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnTransformStringIfArgumentsIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionOnTransformStringIfArgumentsIsInvalidAndLogIt(
             string invalidInput)
         {
             // given
@@ -41,12 +41,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
 
             // when
-            ValueTask<string> transformStringTask =
+            Action transformStringAction = () =>
                 this.templateProcessingService
-                    .TransformStringAsync(invalidContent, nullDictionary);
+                    .TransformString(invalidContent, nullDictionary);
 
             TemplateProcessingValidationException actualException =
-                await Assert.ThrowsAsync<TemplateProcessingValidationException>(transformStringTask.AsTask);
+                Assert.Throws<TemplateProcessingValidationException>(transformStringAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
@@ -57,11 +57,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         Times.Once);
 
             this.templateServiceMock.Verify(service =>
-                service.TransformStringAsync(It.IsAny<string>(), nullDictionary),
+                service.TransformString(It.IsAny<string>(), nullDictionary),
                     Times.Never);
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(It.IsAny<string>()),
+                service.ValidateTransformation(It.IsAny<string>()),
                     Times.Never());
 
             this.templateServiceMock.VerifyNoOtherCalls();

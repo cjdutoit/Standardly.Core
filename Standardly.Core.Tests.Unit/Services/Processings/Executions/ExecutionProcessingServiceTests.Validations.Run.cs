@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
     public partial class ExecutionProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNullAndLogItAsync()
+        public void ShouldThrowValidationExceptionOnRunIfExecutionsIsNullAndLogIt()
         {
             // given
             List<Execution> nullExecutions = null;
@@ -35,11 +35,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 new ExecutionProcessingValidationException(invalidArgumentExecutionProcessingException);
 
             // when
-            ValueTask<string> runTask =
-                this.executionProcessingService.RunAsync(nullExecutions, executionFolder);
+            Action runAction = () =>
+                this.executionProcessingService.Run(nullExecutions, executionFolder);
 
             ExecutionProcessingValidationException actualExecutionProcessingValidationException =
-                await Assert.ThrowsAsync<ExecutionProcessingValidationException>(runTask.AsTask);
+                Assert.Throws<ExecutionProcessingValidationException>(runAction);
 
             // then
             actualExecutionProcessingValidationException.Should()
@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                         Times.Once);
 
             this.executionServiceMock.Verify(service =>
-                service.RunAsync(nullExecutions, executionFolder),
+                service.Run(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();
@@ -62,7 +62,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogItAsync(string invalidValue)
+        public void ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogIt(string invalidValue)
         {
             // given
             List<Execution> nullExecutions = GetRandomExecutions();
@@ -79,11 +79,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 new ExecutionProcessingValidationException(invalidArgumentExecutionProcessingException);
 
             // when
-            ValueTask<string> runTask =
-                this.executionProcessingService.RunAsync(nullExecutions, executionFolder);
+            Action runAction = () =>
+                this.executionProcessingService.Run(nullExecutions, executionFolder);
 
             ExecutionProcessingValidationException actualExecutionProcessingValidationException =
-                await Assert.ThrowsAsync<ExecutionProcessingValidationException>(runTask.AsTask);
+                Assert.Throws<ExecutionProcessingValidationException>(runAction);
 
             // then
             actualExecutionProcessingValidationException.Should()
@@ -95,7 +95,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                         Times.Once);
 
             this.executionServiceMock.Verify(service =>
-                service.RunAsync(nullExecutions, executionFolder),
+                service.Run(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();

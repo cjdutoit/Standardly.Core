@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnReadFromFileIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionOnReadFromFileIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -35,11 +34,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<string> readFileTask =
-                this.fileService.ReadFromFileAsync(somePath);
+            Action readFileAction = () =>
+                this.fileService.ReadFromFile(somePath);
 
             FileDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileDependencyValidationException>(readFileTask.AsTask);
+                Assert.Throws<FileDependencyValidationException>(readFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
@@ -59,7 +58,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -81,11 +80,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<string> readFromFileTask =
-                this.fileService.ReadFromFileAsync(somePath);
+            Action readFromFileAction = () =>
+                this.fileService.ReadFromFile(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(readFromFileTask.AsTask);
+                Assert.Throws<FileDependencyException>(readFromFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -109,7 +108,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogItCriticalAsync(
+        public void ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -131,11 +130,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<string> readFromFileTask =
-                this.fileService.ReadFromFileAsync(somePath);
+            Action readFromFileAction = () =>
+                this.fileService.ReadFromFile(somePath);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(readFromFileTask.AsTask);
+                Assert.Throws<FileDependencyException>(readFromFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -154,7 +153,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnReadFromFileIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnReadFromFileIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -171,11 +170,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<string> readFromFileTask =
-                this.fileService.ReadFromFileAsync(somePath);
+            Action readFromFileAction = () =>
+                this.fileService.ReadFromFile(somePath);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(readFromFileTask.AsTask);
+                Assert.Throws<FileServiceException>(readFromFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

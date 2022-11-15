@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -14,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public async Task ShouldAppendContentAsync()
+        public void ShouldAppendContent()
         {
             // given
             string sourceContent = GetRandomString();
@@ -26,7 +25,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             bool matchFound = true;
             string matchedContent = GetRandomString();
             var expressionMatchResult = (matchFound, matchedContent);
-            string mergedContent = appendContent + "\r\n" + matchedContent;
+            string mergedContent = appendContent + matchedContent;
             string expectedResult = GetRandomString();
 
             this.regularExpressionBrokerMock.Setup(broker =>
@@ -38,8 +37,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = await this.templateService
-                .AppendContentAsync(
+            string actualResult = this.templateService
+                .AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
@@ -64,7 +63,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldNotAppendContentAsync()
+        public void ShouldNotAppendContent()
         {
             // given
             string sourceContent = GetRandomString();
@@ -88,8 +87,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = await this.templateService
-                .AppendContentAsync(
+            string actualResult = this.templateService
+                .AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
@@ -114,7 +113,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldAppendIfTheDoesNotContainContentIsNotPresentAsync()
+        public void ShouldAppendIfTheDoesNotContainContentIsNotPresent()
         {
             // given
             string innerContent = GetRandomString();
@@ -127,7 +126,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             bool matchFound = true;
             string matchedContent = GetRandomString();
             var expressionMatchResult = (matchFound, matchedContent);
-            string mergedContent = appendContent + "\r\n" + matchedContent;
+            string mergedContent = appendContent + matchedContent;
             string expectedResult = GetRandomString();
 
             this.regularExpressionBrokerMock.Setup(broker =>
@@ -139,8 +138,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = await this.templateService
-                .AppendContentAsync(
+            string actualResult = this.templateService
+                .AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
@@ -165,7 +164,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldNotAppendIfTheDoesNotContainContentIsPresentAsync()
+        public void ShouldNotAppendIfTheDoesNotContainContentIsPresent()
         {
             // given
             string innerContent = GetRandomString();
@@ -190,8 +189,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = await this.templateService
-                .AppendContentAsync(
+            string actualResult = this.templateService
+                .AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,

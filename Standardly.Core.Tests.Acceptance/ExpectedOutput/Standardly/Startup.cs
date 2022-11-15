@@ -1,4 +1,4 @@
-﻿// ---------------------------------------------------------------
+// ---------------------------------------------------------------
 // Copyright (c) Christo du Toit. All rights reserved.
 // Licensed under the MIT License.
 // See License.txt in the project root for license information.
@@ -15,7 +15,10 @@ namespace Standardly
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StorageBroker>();
+            AddBrokers(services);
+            AddFoundations(services);
+            AddProcessings(services);
+            AddOrchestrations(services);
             services.AddLogging();
 
             services.AddControllers()
@@ -42,12 +45,21 @@ namespace Standardly
 
         private static void AddBrokers(IServiceCollection services)
         {
-
+            services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+            services.AddTransient<ILoggingBroker, LoggingBroker>();
+            services.AddTransient<IStorageBroker, StorageBroker>();
         }
 
-        private static void AddServices(IServiceCollection services)
+        private static void AddFoundations(IServiceCollection services)
         {
+        }
 
+        private static void AddProcessings(IServiceCollection services)
+        {
+        }
+
+        private static void AddOrchestrations(IServiceCollection services)
+        {
         }
     }
 }

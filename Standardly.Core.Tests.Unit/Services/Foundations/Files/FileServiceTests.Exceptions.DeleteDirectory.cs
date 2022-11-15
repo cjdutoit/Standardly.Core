@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnDeleteDirectoryIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionOnDeleteDirectoryIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -36,11 +35,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask<bool> writeToFileTask =
-                this.fileService.DeleteDirectoryAsync(somePath, recursive);
+            Action writeToFileAction = () =>
+                this.fileService.DeleteDirectory(somePath, recursive);
 
             FileDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileDependencyValidationException>(writeToFileTask.AsTask);
+                Assert.Throws<FileDependencyValidationException>(writeToFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
@@ -60,7 +59,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -83,11 +82,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> writeToFileTask =
-                this.fileService.DeleteDirectoryAsync(somePath, recursive);
+            Action writeToFileAction = () =>
+                this.fileService.DeleteDirectory(somePath, recursive);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(writeToFileTask.AsTask);
+                Assert.Throws<FileDependencyException>(writeToFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -111,7 +110,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAndLogItCriticalAsync(
+        public void ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -134,11 +133,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(dependencyException);
 
             // when
-            ValueTask<bool> writeToFileTask =
-                this.fileService.DeleteDirectoryAsync(somePath, recursive);
+            Action writeToFileAction = () =>
+                this.fileService.DeleteDirectory(somePath, recursive);
 
             FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(writeToFileTask.AsTask);
+                Assert.Throws<FileDependencyException>(writeToFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
@@ -157,7 +156,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnDeleteDirectoryIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnDeleteDirectoryIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -175,11 +174,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     .Throws(serviceException);
 
             // when
-            ValueTask<bool> writeToFileTask =
-                this.fileService.DeleteDirectoryAsync(somePath, recursive);
+            Action writeToFileAction = () =>
+                this.fileService.DeleteDirectory(somePath, recursive);
 
             FileServiceException actualException =
-                await Assert.ThrowsAsync<FileServiceException>(writeToFileTask.AsTask);
+                Assert.Throws<FileServiceException>(writeToFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);

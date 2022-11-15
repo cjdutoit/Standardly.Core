@@ -5,19 +5,18 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Standardly.Core.Services.Foundations.Files
 {
     public interface IFileService
     {
-        ValueTask<bool> CheckIfFileExistsAsync(string path);
-        ValueTask<bool> WriteToFileAsync(string path, string content);
-        ValueTask<string> ReadFromFileAsync(string path);
-        ValueTask<bool> DeleteFileAsync(string path);
-        ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*");
-        ValueTask<bool> CheckIfDirectoryExistsAsync(string path);
-        ValueTask<bool> CreateDirectoryAsync(string path);
-        ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false);
+        bool CheckIfFileExists(string path);
+        bool WriteToFile(string path, string content);
+        string ReadFromFile(string path);
+        bool DeleteFile(string path);
+        List<string> RetrieveListOfFiles(string path, string searchPattern = "*");
+        bool CheckIfDirectoryExists(string path);
+        bool CreateDirectory(string path);
+        bool DeleteDirectory(string path, bool recursive = false);
     }
 }

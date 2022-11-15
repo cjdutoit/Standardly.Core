@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -18,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnCheckIfDirectoryExistsIfPathIsInvalidAsync(string invalidPath)
+        public void ShouldThrowValidationExceptionOnCheckIfDirectoryExistsIfPathIsInvalidAsync(string invalidPath)
         {
             // given
             var invalidArgumentFileException =
@@ -32,11 +31,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfDirectoryExistsAsync(invalidPath);
+            System.Action checkIfFileExistsTask = () =>
+                this.fileService.CheckIfDirectoryExists(invalidPath);
 
             FileValidationException actualException =
-                await Assert.ThrowsAsync<FileValidationException>(checkIfFileExistsTask.AsTask);
+                Assert.Throws<FileValidationException>(checkIfFileExistsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);

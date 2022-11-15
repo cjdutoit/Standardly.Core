@@ -15,7 +15,6 @@ namespace Standardly
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StorageBroker>();
             services.AddLogging();
 
             services.AddControllers()
@@ -36,16 +35,6 @@ namespace Standardly
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-
-        }
-
-        private static void AddBrokers(IServiceCollection services)
-        {
-
-        }
-
-        private static void AddServices(IServiceCollection services)
         {
 
         }
