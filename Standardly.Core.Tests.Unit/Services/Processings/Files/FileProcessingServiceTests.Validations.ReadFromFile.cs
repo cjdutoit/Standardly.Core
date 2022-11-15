@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
+using System;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalidAndLogIt(
             string invalidFilePath)
         {
             // given
@@ -33,11 +33,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask<string> runTask =
-                this.fileProcessingService.ReadFromFileAsync(invalidFilePath);
+            Action ReadFromFileAction = () =>
+                this.fileProcessingService.ReadFromFile(invalidFilePath);
 
             FileProcessingValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingValidationException>(runTask.AsTask);
+                Assert.Throws<FileProcessingValidationException>(ReadFromFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
@@ -48,7 +48,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.ReadFromFileAsync(invalidFilePath),
+                service.ReadFromFile(invalidFilePath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

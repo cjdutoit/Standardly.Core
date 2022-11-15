@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.Loggings;
@@ -32,10 +31,10 @@ namespace Standardly.Core.Services.Foundations.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> TransformStringAsync(
+        public string TransformString(
             string content,
             Dictionary<string, string> replacementDictionary) =>
-                TryCatchAsync(async () =>
+                TryCatch(() =>
                 {
                     ValidateTransformString(content, replacementDictionary);
 
@@ -49,19 +48,19 @@ namespace Standardly.Core.Services.Foundations.Templates
                         }
                     }
 
-                    return await Task.FromResult(template);
+                    return template;
                 });
 
-        public ValueTask ValidateTransformationAsync(string content) =>
-            TryCatchAsync(async () =>
+        public void ValidateTransformation(string content) =>
+            TryCatch(() =>
             {
                 ValidateTransformationArguments(content);
 
-                await Task.Run(() => CheckAllTagsHasBeenReplaced(content));
+                CheckAllTagsHasBeenReplaced(content);
             });
 
-        public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
-            TryCatchAsync(async () =>
+        public Template ConvertStringToTemplate(string content) =>
+            TryCatch(() =>
             {
                 ValidateConvertStringToTemplateArguments(content);
 
@@ -71,17 +70,17 @@ namespace Standardly.Core.Services.Foundations.Templates
                 template.RawTemplate = content;
                 ValidateTemplate(template);
 
-                return await Task.FromResult(template);
+                return template;
             });
 
-        public ValueTask<string> AppendContentAsync(
+        public string AppendContent(
             string sourceContent,
             string doesNotContain,
             string regexToMatchForAppend,
             string appendContent,
             bool appendToBeginning,
             bool appendEvenIfContentAlreadyExist) =>
-                TryCatchAsync(async () =>
+                TryCatch(() =>
                 {
                     ValidateAppendContent(sourceContent, regexToMatchForAppend, appendContent);
 
@@ -98,7 +97,7 @@ namespace Standardly.Core.Services.Foundations.Templates
 
                     if (appendEvenIfContentAlreadyExist == false && match.Contains(appendContent))
                     {
-                        return await Task.FromResult(sourceContent);
+                        return sourceContent;
                     }
 
                     string mergedContent = AppendContentToExistingContent(appendContent, appendToBeginning, match);
@@ -106,7 +105,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                     string result = this.regularExpressionBroker
                         .Replace(sourceContent, regexToMatchForAppend, mergedContent);
 
-                    return await Task.FromResult(result);
+                    return result;
                 });
 
         private static string AppendContentToExistingContent(string appendContent, bool appendToBeginning, string match)
@@ -115,13 +114,11 @@ namespace Standardly.Core.Services.Foundations.Templates
             if (appendToBeginning)
             {
                 builder.Append(appendContent);
-                builder.Append("\r\n");
                 builder.Append(match);
             }
             else
             {
                 builder.Append(match);
-                builder.Append("\r\n");
                 builder.Append(appendContent);
             }
 

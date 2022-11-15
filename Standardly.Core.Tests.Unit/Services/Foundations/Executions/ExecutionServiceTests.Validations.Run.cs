@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
@@ -20,7 +20,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalid(string invalidValue)
+        public void ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalid(string invalidValue)
         {
             // given
             string inputExecutionFolder = invalidValue;
@@ -38,10 +38,10 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionValidationException(invalidArgumentExecutionException);
 
             // when
-            ValueTask<string> runTask = this.executionService.RunAsync(someExecutions, inputExecutionFolder);
+            Action runAction = () => this.executionService.Run(someExecutions, inputExecutionFolder);
 
             ExecutionValidationException actualExecutionValidationException =
-                await Assert.ThrowsAsync<ExecutionValidationException>(runTask.AsTask);
+                 Assert.Throws<ExecutionValidationException>(runAction);
 
             // then
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
@@ -52,7 +52,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                         Times.Once);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.RunAsync(someExecutions, inputExecutionFolder),
+                broker.Run(someExecutions, inputExecutionFolder),
                     Times.Never);
 
             this.executionBrokerMock.VerifyNoOtherCalls();
@@ -60,7 +60,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
 
         [Theory]
         [MemberData(nameof(InvalidExecutions))]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNull(List<Execution> invalidExecutions)
+        public void ShouldThrowValidationExceptionOnRunIfExecutionsIsNull(List<Execution> invalidExecutions)
         {
             // given
             string randomExecutionFolder = GetRandomString();
@@ -78,10 +78,10 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionValidationException(invalidArgumentExecutionException);
 
             // when
-            ValueTask<string> runTask = this.executionService.RunAsync(inputExecutions, inputExecutionFolder);
+            Action runAction = () => this.executionService.Run(inputExecutions, inputExecutionFolder);
 
             ExecutionValidationException actualExecutionValidationException =
-                await Assert.ThrowsAsync<ExecutionValidationException>(runTask.AsTask);
+                Assert.Throws<ExecutionValidationException>(runAction);
 
             // then
             actualExecutionValidationException.Should().BeEquivalentTo(expectedExecutionValidationException);
@@ -92,7 +92,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                         Times.Once);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.RunAsync(inputExecutions, inputExecutionFolder),
+                broker.Run(inputExecutions, inputExecutionFolder),
                     Times.Never);
 
             this.executionBrokerMock.VerifyNoOtherCalls();

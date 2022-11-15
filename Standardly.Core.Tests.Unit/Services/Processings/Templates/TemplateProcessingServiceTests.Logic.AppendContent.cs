@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -14,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldAppendContentAsync()
+        public void ShouldAppendContent()
         {
             // given
             string sourceContent = GetRandomString();
@@ -27,18 +26,18 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             string expectedResult = output;
 
             this.templateServiceMock.Setup(service =>
-                service.AppendContentAsync(
+                service.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
                     appendContent,
                     appendToBeginning,
                     appendEvenIfContentAlreadyExist))
-                        .ReturnsAsync(output);
+                        .Returns(output);
 
             // when
-            string actualResult = await this.templateProcessingService
-                .AppendContentAsync(
+            string actualResult = this.templateProcessingService
+                .AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
@@ -50,7 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.templateServiceMock.Verify(service =>
-                service.AppendContentAsync(
+                service.AppendContent(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,

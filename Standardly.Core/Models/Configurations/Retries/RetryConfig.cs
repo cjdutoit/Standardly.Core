@@ -12,8 +12,8 @@ namespace Standardly.Core.Models.Configurations.Retries
     {
         public RetryConfig()
         {
-            MaxRetryAttempts = 3;
-            PauseBetweenFailures = TimeSpan.FromSeconds(2);
+            MaxRetryAttempts = 5;
+            PauseBetweenFailures = TimeSpan.FromSeconds(3);
         }
 
         public RetryConfig(int maxRetryAttempts, TimeSpan pauseBetweenFailures)

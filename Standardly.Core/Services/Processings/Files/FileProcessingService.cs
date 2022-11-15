@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Services.Foundations.Files;
 
@@ -23,73 +22,73 @@ namespace Standardly.Core.Services.Processings.Files
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            TryCatchAsync(async () =>
+        public bool CheckIfFileExists(string path) =>
+            TryCatch(() =>
             {
                 ValidateCheckIfFileExists(path);
 
-                return await this.fileService.CheckIfFileExistsAsync(path);
+                return this.fileService.CheckIfFileExists(path);
             });
 
-        public ValueTask WriteToFileAsync(string path, string content) =>
-            TryCatchAsync(async () =>
+        public bool WriteToFile(string path, string content) =>
+            TryCatch(() =>
             {
                 ValidateWriteToFile(path, content);
                 FileInfo fileName = new FileInfo(path);
                 string directoryPath = fileName.DirectoryName;
 
-                if (!this.fileService.CheckIfDirectoryExistsAsync(directoryPath).Result)
+                if (!this.fileService.CheckIfDirectoryExists(directoryPath))
                 {
-                    await this.CreateDirectoryAsync(directoryPath);
+                    this.fileService.CreateDirectory(directoryPath);
                 }
 
-                await this.fileService.WriteToFileAsync(path, content);
+                return this.fileService.WriteToFile(path, content);
             });
 
-        public ValueTask<string> ReadFromFileAsync(string path) =>
-            TryCatchAsync(async () =>
+        public string ReadFromFile(string path) =>
+            TryCatch(() =>
             {
                 ValidateReadFromFile(path);
 
-                return await this.fileService.ReadFromFileAsync(path);
+                return this.fileService.ReadFromFile(path);
             });
 
-        public ValueTask DeleteFileAsync(string path) =>
-             TryCatchAsync(async () =>
+        public bool DeleteFile(string path) =>
+             TryCatch(() =>
              {
                  ValidateDeleteFile(path);
 
-                 await this.fileService.DeleteFileAsync(path);
+                 return this.fileService.DeleteFile(path);
              });
 
-        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            TryCatchAsync(async () =>
+        public List<string> RetrieveListOfFiles(string path, string searchPattern = "*") =>
+            TryCatch(() =>
             {
                 ValidateRetrieveListOfFiles(path, searchPattern);
 
-                return await this.fileService.RetrieveListOfFilesAsync(path, searchPattern);
+                return this.fileService.RetrieveListOfFiles(path, searchPattern);
             });
 
-        public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
-            TryCatchAsync(async () =>
+        public bool CheckIfDirectoryExists(string path) =>
+            TryCatch(() =>
             {
                 ValidateCheckIfDirectoryExists(path);
 
-                return await this.fileService.CheckIfDirectoryExistsAsync(path);
+                return this.fileService.CheckIfDirectoryExists(path);
             });
 
-        public ValueTask CreateDirectoryAsync(string path) =>
-            TryCatchAsync(async () =>
+        public bool CreateDirectory(string path) =>
+            TryCatch(() =>
             {
                 ValidateCreateDirectory(path);
-                await this.fileService.CreateDirectoryAsync(path);
+                return this.fileService.CreateDirectory(path);
             });
 
-        public ValueTask DeleteDirectoryAsync(string path, bool recursive = false) =>
-            TryCatchAsync(async () =>
+        public bool DeleteDirectory(string path, bool recursive = false) =>
+            TryCatch(() =>
             {
                 ValidateDeleteDirectory(path);
-                await this.fileService.DeleteDirectoryAsync(path, recursive);
+                return this.fileService.DeleteDirectory(path, recursive);
             });
     }
 }

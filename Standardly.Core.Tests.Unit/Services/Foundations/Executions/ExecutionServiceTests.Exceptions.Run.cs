@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
@@ -18,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
     public partial class ExecutionServiceTests
     {
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnRunIfServiceErrorOccurs()
+        public void ShoudThrowServiceExceptionOnRunIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -33,20 +32,20 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 new ExecutionServiceException(failedExecutionServiceException);
 
             this.executionBrokerMock.Setup(broker =>
-                broker.RunAsync(someExecutions, somePath))
-                    .ThrowsAsync(serviceException);
+                broker.Run(someExecutions, somePath))
+                    .Throws(serviceException);
 
             // when
-            ValueTask<string> runTask = this.executionService.RunAsync(someExecutions, somePath);
+            Action runAction = () => this.executionService.Run(someExecutions, somePath);
 
             ExecutionServiceException actualExecutionServiceException =
-                await Assert.ThrowsAsync<ExecutionServiceException>(runTask.AsTask);
+                Assert.Throws<ExecutionServiceException>(runAction);
 
             // then
             actualExecutionServiceException.Should().BeEquivalentTo(expectedExecutionServiceException);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.RunAsync(someExecutions, somePath),
+                broker.Run(someExecutions, somePath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

@@ -85,9 +85,12 @@ namespace Standardly.Core.Services.Foundations.Templates
                     taskRules.Add((Rule: IsInvalid(tasks[taskIndex].Name), Parameter: $"Tasks[{taskIndex}].Name"));
 
                     taskRules.Add(
+                        (Rule: IsInvalid(tasks[taskIndex].BranchName), Parameter: $"Tasks[{taskIndex}].BranchName"));
+
+                    taskRules.Add(
                         (Rule: IsInvalid(tasks[taskIndex].Actions), Parameter: $"Tasks[{taskIndex}].Actions"));
 
-                    taskRules.AddRange(GetActionValidationRules(tasks[taskIndex]));
+                    taskRules.AddRange(GetActionValidationRules(tasks[taskIndex], taskIndex));
                 }
             }
 
@@ -95,7 +98,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         }
 
         private List<(dynamic Rule, string Parameter)> GetActionValidationRules(
-            Models.Foundations.Templates.Tasks.Task task)
+            Models.Foundations.Templates.Tasks.Task task, int taskIndex)
         {
             var actionRules = new List<(dynamic Rule, string Parameter)>();
 
@@ -107,11 +110,12 @@ namespace Standardly.Core.Services.Foundations.Templates
                 {
                     actionRules.Add(
                         (Rule: IsInvalid(actions[actionIndex].Name),
-                                Parameter: $"Actions[{actionIndex}].Name"));
+                                Parameter: $"Tasks[{taskIndex}].Actions[{actionIndex}].Name"));
 
-                    actionRules.Add(
-                        (Rule: IsInvalid(actions[actionIndex].Executions),
-                            Parameter: $"Actions[{actionIndex}].Executions"));
+                    //TODO: Remove this rule?
+                    //actionRules.Add(
+                    //    (Rule: IsInvalid(actions[actionIndex].Executions),
+                    //        Parameter: $"Tasks[{taskIndex}].Actions[{actionIndex}].Executions"));
 
                     actionRules.AddRange(GetFileValidationRules(actions[actionIndex], actionIndex));
                     actionRules.AddRange(GetAppendValidationRules(actions[actionIndex], actionIndex));

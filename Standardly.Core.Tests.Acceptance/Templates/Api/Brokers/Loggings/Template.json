@@ -1,0 +1,477 @@
+{
+  "name": "BROKERS: Logging Broker",
+  "description": "Generates a Logging Broker",
+  "templateType": "API",
+  "projectsRequired": "Api",
+  "sortOrder": 1,
+  "modelSingularName": "Logging",
+  "modelPluralName": "Loggings",
+  "tasks": [
+    {
+      "name": "001 - BROKERS: Logging - Log Information",
+      "branchName": "brokers-loggers-loginformation",
+      "actions": [
+        {
+          "name": "Create branch for Log Information",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Checkout base branch",
+              "instruction": "git checkout $basebranch$"
+            },
+            {
+              "name": "Fetch the latest code",
+              "instruction": "git pull origin"
+            },
+            {
+              "name": "Create new branch",
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
+            },
+            {
+              "name": "Install Microsoft.Extensions.Logging from NuGet",
+              "instruction": "dotnet add $projectFile$ package Microsoft.Extensions.Logging"
+            }
+          ]
+        },
+        {
+          "name": "Add Log Information",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\001_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\001_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ],
+          "appends": [
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddBrokers(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n\r\n        private static void AddBrokers(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddFoundations(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n\r\n        private static void AddFoundations(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddProcessings(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n\r\n        private static void AddProcessings(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "private static void AddOrchestrations(IServiceCollection services)",
+              "regexToMatchForAppend": "(?<=public class Startup\\r\\n    \\{\\r\\n)([\\S\\s]*?)(?=\\r\\n    \\}\\r\\n)",
+              "contentToAppend": "\r\n\r\n        private static void AddOrchestrations(IServiceCollection services)\r\n        {\r\n        }",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddOrchestrations(services);\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddProcessings(services);\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddFoundations(services);\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=public void ConfigureServices\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=\\n        \\}\\r\\n)",
+              "contentToAppend": "            AddBrokers(services);\r\n",
+              "appendToBeginning": true,
+              "appendEvenIfContentAlreadyExist": false
+            },
+            {
+              "target": "$projectFolder$\\Startup.cs",
+              "doesNotContainContent": "",
+              "regexToMatchForAppend": "(?<=private static void AddBrokers\\(IServiceCollection services\\)\\r\\n        \\{\\r\\n)([\\S\\s]*?)(?=        \\}\\r\\n)",
+              "contentToAppend": "            services.AddTransient<ILoggingBroker, LoggingBroker>();\r\n",
+              "appendToBeginning": false,
+              "appendEvenIfContentAlreadyExist": false
+            }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log Information\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Information",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/$currentBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Information\" -b \" \""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "002 - BROKERS: Logging - Log Trace",
+      "branchName": "brokers-loggers-logtrace",
+      "actions": [
+        {
+          "name": "Create branch for Log Trace",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Add Log Trace",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\002_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\002_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogTrace\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log LogTrace",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/$currentBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Trace\" -b \" \""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "003 - BROKERS: Logging - Log Debug",
+      "branchName": "brokers-loggers-logdebug",
+      "actions": [
+        {
+          "name": "Create branch for Log Debug",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Add Log Debug",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\003_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\003_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogDebug\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Debug",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/$currentBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Debug\" -b \" \""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "004 - BROKERS: Logging - Log Warning",
+      "branchName": "brokers-loggers-logwarning",
+      "actions": [
+        {
+          "name": "Create branch for Log Warning",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Add Log Warning",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\004_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\004_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogWarning\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Warning",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/$currentBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Warning\" -b \" \""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "005 - BROKERS: Logging - Log Error",
+      "branchName": "brokers-loggers-logerror",
+      "actions": [
+        {
+          "name": "Create branch for Log Error",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Add Log Error",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\005_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\005_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogError\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Error",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/$currentBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Error\" -b \" \""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "006 - BROKERS: Logging - Log Critical",
+      "branchName": "brokers-loggers-logcritical",
+      "actions": [
+        {
+          "name": "Create branch for Log Critical",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create new branch based on the current branch",
+              "instruction": "git checkout -b users/$username$/$currentBranch$ users/$username$/$previousBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Add Log Critical",
+          "executionFolder": "$projectFolder$",
+          "files": [
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\006_ILoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\ILoggingBroker.cs",
+              "replace": true
+            },
+            {
+              "template": "$templateFolder$\\Api\\Brokers\\Loggings\\006_LoggingBroker.cs.txt",
+              "target": "$projectFolder$\\$brokers$\\Loggings\\LoggingBroker.cs",
+              "replace": true
+            }
+          ],
+          "executions": [
+            {
+              "name": "Stage all changes",
+              "instruction": "git add -A"
+            },
+            {
+              "name": "Commit staged changes",
+              "instruction": "git commit -m \"BROKERS: Logging - Log LogCritical\""
+            }
+          ]
+        },
+        {
+          "name": "Push branch for Log Critical",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Push changes to <remote>",
+              "instruction": "git push origin users/$username$/$currentBranch$"
+            }
+          ]
+        },
+        {
+          "name": "Create Pull Request",
+          "executionFolder": "$projectFolder$",
+          "executions": [
+            {
+              "name": "Create Pull Request",
+              "instruction": "gh pr create $draftPullRequest$ -t \"BROKERS: Logging - Log Critical\" -b \" \""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cleanupTasks": [
+    "----------------------------------------------------",
+    "BROKERS: LoggingBroker",
+    "----------------------------------------------------",
+    "* Resolve / remove any TODO items in the task list",
+    "* Link the pull request(s) to related issues by adding e.g. #CLOSES 123 to the description",
+    "* Review Draft Pull Requests (and add more commits by pushing to any of the branches if needed):",
+  ]
+}

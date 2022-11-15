@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Services.Foundations.Templates;
@@ -25,60 +24,60 @@ namespace Standardly.Core.Services.Processings.Templates
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
-            TryCatchAsync(async () =>
+        public Template ConvertStringToTemplate(string content) =>
+            TryCatch(() =>
             {
                 ValidateConvertStringToTemplate(content);
 
-                return await this.templateService.ConvertStringToTemplateAsync(content);
+                return this.templateService.ConvertStringToTemplate(content);
             });
 
-        public ValueTask<Template> TransformTemplateAsync(
+        public Template TransformTemplate(
             Template template,
             Dictionary<string, string> replacementDictionary) =>
-                TryCatchAsync(async () =>
+                TryCatch(() =>
                 {
                     ValidateTransformTemplate(template, replacementDictionary);
 
-                    var transformedStringTemplate = await this.templateService
-                        .TransformStringAsync(template.RawTemplate, replacementDictionary);
+                    var transformedStringTemplate = this.templateService
+                        .TransformString(template.RawTemplate, replacementDictionary);
 
-                    await this.templateService.ValidateTransformationAsync(transformedStringTemplate);
+                    this.templateService.ValidateTransformation(transformedStringTemplate);
 
-                    var transformedTemplate = await this.templateService
-                        .ConvertStringToTemplateAsync(transformedStringTemplate);
+                    var transformedTemplate = this.templateService
+                        .ConvertStringToTemplate(transformedStringTemplate);
 
                     return transformedTemplate;
                 });
 
-        public ValueTask<string> TransformStringAsync(
+        public string TransformString(
             string content,
             Dictionary<string, string> replacementDictionary) =>
-                TryCatchAsync(async () =>
+                TryCatch(() =>
                 {
                     ValidateTransformString(content, replacementDictionary);
 
                     var transformedStringTemplate =
-                        await this.templateService.TransformStringAsync(content, replacementDictionary);
+                        this.templateService.TransformString(content, replacementDictionary);
 
-                    await this.templateService.ValidateTransformationAsync(transformedStringTemplate);
+                    this.templateService.ValidateTransformation(transformedStringTemplate);
 
                     return transformedStringTemplate;
                 });
 
-        public ValueTask<string> AppendContentAsync(
+        public string AppendContent(
             string sourceContent,
             string doesNotContainContent,
             string regexToMatchForAppend,
             string appendContent,
             bool appendToBeginning,
             bool appendEvenIfContentAlreadyExist) =>
-                TryCatchAsync(async () =>
+                TryCatch(() =>
                 {
                     ValidateAppendContent(sourceContent, regexToMatchForAppend, appendContent);
 
-                    return await this.templateService
-                        .AppendContentAsync(
+                    return this.templateService
+                        .AppendContent(
                             sourceContent,
                             doesNotContainContent,
                             regexToMatchForAppend,

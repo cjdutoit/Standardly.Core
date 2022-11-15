@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -18,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnWriteToFileIfInputsIsInvalidAndLogItAsync(
+        public void ShouldThrowValidationExceptionOnWriteToFileIfInputsIsInvalidAndLogIt(
             string invalidInput)
         {
             // given
@@ -40,11 +39,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            ValueTask writeToFileTask =
-                this.fileProcessingService.WriteToFileAsync(path: invalidPath, content: invalidContent);
+            System.Action writeToFileAction = () =>
+                this.fileProcessingService.WriteToFile(path: invalidPath, content: invalidContent);
 
             FileProcessingValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingValidationException>(writeToFileTask.AsTask);
+                Assert.Throws<FileProcessingValidationException>(writeToFileAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
@@ -55,7 +54,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                         Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFileAsync(invalidPath, invalidContent),
+                service.WriteToFile(invalidPath, invalidContent),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

@@ -5,13 +5,12 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Executions;
 
 namespace Standardly.Core.Services.Processings.Executions
 {
     public interface IExecutionProcessingService
     {
-        ValueTask<string> RunAsync(List<Execution> executions, string executionFolder);
+        string Run(List<Execution> executions, string executionFolder);
     }
 }

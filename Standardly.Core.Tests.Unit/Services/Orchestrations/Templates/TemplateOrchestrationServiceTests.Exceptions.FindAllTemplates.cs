@@ -5,11 +5,8 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Xeptions;
 using Xunit;
@@ -20,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -34,24 +31,23 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(service =>
-                service.RetrieveListOfFilesAsync(
+                service.RetrieveListOfFiles(
                     templatefolder,
                     templateDefinitionFile))
-                        .ThrowsAsync(dependencyValidationException);
+                        .Throws(dependencyValidationException);
 
             // when
-            ValueTask<List<Template>> findAllTemplatesTask =
-                templateOrchestrationService.FindAllTemplatesAsync();
+            Action findAllTemplatesAction = () =>
+                templateOrchestrationService.FindAllTemplates();
 
             TemplateOrchestrationDependencyValidationException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationDependencyValidationException>(
-                    findAllTemplatesTask.AsTask);
+                Assert.Throws<TemplateOrchestrationDependencyValidationException>(findAllTemplatesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -61,7 +57,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -74,21 +70,21 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 new TemplateOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(broker =>
-                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile))
-                    .ThrowsAsync(dependencyException);
+                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
+                    .Throws(dependencyException);
 
             // when
-            ValueTask<List<Template>> findAllTemplatesTask =
-                this.templateOrchestrationService.FindAllTemplatesAsync();
+            Action findAllTemplatesAction = () =>
+                this.templateOrchestrationService.FindAllTemplates();
 
             TemplateOrchestrationDependencyException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationDependencyException>(findAllTemplatesTask.AsTask);
+                Assert.Throws<TemplateOrchestrationDependencyException>(findAllTemplatesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -97,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccursAsync()
+        public void ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
         {
             // given
             var serviceException = new Exception();
@@ -109,21 +105,21 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 new TemplateOrchestrationServiceException(failedTemplateOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Setup(broker =>
-                broker.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
+                broker.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()))
                     .Throws(serviceException);
 
             // when
-            ValueTask<List<Template>> findAllTemplatesTask =
-                this.templateOrchestrationService.FindAllTemplatesAsync();
+            Action findAllTemplatesAction = () =>
+                this.templateOrchestrationService.FindAllTemplates();
 
             TemplateOrchestrationServiceException actualException =
-                await Assert.ThrowsAsync<TemplateOrchestrationServiceException>(findAllTemplatesTask.AsTask);
+                Assert.Throws<TemplateOrchestrationServiceException>(findAllTemplatesAction);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Verify(service =>
-                service.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()),
+                service.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

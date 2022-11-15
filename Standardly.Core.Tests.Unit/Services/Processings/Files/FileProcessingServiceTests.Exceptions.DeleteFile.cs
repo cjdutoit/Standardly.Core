@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnDeleteFileAsyncIfDependencyValidationErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyValidationOnDeleteFileAsyncIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -29,19 +28,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteFileAsync(inputPath))
+                service.DeleteFile(inputPath))
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask deleteFileTask =
-                this.fileProcessingService.DeleteFileAsync(inputPath);
+            Action deleteFileAction = () =>
+                this.fileProcessingService.DeleteFile(inputPath);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(deleteFileTask.AsTask);
+                Assert.Throws<FileProcessingDependencyValidationException>(deleteFileAction);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(inputPath),
+                service.DeleteFile(inputPath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -55,7 +54,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnDeleteFileAsyncIfDependencyErrorOccursAndLogItAsync(
+        public void ShouldThrowDependencyOnDeleteFileAsyncIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -67,19 +66,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteFileAsync(inputPath))
+                service.DeleteFile(inputPath))
                     .Throws(dependencyException);
 
             // when
-            ValueTask deleteFileTask =
-                this.fileProcessingService.DeleteFileAsync(inputPath);
+            Action deleteFileAction = () =>
+                this.fileProcessingService.DeleteFile(inputPath);
 
             // then
             FileProcessingDependencyException actualException =
-                await Assert.ThrowsAsync<FileProcessingDependencyException>(deleteFileTask.AsTask);
+                Assert.Throws<FileProcessingDependencyException>(deleteFileAction);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(inputPath),
+                service.DeleteFile(inputPath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
@@ -92,7 +91,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnDeleteFileAsyncIfServiceErrorOccursAndLogItAsync()
+        public void ShouldThrowServiceExceptionOnDeleteFileAsyncIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomPath = GetRandomString();
@@ -109,19 +108,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
-                service.DeleteFileAsync(inputPath))
+                service.DeleteFile(inputPath))
                     .Throws(serviceException);
 
             // when
-            ValueTask deleteFileTask =
-                this.fileProcessingService.DeleteFileAsync(inputPath);
+            Action deleteFileAction = () =>
+                this.fileProcessingService.DeleteFile(inputPath);
 
             // then
             FileProcessingServiceException actualException =
-                await Assert.ThrowsAsync<FileProcessingServiceException>(deleteFileTask.AsTask);
+                Assert.Throws<FileProcessingServiceException>(deleteFileAction);
 
             this.fileServiceMock.Verify(service =>
-                service.DeleteFileAsync(inputPath),
+                service.DeleteFile(inputPath),
                     Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>

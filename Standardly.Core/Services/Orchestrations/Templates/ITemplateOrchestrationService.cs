@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Orchestrations.Templates
@@ -14,7 +13,8 @@ namespace Standardly.Core.Services.Orchestrations.Templates
     public interface ITemplateOrchestrationService
     {
         event Action<DateTimeOffset, string, string> LogRaised;
-        ValueTask<List<Template>> FindAllTemplatesAsync();
-        ValueTask GenerateCodeAsync(List<Template> templates, Dictionary<string, string> replacementDictionary);
+        bool ScriptExecutionIsEnabled { get; set; }
+        List<Template> FindAllTemplates();
+        void GenerateCode(List<Template> templates, Dictionary<string, string> replacementDictionary);
     }
 }

@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
+using System;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("  ")]
-        public async Task ShouldThrowValidationExceptionOnValidateTransformIfStringArgumentsInvalid(string invalidString)
+        public void ShouldThrowValidationExceptionOnValidateTransformIfStringArgumentsInvalid(string invalidString)
         {
             // given
             string invalidContent = invalidString;
@@ -35,11 +35,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidArgumentTemplateException);
 
             // when
-            ValueTask validateTransformationAction =
-                this.templateService.ValidateTransformationAsync(invalidContent);
+            Action validateTransformationAction = () =>
+                this.templateService.ValidateTransformation(invalidContent);
 
             TemplateValidationException actualTemplateValidationException =
-                await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationAction.AsTask);
+                Assert.Throws<TemplateValidationException>(validateTransformationAction);
 
             // then
             actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);

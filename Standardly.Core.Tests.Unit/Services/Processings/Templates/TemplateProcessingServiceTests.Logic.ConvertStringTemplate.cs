@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -15,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldConvertStringToTemplateExecutionAsync()
+        public void ShouldConvertStringToTemplateExecution()
         {
             // given
             string randomString = GetRandomString();
@@ -24,18 +23,18 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             Template expectedTemplate = randomTemplate;
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplateAsync(inputString))
-                    .ReturnsAsync(expectedTemplate);
+                service.ConvertStringToTemplate(inputString))
+                    .Returns(expectedTemplate);
 
             // when
-            Template actualTemplate = await this.templateProcessingService
-                .ConvertStringToTemplateAsync(inputString);
+            Template actualTemplate = this.templateProcessingService
+                .ConvertStringToTemplate(inputString);
 
             // then
             actualTemplate.Should().BeEquivalentTo(expectedTemplate);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(inputString),
+                service.ConvertStringToTemplate(inputString),
                     Times.Once());
 
             this.templateServiceMock.VerifyNoOtherCalls();

@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -16,7 +15,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldTransformTemplateAsync()
+        public void ShouldTransformTemplate()
         {
             // given
             string randomString = GetRandomString();
@@ -31,30 +30,30 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             Template expectedTemplate = randomTemplate;
 
             this.templateServiceMock.Setup(service =>
-                service.TransformStringAsync(inputTemplate.RawTemplate, inputReplacementDictionary))
-                    .ReturnsAsync(transformedString);
+                service.TransformString(inputTemplate.RawTemplate, inputReplacementDictionary))
+                    .Returns(transformedString);
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplateAsync(transformedString))
-                    .ReturnsAsync(expectedTemplate);
+                service.ConvertStringToTemplate(transformedString))
+                    .Returns(expectedTemplate);
 
             // when
-            Template actualTemplate = await this.templateProcessingService
-                .TransformTemplateAsync(inputTemplate, inputReplacementDictionary);
+            Template actualTemplate = this.templateProcessingService
+                .TransformTemplate(inputTemplate, inputReplacementDictionary);
 
             // then
             actualTemplate.Should().BeEquivalentTo(expectedTemplate);
 
             this.templateServiceMock.Verify(service =>
-                service.TransformStringAsync(inputTemplate.RawTemplate, inputReplacementDictionary),
+                service.TransformString(inputTemplate.RawTemplate, inputReplacementDictionary),
                     Times.Once());
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformationAsync(transformedString),
+                service.ValidateTransformation(transformedString),
                     Times.Once());
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplateAsync(transformedString),
+                service.ConvertStringToTemplate(transformedString),
                     Times.Once());
 
             this.templateServiceMock.VerifyNoOtherCalls();

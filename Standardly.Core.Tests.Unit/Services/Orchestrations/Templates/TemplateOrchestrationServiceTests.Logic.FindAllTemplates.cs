@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -17,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
     {
 
         [Fact]
-        public async Task ShouldFindAllTemplatesAsync()
+        public void ShouldFindAllTemplates()
         {
             // given
             string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
@@ -33,33 +32,33 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
 
             fileProcessingServiceMock.Setup(fileService =>
-                fileService.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile))
-                    .ReturnsAsync(expectedFileList);
+                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
+                    .Returns(expectedFileList);
 
             this.fileProcessingServiceMock.Setup(fileService =>
-                fileService.ReadFromFileAsync(It.IsAny<string>()))
-                    .ReturnsAsync(expectedTemplateString);
+                fileService.ReadFromFile(It.IsAny<string>()))
+                    .Returns(expectedTemplateString);
 
             this.templateProcessingServiceMock.Setup(templateService =>
-                templateService.ConvertStringToTemplateAsync(rawTemplateString))
-                    .ReturnsAsync(outputTemplate);
+                templateService.ConvertStringToTemplate(rawTemplateString))
+                    .Returns(outputTemplate);
 
             // when
-            List<Template> actualTemplates = await this.templateOrchestrationService.FindAllTemplatesAsync();
+            List<Template> actualTemplates = this.templateOrchestrationService.FindAllTemplates();
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.RetrieveListOfFilesAsync(templatefolder, templateDefinitionFile),
+                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
                         Times.Once);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.ReadFromFileAsync(It.IsAny<string>()),
+                fileService.ReadFromFile(It.IsAny<string>()),
                     Times.Exactly(expectedFileList.Count));
 
             this.templateProcessingServiceMock.Verify(templateService =>
-                templateService.ConvertStringToTemplateAsync(rawTemplateString),
+                templateService.ConvertStringToTemplate(rawTemplateString),
                     Times.Exactly(expectedFileList.Count));
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
