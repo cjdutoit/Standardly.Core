@@ -27,8 +27,8 @@
     <PackageReference Include="DeepCloner" Version="0.10.4" />
     <PackageReference Include="FluentAssertions" Version="6.8.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Xeption" Version="2.5.0" />
   </ItemGroup>
@@ -45,5 +45,12 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Standardly.Commands\Standardly.Commands.csproj">
+	    <Private>True</Private>
+	    <ReferenceOutputAssembly>True</ReferenceOutputAssembly>
+	  </ProjectReference>
+	</ItemGroup>
 
 </Project>
