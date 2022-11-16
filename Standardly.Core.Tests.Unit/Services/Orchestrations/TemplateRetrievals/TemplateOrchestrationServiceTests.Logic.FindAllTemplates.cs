@@ -62,7 +62,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     Times.Exactly(expectedFileList.Count));
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
-            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }
