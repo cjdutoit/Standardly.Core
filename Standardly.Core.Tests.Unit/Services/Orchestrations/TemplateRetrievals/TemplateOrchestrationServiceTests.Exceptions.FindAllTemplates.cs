@@ -51,7 +51,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
-            this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
 
