@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Standardly.Core.Tests.Acceptance
 {
-    public partial class StandardlyClientTests
+    public partial class StandardlyGenerationClientTests
     {
         [Fact]
         public void ShouldGenerateCodeForTemplate()
@@ -53,21 +53,25 @@ namespace Standardly.Core.Tests.Acceptance
                 displayName: "Test User",
                 gitHubUsername: "test.user@domain.com");
 
-            var standardlyClient = new StandardlyClient(templateFolderPath, templateDefinitionFileName)
+            var standardlyTemplateClient =
+                new StandardlyTemplateClient(templateFolderPath, templateDefinitionFileName);
+
+            List<Template> templates =
+                standardlyTemplateClient.FindAllTemplates();
+
+            var standardlyGenerationClient = new StandardlyGenerationClient(templateFolderPath, templateDefinitionFileName)
             {
                 ScriptExecutionIsEnabled = false
             };
 
-            List<Template> templates =
-                standardlyClient.FindAllTemplates();
 
-            standardlyClient.LogRaised += (date, message, type) =>
+            standardlyGenerationClient.LogRaised += (date, message, type) =>
             {
                 System.Diagnostics.Debug.WriteLine($"{date} - {type} - {message}");
             };
 
             //when
-            standardlyClient.GenerateCode(templates, replacementDictionary);
+            standardlyGenerationClient.GenerateCode(templates, replacementDictionary);
 
             //then
             foreach (FileLocations fileLocations in files)

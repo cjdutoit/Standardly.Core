@@ -17,7 +17,7 @@ using Standardly.Core.Models.Orchestrations.TemplateGenerations;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
-using Standardly.Core.Services.Orchestrations.Templates;
+using Standardly.Core.Services.Orchestrations.TemplateRetrievals;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
@@ -25,21 +25,20 @@ using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
+namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 {
-    public partial class TemplateOrchestrationServiceTests
+    public partial class TemplateRetrievalOrchestrationServiceTests
     {
         private readonly Mock<IFileProcessingService> fileProcessingServiceMock;
         private readonly Mock<IExecutionProcessingService> executionProcessingServiceMock;
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
         private readonly Mock<ITemplateConfig> templateConfigMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly ITemplateGenerationOrchestrationService templateGenerationOrchestrationService;
+        private readonly ITemplateRetrievalOrchestrationService templateRetrievalOrchestrationService;
 
-        public TemplateOrchestrationServiceTests()
+        public TemplateRetrievalOrchestrationServiceTests()
         {
             this.fileProcessingServiceMock = new Mock<IFileProcessingService>();
-            this.executionProcessingServiceMock = new Mock<IExecutionProcessingService>();
             this.templateProcessingServiceMock = new Mock<ITemplateProcessingService>();
             this.templateConfigMock = new Mock<ITemplateConfig>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
@@ -50,9 +49,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             this.templateConfigMock
                 .Setup(config => config.TemplateDefinitionFileName).Returns("Template.json");
 
-            templateGenerationOrchestrationService = new TemplateGenerationOrchestrationService(
+            templateRetrievalOrchestrationService = new TemplateRetrievalOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
-                executionProcessingService: executionProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,
                 templateConfig: templateConfigMock.Object,
                 loggingBroker: loggingBrokerMock.Object);

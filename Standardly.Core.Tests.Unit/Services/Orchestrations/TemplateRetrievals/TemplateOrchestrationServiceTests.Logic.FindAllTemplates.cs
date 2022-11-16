@@ -10,9 +10,9 @@ using Moq;
 using Standardly.Core.Models.Foundations.Templates;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
+namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 {
-    public partial class TemplateOrchestrationServiceTests
+    public partial class TemplateRetrievalOrchestrationServiceTests
     {
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     .Returns(outputTemplate);
 
             // when
-            List<Template> actualTemplates = this.templateGenerationOrchestrationService.FindAllTemplates();
+            List<Template> actualTemplates = this.templateRetrievalOrchestrationService.FindAllTemplates();
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count);

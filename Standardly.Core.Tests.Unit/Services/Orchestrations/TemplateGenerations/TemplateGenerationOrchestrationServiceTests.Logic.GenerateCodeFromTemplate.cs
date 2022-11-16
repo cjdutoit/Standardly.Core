@@ -9,9 +9,9 @@ using Moq;
 using Standardly.Core.Models.Foundations.Templates;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
+namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 {
-    public partial class TemplateOrchestrationServiceTests
+    public partial class TemplateGenerationOrchestrationServiceTests
     {
         [Fact]
         public void ShouldGenerateCodeIncludingScriptExecution()

@@ -13,9 +13,9 @@ using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
+namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 {
-    public partial class TemplateOrchestrationServiceTests
+    public partial class TemplateGenerationOrchestrationServiceTests
     {
         [Fact]
         public void ShouldThrowValidationExceptionIfArgumentsIsNull()

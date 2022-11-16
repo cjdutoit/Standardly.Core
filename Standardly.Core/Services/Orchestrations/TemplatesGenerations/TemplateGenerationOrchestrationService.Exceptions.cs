@@ -5,8 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -14,75 +12,11 @@ using Standardly.Core.Models.Processings.Files.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xeptions;
 
-namespace Standardly.Core.Services.Orchestrations.Templates
+namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public partial class TemplateGenerationOrchestrationService
     {
-        private delegate List<Template> ReturningTemplateListFunction();
         private delegate void ReturningNothingFunction();
-
-        private List<Template> TryCatch(ReturningTemplateListFunction returningTemplateListFunction)
-        {
-            try
-            {
-                return returningTemplateListFunction();
-            }
-            catch (FileProcessingValidationException fileServiceValidationException)
-            {
-                throw CreateAndLogDependencyValidationException(fileServiceValidationException);
-            }
-            catch (FileProcessingDependencyValidationException fileServiceDependencyValidationException)
-            {
-                throw CreateAndLogDependencyValidationException(fileServiceDependencyValidationException);
-            }
-            catch (ExecutionProcessingValidationException executionValidationException)
-            {
-                throw CreateAndLogDependencyValidationException(executionValidationException);
-            }
-            catch (ExecutionProcessingDependencyValidationException executionDependencyValidationException)
-            {
-                throw CreateAndLogDependencyValidationException(executionDependencyValidationException);
-            }
-            catch (TemplateProcessingValidationException templateValidationException)
-            {
-                throw CreateAndLogDependencyValidationException(templateValidationException);
-            }
-            catch (TemplateProcessingDependencyValidationException templateDependencyValidationException)
-            {
-                throw CreateAndLogDependencyValidationException(templateDependencyValidationException);
-            }
-            catch (FileProcessingServiceException fileServiceException)
-            {
-                throw CreateAndLogDependencyException(fileServiceException);
-            }
-            catch (FileProcessingDependencyException fileServiceDependencyException)
-            {
-                throw CreateAndLogDependencyException(fileServiceDependencyException);
-            }
-            catch (TemplateProcessingServiceException templateServiceException)
-            {
-                throw CreateAndLogDependencyException(templateServiceException);
-            }
-            catch (TemplateProcessingDependencyException templateDependencyException)
-            {
-                throw CreateAndLogDependencyException(templateDependencyException);
-            }
-            catch (ExecutionProcessingServiceException executionServiceException)
-            {
-                throw CreateAndLogDependencyException(executionServiceException);
-            }
-            catch (ExecutionProcessingDependencyException executionDependencyException)
-            {
-                throw CreateAndLogDependencyException(executionDependencyException);
-            }
-            catch (Exception exception)
-            {
-                var failedTemplateOrchestrationServiceException =
-                    new FailedTemplateGenerationOrchestrationServiceException(exception.InnerException as Xeption);
-
-                throw CreateAndLogServiceException(failedTemplateOrchestrationServiceException);
-            }
-        }
 
         private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
