@@ -59,7 +59,7 @@ namespace Standardly.Core.Tests.Acceptance
             List<Template> templates =
                 standardlyTemplateClient.FindAllTemplates();
 
-            var standardlyGenerationClient = new StandardlyGenerationClient(templateFolderPath, templateDefinitionFileName)
+            var standardlyGenerationClient = new StandardlyGenerationClient()
             {
                 ScriptExecutionIsEnabled = false
             };

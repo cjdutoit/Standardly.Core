@@ -12,7 +12,6 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
@@ -26,7 +25,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         private readonly IFileProcessingService fileProcessingService;
         private readonly IExecutionProcessingService executionProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
-        private readonly ITemplateConfig templateConfig;
         private readonly ILoggingBroker loggingBroker;
         private string previousBranch = string.Empty;
 
@@ -34,13 +32,11 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             IFileProcessingService fileProcessingService,
             IExecutionProcessingService executionProcessingService,
             ITemplateProcessingService templateProcessingService,
-            ITemplateConfig templateConfig,
             ILoggingBroker loggingBroker)
         {
             this.fileProcessingService = fileProcessingService;
             this.executionProcessingService = executionProcessingService;
             this.templateProcessingService = templateProcessingService;
-            this.templateConfig = templateConfig;
             this.loggingBroker = loggingBroker;
         }
 

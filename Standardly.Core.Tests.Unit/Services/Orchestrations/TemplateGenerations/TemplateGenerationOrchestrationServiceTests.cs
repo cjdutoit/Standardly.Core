@@ -54,7 +54,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 fileProcessingService: fileProcessingServiceMock.Object,
                 executionProcessingService: executionProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,
-                templateConfig: templateConfigMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
 
