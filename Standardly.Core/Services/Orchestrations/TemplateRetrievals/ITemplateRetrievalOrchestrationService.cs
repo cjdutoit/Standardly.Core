@@ -4,17 +4,13 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Templates;
 
-namespace Standardly.Core.Services.Orchestrations.Templates
+namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
 {
-    public interface ITemplateGenerationOrchestrationService
+    public interface ITemplateRetrievalOrchestrationService
     {
-        event Action<DateTimeOffset, string, string> LogRaised;
-        bool ScriptExecutionIsEnabled { get; set; }
         List<Template> FindAllTemplates();
-        void GenerateCode(List<Template> templates, Dictionary<string, string> replacementDictionary);
     }
 }

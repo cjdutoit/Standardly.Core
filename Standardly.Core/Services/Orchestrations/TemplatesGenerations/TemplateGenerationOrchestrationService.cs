@@ -12,12 +12,11 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
 
-namespace Standardly.Core.Services.Orchestrations.Templates
+namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public partial class TemplateGenerationOrchestrationService : ITemplateGenerationOrchestrationService
     {
@@ -26,7 +25,6 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         private readonly IFileProcessingService fileProcessingService;
         private readonly IExecutionProcessingService executionProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
-        private readonly ITemplateConfig templateConfig;
         private readonly ILoggingBroker loggingBroker;
         private string previousBranch = string.Empty;
 
@@ -34,44 +32,13 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             IFileProcessingService fileProcessingService,
             IExecutionProcessingService executionProcessingService,
             ITemplateProcessingService templateProcessingService,
-            ITemplateConfig templateConfig,
             ILoggingBroker loggingBroker)
         {
             this.fileProcessingService = fileProcessingService;
             this.executionProcessingService = executionProcessingService;
             this.templateProcessingService = templateProcessingService;
-            this.templateConfig = templateConfig;
             this.loggingBroker = loggingBroker;
         }
-
-        public List<Template> FindAllTemplates() =>
-            TryCatch(() =>
-            {
-                List<Template> templates = new List<Template>();
-
-                var fileList = this.fileProcessingService
-                    .RetrieveListOfFiles(
-                    this.templateConfig.TemplateFolderPath,
-                    this.templateConfig.TemplateDefinitionFileName);
-
-                foreach (string file in fileList)
-                {
-                    try
-                    {
-                        string rawTemplate = this.fileProcessingService.ReadFromFile(file);
-
-                        Template template = this.templateProcessingService
-                            .ConvertStringToTemplate(rawTemplate);
-
-                        templates.Add(template);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-
-                return templates;
-            });
 
         public void GenerateCode(
             List<Template> templates,

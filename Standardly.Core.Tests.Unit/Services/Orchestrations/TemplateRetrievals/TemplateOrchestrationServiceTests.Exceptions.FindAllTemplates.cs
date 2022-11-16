@@ -11,9 +11,9 @@ using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Xeptions;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
+namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 {
-    public partial class TemplateOrchestrationServiceTests
+    public partial class TemplateRetrievalOrchestrationServiceTests
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
@@ -38,7 +38,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             // when
             Action findAllTemplatesAction = () =>
-                templateGenerationOrchestrationService.FindAllTemplates();
+                templateRetrievalOrchestrationService.FindAllTemplates();
 
             TemplateGenerationOrchestrationDependencyValidationException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationDependencyValidationException>(findAllTemplatesAction);
@@ -51,7 +51,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
-            this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
 
@@ -75,7 +74,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             // when
             Action findAllTemplatesAction = () =>
-                this.templateGenerationOrchestrationService.FindAllTemplates();
+                this.templateRetrievalOrchestrationService.FindAllTemplates();
 
             TemplateGenerationOrchestrationDependencyException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationDependencyException>(findAllTemplatesAction);
@@ -88,7 +87,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
-            this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
 
@@ -110,7 +108,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             // when
             Action findAllTemplatesAction = () =>
-                this.templateGenerationOrchestrationService.FindAllTemplates();
+                this.templateRetrievalOrchestrationService.FindAllTemplates();
 
             TemplateGenerationOrchestrationServiceException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationServiceException>(findAllTemplatesAction);
@@ -123,7 +121,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
-            this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
     }

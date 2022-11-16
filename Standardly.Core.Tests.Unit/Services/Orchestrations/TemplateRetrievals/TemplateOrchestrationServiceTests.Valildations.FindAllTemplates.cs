@@ -8,50 +8,53 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Processings.Files.Exceptions;
+using Xeptions;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
+namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 {
-    public partial class TemplateOrchestrationServiceTests
+    public partial class TemplateRetrievalOrchestrationServiceTests
     {
-
         [Fact]
-        public void ShouldFindAllTemplates()
+        public void ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTests()
         {
             // given
-            string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
-            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
-            List<string> randomFileList = GetRandomStringList();
+            int itemsToGenerate = GetRandomNumber();
+            List<string> randomFileList = CreateListOfStrings();
             List<string> expectedFileList = randomFileList;
             string randomTemplateString = GetRandomString();
             string inputTemplateString = randomTemplateString;
             string expectedTemplateString = inputTemplateString;
             string rawTemplateString = expectedTemplateString;
-            Template randomTemplate = CreateRandomTemplate(GetRandomNumber(), true);
+            Template randomTemplate = CreateRandomTemplate(itemsToGenerate);
             Template outputTemplate = randomTemplate;
 
-
-            fileProcessingServiceMock.Setup(fileService =>
-                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
+            this.fileProcessingServiceMock.Setup(fileService =>
+                fileService.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(expectedFileList);
 
             this.fileProcessingServiceMock.Setup(fileService =>
                 fileService.ReadFromFile(It.IsAny<string>()))
                     .Returns(expectedTemplateString);
 
+            this.fileProcessingServiceMock.Setup(fileService =>
+                fileService.ReadFromFile(randomFileList[0]))
+                    .Throws(new FileProcessingDependencyException(new Xeption(randomFileList[0])));
+
             this.templateProcessingServiceMock.Setup(templateService =>
                 templateService.ConvertStringToTemplate(rawTemplateString))
-                    .Returns(outputTemplate);
+                .Returns(outputTemplate);
 
             // when
-            List<Template> actualTemplates = this.templateGenerationOrchestrationService.FindAllTemplates();
+            List<Template> actualTemplates = this.templateRetrievalOrchestrationService.FindAllTemplates();
 
             // then
-            actualTemplates.Count.Should().Be(expectedFileList.Count);
+            actualTemplates.Count.Should().Be(expectedFileList.Count - 1);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
-                        Times.Once);
+                fileService.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()),
+                    Times.Once);
 
             this.fileProcessingServiceMock.Verify(fileService =>
                 fileService.ReadFromFile(It.IsAny<string>()),
@@ -59,10 +62,10 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
 
             this.templateProcessingServiceMock.Verify(templateService =>
                 templateService.ConvertStringToTemplate(rawTemplateString),
-                    Times.Exactly(expectedFileList.Count));
+                    Times.Exactly(expectedFileList.Count - 1));
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
-            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }

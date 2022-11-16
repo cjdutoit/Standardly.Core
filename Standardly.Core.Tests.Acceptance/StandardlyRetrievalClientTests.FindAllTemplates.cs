@@ -21,13 +21,10 @@ namespace Standardly.Core.Tests.Acceptance
         public void ShouldFindListOfTemplates()
         {
             //given
-            var standardlyClient = new StandardlyClient
-            {
-                ScriptExecutionIsEnabled = false
-            };
+            var standardlyTemplateClient = new StandardlyTemplateClient();
 
             //when
-            List<Template> templates = standardlyClient.FindAllTemplates();
+            List<Template> templates = standardlyTemplateClient.FindAllTemplates();
 
             //then
             templates.Count().Should().Be(3);
@@ -43,13 +40,12 @@ namespace Standardly.Core.Tests.Acceptance
             string assembly = Assembly.GetExecutingAssembly().Location;
             string templateFolderPath = Path.Combine(Path.GetDirectoryName(assembly), @"Templates");
             string templateDefinitionFileName = "Template.json";
-            var standardlyClient = new StandardlyClient(templateFolderPath, templateDefinitionFileName)
-            {
-                ScriptExecutionIsEnabled = false
-            };
+
+            var standardlyTemplateClient =
+                new StandardlyTemplateClient(templateFolderPath, templateDefinitionFileName);
 
             //when
-            List<Template> templates = standardlyClient.FindAllTemplates();
+            List<Template> templates = standardlyTemplateClient.FindAllTemplates();
 
             //then
             templates.Count().Should().Be(3);

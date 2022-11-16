@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 
-namespace Standardly.Core.Services.Orchestrations.Templates
+namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public partial class TemplateGenerationOrchestrationService
     {

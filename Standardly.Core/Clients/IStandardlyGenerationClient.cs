@@ -10,10 +10,9 @@ using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Clients
 {
-    public interface IStandardlyClient
+    public interface IStandardlyGenerationClient
     {
         event Action<DateTimeOffset, string, string> LogRaised;
-        List<Template> FindAllTemplates();
         void GenerateCode(List<Template> templates, Dictionary<string, string> replacementDictionary);
     }
 }
