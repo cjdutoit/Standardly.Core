@@ -10,7 +10,7 @@ using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Orchestrations.Templates
 {
-    public interface ITemplateOrchestrationService
+    public interface ITemplateGenerationOrchestrationService
     {
         event Action<DateTimeOffset, string, string> LogRaised;
         bool ScriptExecutionIsEnabled { get; set; }

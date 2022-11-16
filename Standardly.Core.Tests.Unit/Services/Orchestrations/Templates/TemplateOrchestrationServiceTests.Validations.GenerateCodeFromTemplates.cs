@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Xunit;
 
@@ -23,34 +24,34 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             List<Template> nullTemplateList = null;
             Dictionary<string, string> randomReplacementDictionary = null;
 
-            var invalidArgumentTemplateOrchestrationException =
-                new InvalidArgumentTemplateOrchestrationException();
+            var invalidArgumentTemplateGenerationOrchestrationException =
+                new InvalidArgumentTemplateGenerationOrchestrationException();
 
-            invalidArgumentTemplateOrchestrationException.AddData(
+            invalidArgumentTemplateGenerationOrchestrationException.AddData(
                 key: "templates",
                 values: "Templates is required");
 
-            invalidArgumentTemplateOrchestrationException.AddData(
+            invalidArgumentTemplateGenerationOrchestrationException.AddData(
                 key: "replacementDictionary",
                 values: "Dictionary values is required");
 
             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                 templateProcessingService
                     .TransformTemplate(It.IsAny<Template>(), It.IsAny<Dictionary<string, string>>()))
-                        .Throws(invalidArgumentTemplateOrchestrationException);
+                        .Throws(invalidArgumentTemplateGenerationOrchestrationException);
 
-            var expectedTemplateOrchestrationValidationException =
-                new TemplateOrchestrationValidationException(invalidArgumentTemplateOrchestrationException);
+            var expectedTemplateGenerationOrchestrationValidationException =
+                new TemplateGenerationOrchestrationValidationException(invalidArgumentTemplateGenerationOrchestrationException);
 
             // when
             Action generateCodeAction = () =>
-               templateOrchestrationService.GenerateCode(nullTemplateList, randomReplacementDictionary);
+               templateGenerationOrchestrationService.GenerateCode(nullTemplateList, randomReplacementDictionary);
 
-            TemplateOrchestrationValidationException actualException =
-                Assert.Throws<TemplateOrchestrationValidationException>(generateCodeAction);
+            TemplateGenerationOrchestrationValidationException actualException =
+                Assert.Throws<TemplateGenerationOrchestrationValidationException>(generateCodeAction);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationValidationException);
+            actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationValidationException);
 
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -101,7 +102,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             }
 
             // when
-            templateOrchestrationService
+            templateGenerationOrchestrationService
                 .GenerateCode(inputTemplates, randomReplacementDictionary);
 
             // then

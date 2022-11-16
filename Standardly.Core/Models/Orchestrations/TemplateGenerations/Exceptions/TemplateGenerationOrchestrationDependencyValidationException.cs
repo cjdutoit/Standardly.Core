@@ -6,11 +6,11 @@
 
 using Xeptions;
 
-namespace Standardly.Core.Models.Orchestrations.Templates.Exceptions
+namespace Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions
 {
-    public class TemplateOrchestrationDependencyValidationException : Xeption
+    public class TemplateGenerationOrchestrationDependencyValidationException : Xeption
     {
-        public TemplateOrchestrationDependencyValidationException(Xeption innerException)
+        public TemplateGenerationOrchestrationDependencyValidationException(Xeption innerException)
             : base(message: "Template orchestration dependency validation occurred, please try again.", innerException)
         { }
     }

@@ -8,9 +8,9 @@ using Xeptions;
 
 namespace Standardly.Core.Models.Orchestrations.Templates.Exceptions
 {
-    public class TemplateOrchestrationValidationException : Xeption
+    public class TemplateGenerationOrchestrationValidationException : Xeption
     {
-        public TemplateOrchestrationValidationException(Xeption innerException)
+        public TemplateGenerationOrchestrationValidationException(Xeption innerException)
             : base(message: "Template orcgestration validation errors occurred, please try again.",
                   innerException)
         { }

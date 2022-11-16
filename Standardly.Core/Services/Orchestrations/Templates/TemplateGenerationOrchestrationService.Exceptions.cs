@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -15,7 +16,7 @@ using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.Templates
 {
-    public partial class TemplateOrchestrationService
+    public partial class TemplateGenerationOrchestrationService
     {
         private delegate List<Template> ReturningTemplateListFunction();
         private delegate void ReturningNothingFunction();
@@ -77,7 +78,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             catch (Exception exception)
             {
                 var failedTemplateOrchestrationServiceException =
-                    new FailedTemplateOrchestrationServiceException(exception.InnerException as Xeption);
+                    new FailedTemplateGenerationOrchestrationServiceException(exception.InnerException as Xeption);
 
                 throw CreateAndLogServiceException(failedTemplateOrchestrationServiceException);
             }
@@ -89,7 +90,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             {
                 returningNothingFunction();
             }
-            catch (InvalidArgumentTemplateOrchestrationException invalidArgumentTemplateOrchestrationException)
+            catch (InvalidArgumentTemplateGenerationOrchestrationException invalidArgumentTemplateOrchestrationException)
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateOrchestrationException);
             }
@@ -144,42 +145,42 @@ namespace Standardly.Core.Services.Orchestrations.Templates
             catch (Exception exception)
             {
                 var failedTemplateOrchestrationServiceException =
-                    new FailedTemplateOrchestrationServiceException(exception.InnerException as Xeption);
+                    new FailedTemplateGenerationOrchestrationServiceException(exception.InnerException as Xeption);
 
                 throw CreateAndLogServiceException(failedTemplateOrchestrationServiceException);
             }
         }
 
-        private TemplateOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
+        private TemplateGenerationOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
         {
             var templateOrchestrationValidationException =
-                new TemplateOrchestrationValidationException(exception);
+                new TemplateGenerationOrchestrationValidationException(exception);
 
             this.loggingBroker.LogError(templateOrchestrationValidationException);
 
             return templateOrchestrationValidationException;
         }
 
-        private TemplateOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(
+        private TemplateGenerationOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(
         Xeption exception)
         {
             var templateOrchestrationDependencyValidationException =
-                new TemplateOrchestrationDependencyValidationException(exception.InnerException as Xeption);
+                new TemplateGenerationOrchestrationDependencyValidationException(exception.InnerException as Xeption);
 
             throw templateOrchestrationDependencyValidationException;
         }
 
-        private TemplateOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
+        private TemplateGenerationOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
         {
             var templateOrchestrationDependencyException =
-                new TemplateOrchestrationDependencyException(exception.InnerException as Xeption);
+                new TemplateGenerationOrchestrationDependencyException(exception.InnerException as Xeption);
 
             throw templateOrchestrationDependencyException;
         }
 
-        private TemplateOrchestrationServiceException CreateAndLogServiceException(Exception exception)
+        private TemplateGenerationOrchestrationServiceException CreateAndLogServiceException(Exception exception)
         {
-            var templateOrchestrationServiceException = new TemplateOrchestrationServiceException(exception);
+            var templateOrchestrationServiceException = new TemplateGenerationOrchestrationServiceException(exception);
 
             return templateOrchestrationServiceException;
         }

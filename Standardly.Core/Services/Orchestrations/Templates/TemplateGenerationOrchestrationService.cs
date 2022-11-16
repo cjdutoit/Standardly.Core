@@ -12,14 +12,14 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
-using Standardly.Core.Models.Orchestrations.Templates;
+using Standardly.Core.Models.Orchestrations.TemplateGenerations;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
 
 namespace Standardly.Core.Services.Orchestrations.Templates
 {
-    public partial class TemplateOrchestrationService : ITemplateOrchestrationService
+    public partial class TemplateGenerationOrchestrationService : ITemplateGenerationOrchestrationService
     {
         public event Action<DateTimeOffset, string, string> LogRaised = delegate { };
         public bool ScriptExecutionIsEnabled { get; set; } = true;
@@ -30,7 +30,7 @@ namespace Standardly.Core.Services.Orchestrations.Templates
         private readonly ILoggingBroker loggingBroker;
         private string previousBranch = string.Empty;
 
-        public TemplateOrchestrationService(
+        public TemplateGenerationOrchestrationService(
             IFileProcessingService fileProcessingService,
             IExecutionProcessingService executionProcessingService,
             ITemplateProcessingService templateProcessingService,

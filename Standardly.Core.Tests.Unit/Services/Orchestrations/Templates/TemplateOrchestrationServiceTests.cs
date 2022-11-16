@@ -13,7 +13,7 @@ using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
-using Standardly.Core.Models.Orchestrations.Templates;
+using Standardly.Core.Models.Orchestrations.TemplateGenerations;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
         private readonly Mock<ITemplateConfig> templateConfigMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly ITemplateOrchestrationService templateOrchestrationService;
+        private readonly ITemplateGenerationOrchestrationService templateGenerationOrchestrationService;
 
         public TemplateOrchestrationServiceTests()
         {
@@ -50,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
             this.templateConfigMock
                 .Setup(config => config.TemplateDefinitionFileName).Returns("Template.json");
 
-            templateOrchestrationService = new TemplateOrchestrationService(
+            templateGenerationOrchestrationService = new TemplateGenerationOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
                 executionProcessingService: executionProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,

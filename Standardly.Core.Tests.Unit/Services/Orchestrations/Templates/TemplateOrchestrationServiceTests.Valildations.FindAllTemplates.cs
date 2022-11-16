@@ -47,7 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Templates
                 .Returns(outputTemplate);
 
             // when
-            List<Template> actualTemplates = this.templateOrchestrationService.FindAllTemplates();
+            List<Template> actualTemplates = this.templateGenerationOrchestrationService.FindAllTemplates();
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count - 1);

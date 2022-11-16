@@ -6,12 +6,12 @@
 
 using Xeptions;
 
-namespace Standardly.Core.Models.Orchestrations.Templates.Exceptions
+namespace Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions
 {
-    public class TemplateOrchestrationDependencyException : Xeption
+    public class InvalidArgumentTemplateGenerationOrchestrationException : Xeption
     {
-        public TemplateOrchestrationDependencyException(Xeption innerException) :
-            base(message: "Template orchestration dependency error occurred, contact support.", innerException)
+        public InvalidArgumentTemplateGenerationOrchestrationException()
+            : base(message: "Invalid template argument(s), please correct the errors and try again.")
         { }
     }
 }
