@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Standardly.Core.Tests.Acceptance
 {
-    public partial class StandardlyClientTests
+    public partial class StandardlyTemplateClientTests
     {
         [Fact]
         public void ShouldFindListOfTemplates()

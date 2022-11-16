@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace Standardly.Core.Tests.Acceptance
 {
-    public partial class StandardlyClientTests
+    public partial class StandardlyTemplateClientTests
     {
         private Dictionary<string, string> GetReplacementDictionary(
              string templateFolder,
