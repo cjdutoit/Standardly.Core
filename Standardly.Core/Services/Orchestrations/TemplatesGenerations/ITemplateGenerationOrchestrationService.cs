@@ -5,8 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Orchestrations;
 
 namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
@@ -14,6 +13,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
     {
         event Action<DateTimeOffset, string, string> LogRaised;
         bool ScriptExecutionIsEnabled { get; set; }
-        void GenerateCode(List<Template> templates, Dictionary<string, string> replacementDictionary);
+        void GenerateCode(TemplateGenerationInfo templateGenerationInfo);
     }
 }

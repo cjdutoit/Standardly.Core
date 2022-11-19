@@ -12,6 +12,7 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
+using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
@@ -40,38 +41,41 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             this.loggingBroker = loggingBroker;
         }
 
-        public void GenerateCode(
-            List<Template> templates,
-            Dictionary<string, string> replacementDictionary) =>
+        public void GenerateCode(TemplateGenerationInfo templateGenerationInfo) =>
             TryCatch(() =>
                 {
                     this.LogMessage(DateTimeOffset.UtcNow, $"Validating inputs");
-                    ValidateTemplateArguments(templates, replacementDictionary);
+                    ValidateTemplateGenerationInfoIsNotNull(templateGenerationInfo);
+                    ValidateTemplateArguments(templateGenerationInfo);
                     List<Template> templatesToGenerate = new List<Template>();
                     this.LogMessage(DateTimeOffset.UtcNow, $"Check what needs doing on the templates");
 
-                    if (!replacementDictionary.ContainsKey("$currentBranch$"))
+                    if (!templateGenerationInfo.ReplacementDictionary.ContainsKey("$currentBranch$"))
                     {
-                        replacementDictionary.Add("$currentBranch$", replacementDictionary["$basebranch$"]);
+                        templateGenerationInfo.ReplacementDictionary
+                            .Add("$currentBranch$", templateGenerationInfo.ReplacementDictionary["$basebranch$"]);
                     }
 
-                    if (!replacementDictionary.ContainsKey("$previousBranch$"))
+                    if (!templateGenerationInfo.ReplacementDictionary.ContainsKey("$previousBranch$"))
                     {
-                        replacementDictionary.Add("$previousBranch$", replacementDictionary["$basebranch$"]);
+                        templateGenerationInfo.ReplacementDictionary
+                            .Add("$previousBranch$", templateGenerationInfo.ReplacementDictionary["$basebranch$"]);
                     }
 
                     templatesToGenerate.AddRange(
-                        GetOnlyTheTemplatesThatRequireGeneratingCode(templates, replacementDictionary));
+                        GetOnlyTheTemplatesThatRequireGeneratingCode(
+                            templateGenerationInfo.Templates,
+                            templateGenerationInfo.ReplacementDictionary));
 
                     this.previousBranch =
-                        !string.IsNullOrWhiteSpace(replacementDictionary["$previousBranch$"])
-                            ? replacementDictionary["$previousBranch$"]
-                            : replacementDictionary["$basebranch$"];
+                        !string.IsNullOrWhiteSpace(templateGenerationInfo.ReplacementDictionary["$previousBranch$"])
+                            ? templateGenerationInfo.ReplacementDictionary["$previousBranch$"]
+                            : templateGenerationInfo.ReplacementDictionary["$basebranch$"];
 
                     templatesToGenerate.ForEach(template =>
                     {
                         this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
-                        GenerateTemplate(template, replacementDictionary);
+                        GenerateTemplate(template, templateGenerationInfo.ReplacementDictionary);
                     });
                 });
 
