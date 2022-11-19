@@ -7,6 +7,8 @@
 using System.Collections.Generic;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.EntityModels;
+using Standardly.Core.Models.Orchestrations;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
@@ -30,18 +32,30 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             string randomFileContent = GetRandomString();
             string randomAppendedContent = GetRandomString();
             this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = true;
+            List<EntityModel> entityModelDefinition = new List<EntityModel>();
 
-            for (int i = 0; i < inputTemplates.Count; i++)
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = inputTemplates,
+                    ReplacementDictionary = inputDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
+
+            for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(inputTemplates[i], inputDictionary))
-                            .Returns(outputTemplates[i]);
+                        .TransformTemplate(
+                            templateGenerationInfo.Templates[i],
+                            templateGenerationInfo.ReplacementDictionary))
+                                .Returns(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
                     this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                        templateProcessingService.TransformString(task.BranchName, inputDictionary));
+                        templateProcessingService
+                            .TransformString(task.BranchName, templateGenerationInfo.ReplacementDictionary));
 
                     task.Actions.ForEach(action =>
                     {
@@ -87,22 +101,26 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             templateGenerationOrchestrationService
-                .GenerateCode(inputTemplates, randomReplacementDictionary);
+                .GenerateCode(templateGenerationInfo);
 
             // then
-
-            for (int i = 0; i < inputTemplates.Count; i++)
+            for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(inputTemplates[i], randomReplacementDictionary),
-                            Times.Exactly(2));
+                        .TransformTemplate(
+                            templateGenerationInfo.Templates[i],
+                            templateGenerationInfo.ReplacementDictionary),
+                                Times.Exactly(2));
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
                     this.templateProcessingServiceMock.Verify(templateProcessingService =>
-                        templateProcessingService.TransformString(task.BranchName, inputDictionary),
-                            Times.AtLeastOnce);
+                        templateProcessingService
+                            .TransformString(
+                                task.BranchName,
+                                templateGenerationInfo.ReplacementDictionary),
+                                    Times.AtLeastOnce);
 
                     task.Actions.ForEach(action =>
                     {
@@ -183,18 +201,32 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             string randomFileContent = GetRandomString();
             string randomAppendedContent = GetRandomString();
             this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = false;
+            List<EntityModel> entityModelDefinition = new List<EntityModel>();
 
-            for (int i = 0; i < inputTemplates.Count; i++)
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = inputTemplates,
+                    ReplacementDictionary = inputDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
+
+            for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(inputTemplates[i], inputDictionary))
-                            .Returns(outputTemplates[i]);
+                        .TransformTemplate(
+                            templateGenerationInfo.Templates[i],
+                            templateGenerationInfo.ReplacementDictionary))
+                                .Returns(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
                     this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                        templateProcessingService.TransformString(task.BranchName, inputDictionary));
+                        templateProcessingService
+                            .TransformString(
+                                task.BranchName,
+                                templateGenerationInfo.ReplacementDictionary));
 
                     task.Actions.ForEach(action =>
                     {
@@ -240,22 +272,27 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             templateGenerationOrchestrationService
-                .GenerateCode(inputTemplates, randomReplacementDictionary);
+                .GenerateCode(templateGenerationInfo);
 
             // then
 
-            for (int i = 0; i < inputTemplates.Count; i++)
+            for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(inputTemplates[i], randomReplacementDictionary),
-                            Times.Exactly(2));
+                        .TransformTemplate(
+                            templateGenerationInfo.Templates[i],
+                            templateGenerationInfo.ReplacementDictionary),
+                                Times.Exactly(2));
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
                     this.templateProcessingServiceMock.Verify(templateProcessingService =>
-                        templateProcessingService.TransformString(task.BranchName, inputDictionary),
-                            Times.AtLeastOnce);
+                        templateProcessingService
+                            .TransformString(
+                                task.BranchName,
+                                templateGenerationInfo.ReplacementDictionary),
+                                    Times.AtLeastOnce);
 
                     task.Actions.ForEach(action =>
                     {

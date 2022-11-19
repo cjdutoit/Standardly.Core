@@ -4,16 +4,16 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations;
+using Standardly.Core.Models.Foundations.Templates.EntityModels;
 
-namespace Standardly.Core.Clients
+namespace Standardly.Core.Models.Orchestrations
 {
-    public interface IStandardlyGenerationClient
+    public class TemplateGenerationInfo
     {
-        event Action<DateTimeOffset, string, string> LogRaised;
-        void GenerateCode(TemplateGenerationInfo templateGenerationInfo);
+        public List<Template> Templates { get; set; }
+        public Dictionary<string, string> ReplacementDictionary { get; set; }
+        public List<EntityModel> EntityModelDefinition { get; set; }
     }
 }

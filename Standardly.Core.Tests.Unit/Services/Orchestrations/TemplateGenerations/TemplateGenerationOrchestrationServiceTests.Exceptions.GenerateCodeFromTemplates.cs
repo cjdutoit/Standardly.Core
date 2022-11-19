@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.EntityModels;
+using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Xeptions;
 using Xunit;
@@ -28,6 +30,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputDictionary = randomReplacementDictionary;
+            List<EntityModel> entityModelDefinition = new List<EntityModel>();
+
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = inputTemplates,
+                    ReplacementDictionary = inputDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
 
             var expectedDependencyValidationException =
                 new TemplateGenerationOrchestrationDependencyValidationException(
@@ -41,7 +52,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             Action generateCodeAction = () =>
-                this.templateGenerationOrchestrationService.GenerateCode(inputTemplates, inputDictionary);
+                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
 
             TemplateGenerationOrchestrationDependencyValidationException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationDependencyValidationException>(
@@ -51,7 +62,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplate(It.IsAny<Template>(), inputDictionary),
+                broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -70,6 +81,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputDictionary = randomReplacementDictionary;
+            List<EntityModel> entityModelDefinition = new List<EntityModel>();
+
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = inputTemplates,
+                    ReplacementDictionary = inputDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
 
             var expectedTemplateOrchestrationDependencyException =
                 new TemplateGenerationOrchestrationDependencyException(dependencyException.InnerException as Xeption);
@@ -82,7 +102,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             Action generateCodeAction = () =>
-                this.templateGenerationOrchestrationService.GenerateCode(inputTemplates, inputDictionary);
+                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
 
             TemplateGenerationOrchestrationDependencyException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationDependencyException>(generateCodeAction);
@@ -91,7 +111,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplate(It.IsAny<Template>(), inputDictionary),
+                broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -108,6 +128,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             List<Template> inputTemplates = randomTemplates;
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
             Dictionary<string, string> inputDictionary = randomReplacementDictionary;
+            List<EntityModel> entityModelDefinition = new List<EntityModel>();
+
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = inputTemplates,
+                    ReplacementDictionary = inputDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
+
             var serviceException = new Exception();
 
             var failedTemplateGenerationOrchestrationServiceException =
@@ -124,7 +154,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             Action generateCodeAction = () =>
-                this.templateGenerationOrchestrationService.GenerateCode(inputTemplates, inputDictionary);
+                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
 
             TemplateGenerationOrchestrationServiceException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationServiceException>(generateCodeAction);
@@ -133,7 +163,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationServiceException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplate(It.IsAny<Template>(), inputDictionary),
+                broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

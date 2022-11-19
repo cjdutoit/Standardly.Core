@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Brokers.Files;
@@ -13,7 +12,7 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
-using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Services.Foundations.Executions;
@@ -56,13 +55,11 @@ namespace Standardly.Core.Clients
             set { this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = value; }
         }
 
-        public void GenerateCode(
-            List<Template> templates,
-            Dictionary<string, string> replacementDictionary)
+        public void GenerateCode(TemplateGenerationInfo templateGenerationInfo)
         {
             try
             {
-                this.templateGenerationOrchestrationService.GenerateCode(templates, replacementDictionary);
+                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
             }
             catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
             {

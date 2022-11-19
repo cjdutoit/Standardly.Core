@@ -10,6 +10,8 @@ using System.Reflection;
 using FluentAssertions;
 using Standardly.Core.Clients;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.EntityModels;
+using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Tests.Acceptance.Models;
 using Xunit;
 
@@ -53,11 +55,21 @@ namespace Standardly.Core.Tests.Acceptance
                 displayName: "Test User",
                 gitHubUsername: "test.user@domain.com");
 
+            List<EntityModel> entityModelDefinition = new List<EntityModel>();
+
             var standardlyTemplateClient =
                 new StandardlyTemplateClient(templateFolderPath, templateDefinitionFileName);
 
             List<Template> templates =
                 standardlyTemplateClient.FindAllTemplates();
+
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = templates,
+                    ReplacementDictionary = replacementDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
 
             var standardlyGenerationClient = new StandardlyGenerationClient()
             {
@@ -71,7 +83,7 @@ namespace Standardly.Core.Tests.Acceptance
             };
 
             //when
-            standardlyGenerationClient.GenerateCode(templates, replacementDictionary);
+            standardlyGenerationClient.GenerateCode(templateGenerationInfo);
 
             //then
             foreach (FileLocations fileLocations in files)

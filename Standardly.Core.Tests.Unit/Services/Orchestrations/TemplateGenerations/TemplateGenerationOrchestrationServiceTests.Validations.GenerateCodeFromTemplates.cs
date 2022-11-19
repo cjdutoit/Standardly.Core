@@ -9,8 +9,11 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.EntityModels;
+using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
+using Standardly.Core.Models.Templates.Exceptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
@@ -18,34 +21,70 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
     public partial class TemplateGenerationOrchestrationServiceTests
     {
         [Fact]
+        public void ShouldThrowValidationExceptionWhenIfTemplateIsNullAndLogItAsync()
+        {
+            // given
+            TemplateGenerationInfo nullTemplateGenerationInfo = null;
+
+            var nullTemplateGenerationOrchestrationException =
+                new NullTemplateGenerationOrchestrationException();
+
+            var expectedTemplateGenerationOrchestrationValidationException =
+                new TemplateGenerationOrchestrationValidationException(nullTemplateGenerationOrchestrationException);
+
+            // when
+            Action generateCodeAction = () =>
+               templateGenerationOrchestrationService.GenerateCode(nullTemplateGenerationInfo);
+
+            TemplateGenerationOrchestrationValidationException actualException =
+                Assert.Throws<TemplateGenerationOrchestrationValidationException>(generateCodeAction);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationValidationException);
+
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+
+        [Fact]
         public void ShouldThrowValidationExceptionIfArgumentsIsNull()
         {
             // given
             List<Template> nullTemplateList = null;
-            Dictionary<string, string> randomReplacementDictionary = null;
+            Dictionary<string, string> nullReplacementDictionary = null;
+            List<EntityModel> entityModelDefinition = null;
+
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = nullTemplateList,
+                    ReplacementDictionary = nullReplacementDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
 
             var invalidArgumentTemplateGenerationOrchestrationException =
                 new InvalidArgumentTemplateGenerationOrchestrationException();
 
             invalidArgumentTemplateGenerationOrchestrationException.AddData(
-                key: "templates",
+                key: "Templates",
                 values: "Templates is required");
 
             invalidArgumentTemplateGenerationOrchestrationException.AddData(
-                key: "replacementDictionary",
-                values: "Dictionary values is required");
+                key: "ReplacementDictionary",
+                values: "Dictionary is required");
 
-            this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                templateProcessingService
-                    .TransformTemplate(It.IsAny<Template>(), It.IsAny<Dictionary<string, string>>()))
-                        .Throws(invalidArgumentTemplateGenerationOrchestrationException);
+            invalidArgumentTemplateGenerationOrchestrationException.AddData(
+                key: "EntityModelDefinition",
+                values: "Dictionary is required");
 
             var expectedTemplateGenerationOrchestrationValidationException =
                 new TemplateGenerationOrchestrationValidationException(invalidArgumentTemplateGenerationOrchestrationException);
 
             // when
             Action generateCodeAction = () =>
-               templateGenerationOrchestrationService.GenerateCode(nullTemplateList, randomReplacementDictionary);
+               templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
 
             TemplateGenerationOrchestrationValidationException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationValidationException>(generateCodeAction);
@@ -73,13 +112,24 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             string randomTemplateString = GetRandomString();
             string randomTransformedTemplateString = GetRandomString();
             List<string> targets = new List<string>();
+            List<EntityModel> entityModelDefinition = new List<EntityModel>();
 
-            for (int i = 0; i < inputTemplates.Count; i++)
+            TemplateGenerationInfo templateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Templates = inputTemplates,
+                    ReplacementDictionary = inputDictionary,
+                    EntityModelDefinition = entityModelDefinition
+                };
+
+            for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(inputTemplates[i], inputDictionary))
-                            .Returns(outputTemplates[i]);
+                        .TransformTemplate(
+                            templateGenerationInfo.Templates[i],
+                            templateGenerationInfo.ReplacementDictionary))
+                                .Returns(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
@@ -103,16 +153,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             templateGenerationOrchestrationService
-                .GenerateCode(inputTemplates, randomReplacementDictionary);
+                .GenerateCode(templateGenerationInfo);
 
             // then
 
-            for (int i = 0; i < inputTemplates.Count; i++)
+            for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(inputTemplates[i], randomReplacementDictionary),
-                            Times.Once);
+                        .TransformTemplate(
+                            templateGenerationInfo.Templates[i],
+                            templateGenerationInfo.ReplacementDictionary),
+                                Times.Once);
             }
 
             targets.ForEach(target =>

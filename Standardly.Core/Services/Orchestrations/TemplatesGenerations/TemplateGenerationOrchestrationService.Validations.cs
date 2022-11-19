@@ -6,19 +6,35 @@
 
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Foundations.Templates.EntityModels;
+using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
+using Standardly.Core.Models.Templates.Exceptions;
 
 namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public partial class TemplateGenerationOrchestrationService
     {
-        private static void ValidateTemplateArguments(
-            List<Template> templates,
-            Dictionary<string, string> replacementDictionary)
+        private static void ValidateTemplateGenerationInfoIsNotNull(
+            TemplateGenerationInfo templateGenerationInfo)
+        {
+            if (templateGenerationInfo == null)
+            {
+                throw new NullTemplateGenerationOrchestrationException();
+            }
+        }
+
+        private static void ValidateTemplateArguments(TemplateGenerationInfo templateGenerationInfo)
         {
             Validate(
-                (Rule: IsInvalid(templates), Parameter: nameof(templates)),
-                (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
+                (Rule: IsInvalid(templateGenerationInfo.Templates),
+                    Parameter: nameof(templateGenerationInfo.Templates)),
+
+                (Rule: IsInvalid(templateGenerationInfo.ReplacementDictionary),
+                    Parameter: nameof(templateGenerationInfo.ReplacementDictionary)),
+
+                (Rule: IsInvalid(templateGenerationInfo.EntityModelDefinition),
+                    Parameter: nameof(templateGenerationInfo.EntityModelDefinition)));
         }
 
         private static dynamic IsInvalid(List<Template> templates) => new
@@ -30,7 +46,13 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         private static dynamic IsInvalid(Dictionary<string, string> replacementDictionary) => new
         {
             Condition = replacementDictionary == null,
-            Message = "Dictionary values is required"
+            Message = "Dictionary is required"
+        };
+
+        private static dynamic IsInvalid(List<EntityModel> entityModelDefinition) => new
+        {
+            Condition = entityModelDefinition == null,
+            Message = "Dictionary is required"
         };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
