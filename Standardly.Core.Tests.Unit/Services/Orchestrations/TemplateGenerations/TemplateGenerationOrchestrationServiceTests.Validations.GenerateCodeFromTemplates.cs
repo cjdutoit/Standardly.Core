@@ -68,15 +68,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 new InvalidArgumentTemplateGenerationOrchestrationException();
 
             invalidArgumentTemplateGenerationOrchestrationException.AddData(
-                key: "templates",
+                key: "Templates",
                 values: "Templates is required");
 
             invalidArgumentTemplateGenerationOrchestrationException.AddData(
-                key: "replacementDictionary",
+                key: "ReplacementDictionary",
                 values: "Dictionary is required");
 
             invalidArgumentTemplateGenerationOrchestrationException.AddData(
-                key: "entityModelDefinition",
+                key: "EntityModelDefinition",
                 values: "Dictionary is required");
 
             var expectedTemplateGenerationOrchestrationValidationException =

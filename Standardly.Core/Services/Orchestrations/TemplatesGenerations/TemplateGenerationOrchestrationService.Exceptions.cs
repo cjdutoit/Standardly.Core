@@ -10,6 +10,7 @@ using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
+using Standardly.Core.Models.Templates.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
@@ -23,6 +24,10 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             try
             {
                 returningNothingFunction();
+            }
+            catch (NullTemplateGenerationOrchestrationException nullTemplateGenerationOrchestrationException)
+            {
+                throw CreateAndLogValidationException(nullTemplateGenerationOrchestrationException);
             }
             catch (InvalidArgumentTemplateGenerationOrchestrationException invalidArgumentTemplateOrchestrationException)
             {
