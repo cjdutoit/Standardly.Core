@@ -104,7 +104,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 .GenerateCode(templateGenerationInfo);
 
             // then
-
             for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
