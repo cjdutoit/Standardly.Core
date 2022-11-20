@@ -10,9 +10,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Standardly.png</PackageIcon>
-    <Version>1.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseExpression></PackageLicenseExpression>    
     <PackageProjectUrl>https://github.com/cjdutoit/Standardly.Core</PackageProjectUrl>
@@ -20,37 +20,29 @@
     <RepositoryUrl>https://github.com/cjdutoit/Standardly.Core</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>    
     <PackageTags>Template Engingine</PackageTags>
-    <PackageReleaseNotes>First Release - Standardly.Core Template Engingine</PackageReleaseNotes>    
+    <PackageReleaseNotes>Initial Release - Standardly.Core Template Engingine</PackageReleaseNotes>    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DeepCloner" Version="0.10.4" />
-    <PackageReference Include="FluentAssertions" Version="6.8.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Standardly.Commands" Version="1.0.0" />
     <PackageReference Include="Xeption" Version="2.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="License.Standardly.Core.txt">
+    <None Include="License.Standardly.Core.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
+      <PackagePath></PackagePath>
     </None>
-    <None Update="Standardly.png">
+    <None Include="Resources\Standardly.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Standardly.Commands\Standardly.Commands.csproj">
-	    <Private>True</Private>
-	    <ReferenceOutputAssembly>True</ReferenceOutputAssembly>
-	  </ProjectReference>
-	</ItemGroup>
 
 </Project>
