@@ -3,6 +3,7 @@
 </p>
 
 [![.NET](https://github.com/cjdutoit/Standardly.Core/actions/workflows/build.yml/badge.svg)](https://github.com/cjdutoit/Standardly.Core/actions/workflows/build.yml)
+[![Nuget](https://img.shields.io/nuget/v/Standardly.Core)](https://www.nuget.org/packages/Standardly.Core)
 [![The Standard - COMPLIANT](https://img.shields.io/badge/The_Standard-COMPLIANT-2ea44f)](https://github.com/hassanhabib/The-Standard)
 # Standardly.Core
 Standardly.Core is a .Net library designed to provide a template engine that .Net developers can use to generate ['The Standard'](https://github.com/hassanhabib/The-Standard) compliant code from template definitions.
