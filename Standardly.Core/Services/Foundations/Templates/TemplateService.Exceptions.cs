@@ -91,6 +91,10 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 returningNothingFunction();
             }
+            catch (InvalidReplacementException invalidReplacementException)
+            {
+                throw CreateAndLogValidationException(invalidReplacementException);
+            }
             catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {
                 throw CreateAndLogValidationException(invalidArgumentTemplateException);

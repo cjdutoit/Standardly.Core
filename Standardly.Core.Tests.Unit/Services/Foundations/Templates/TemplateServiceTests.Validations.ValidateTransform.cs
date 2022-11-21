@@ -55,44 +55,37 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [Fact]
         public void ShouldThrowValidationExceptionOnValidateTransformIfAllTagsNotReplaced()
         {
-            try
-            {
-                // given
-                string notReplacedTag = "$notReplaced$";
-                string randomStringTemplate = $"{GetRandomString()}{notReplacedTag}";
-                string inputStringTemplate = randomStringTemplate;
+            // given
+            string notReplacedTag = "$notReplaced$";
+            string randomStringTemplate = $"{GetRandomString()}{notReplacedTag}";
+            string inputStringTemplate = randomStringTemplate;
 
-                var invalidReplacementException =
-                    new InvalidReplacementException();
+            var invalidReplacementException =
+                new InvalidReplacementException();
 
-                invalidReplacementException.AddData(
-                    key: "$notReplaced$",
-                    values: $"Found tag '{notReplacedTag}' that was not in the replacement dictionary.");
+            invalidReplacementException.AddData(
+                key: "$notReplaced$",
+                values: $"Found tag '{notReplacedTag}' that was not in the replacement dictionary.");
 
-                var expectedTemplateValidationException =
-                    new TemplateValidationException(invalidReplacementException);
+            var expectedTemplateValidationException =
+                new TemplateValidationException(invalidReplacementException);
 
-                // when
-                Action validateTransformationAction = () =>
-                    this.templateService.ValidateTransformation(inputStringTemplate);
+            // when
+            Action validateTransformationAction = () =>
+                this.templateService.ValidateTransformation(inputStringTemplate);
 
-                TemplateValidationException actualTemplateValidationException =
-                    Assert.Throws<TemplateValidationException>(validateTransformationAction);
+            TemplateValidationException actualTemplateValidationException =
+                Assert.Throws<TemplateValidationException>(validateTransformationAction);
 
-                // then
-                actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            // then
+            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
 
-                this.loggingBrokerMock.Verify(broker =>
-                    broker.LogError(It.Is(SameExceptionAs(
-                        expectedTemplateValidationException))),
-                            Times.Once);
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTemplateValidationException))),
+                        Times.Once);
 
-                this.loggingBrokerMock.VerifyNoOtherCalls();
-            }
-            catch (Exception ex)
-            {
-                Assert.True(false, ex.Message);
-            }
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
