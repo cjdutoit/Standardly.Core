@@ -51,5 +51,48 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowValidationExceptionOnValidateTransformIfAllTagsNotReplaced()
+        {
+            try
+            {
+                // given
+                string notReplacedTag = "$notReplaced$";
+                string randomStringTemplate = $"{GetRandomString()}{notReplacedTag}";
+                string inputStringTemplate = randomStringTemplate;
+
+                var invalidReplacementException =
+                    new InvalidReplacementException();
+
+                invalidReplacementException.AddData(
+                    key: "$notReplaced$",
+                    values: $"Found tag '{notReplacedTag}' that was not in the replacement dictionary.");
+
+                var expectedTemplateValidationException =
+                    new TemplateValidationException(invalidReplacementException);
+
+                // when
+                Action validateTransformationAction = () =>
+                    this.templateService.ValidateTransformation(inputStringTemplate);
+
+                TemplateValidationException actualTemplateValidationException =
+                    Assert.Throws<TemplateValidationException>(validateTransformationAction);
+
+                // then
+                actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+
+                this.loggingBrokerMock.Verify(broker =>
+                    broker.LogError(It.Is(SameExceptionAs(
+                        expectedTemplateValidationException))),
+                            Times.Once);
+
+                this.loggingBrokerMock.VerifyNoOtherCalls();
+            }
+            catch (Exception ex)
+            {
+                Assert.True(false, ex.Message);
+            }
+        }
     }
 }
