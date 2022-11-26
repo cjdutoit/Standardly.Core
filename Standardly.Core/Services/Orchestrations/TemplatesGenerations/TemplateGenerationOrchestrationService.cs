@@ -99,7 +99,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     this.templateProcessingService
                         .TransformTemplate(template, replacementDictionary);
 
-                PerformTasks(
+                PerformTask(
                     transformedTemplate.Tasks[taskIndex],
                     transformedTemplate, replacementDictionary);
 
@@ -108,7 +108,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             }
         }
 
-        private void PerformTasks(
+        private void PerformTask(
             Models.Foundations.Templates.Tasks.Task task,
             Template transformedTemplate,
             Dictionary<string, string> replacementDictionary)

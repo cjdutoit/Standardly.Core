@@ -61,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string inputStringTemplate = randomStringTemplate;
 
             var invalidReplacementException =
-                new InvalidReplacementException();
+                new InvalidReplacementTemplateException();
 
             invalidReplacementException.AddData(
                 key: "$notReplaced$",

@@ -252,7 +252,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                 }
             }
 
-            var invalidReplacementException = new InvalidReplacementException();
+            var invalidReplacementException = new InvalidReplacementTemplateException();
 
             foreach (string tag in tags)
             {
