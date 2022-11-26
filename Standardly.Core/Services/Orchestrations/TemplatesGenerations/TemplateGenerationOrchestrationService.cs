@@ -99,7 +99,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     this.templateProcessingService
                         .TransformTemplate(template, replacementDictionary);
 
-                PerformTasks(
+                PerformTask(
                     transformedTemplate.Tasks[taskIndex],
                     transformedTemplate, replacementDictionary);
 
@@ -108,7 +108,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             }
         }
 
-        private void PerformTasks(
+        private void PerformTask(
             Models.Foundations.Templates.Tasks.Task task,
             Template transformedTemplate,
             Dictionary<string, string> replacementDictionary)
@@ -134,7 +134,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     $"Starting with {transformedTemplate.Name} > {task.Name} > {action.Name}");
 
                 this.PerformFileCreations(action.Files, replacementDictionary);
-                this.PerformAppendOpperations(action.Appends);
+                this.PerformAppendOpperations(action.Appends, replacementDictionary);
                 this.PerformExecutions(action.Executions, action.ExecutionFolder);
             });
         }
@@ -166,7 +166,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             });
         }
 
-        private void PerformAppendOpperations(List<Append> appends)
+        private void PerformAppendOpperations(
+            List<Append> appends,
+            Dictionary<string, string> replacementDictionary)
         {
             foreach (Append append in appends)
             {
@@ -180,7 +182,10 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     appendToBeginning: append.AppendToBeginning,
                     appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
 
-                this.fileProcessingService.WriteToFile(append.Target, appendedContent);
+                string transformedAppendedContent =
+                    this.templateProcessingService.TransformString(appendedContent, replacementDictionary);
+
+                this.fileProcessingService.WriteToFile(append.Target, transformedAppendedContent);
             }
         }
 

@@ -8,9 +8,9 @@ using Xeptions;
 
 namespace Standardly.Core.Models.Foundations.Templates.Exceptions
 {
-    public class InvalidReplacementException : Xeption
+    public class InvalidReplacementTemplateException : Xeption
     {
-        public InvalidReplacementException()
+        public InvalidReplacementTemplateException()
             : base(message: "Invalid replacement criteria, fix the errors and try again.")
         { }
     }
