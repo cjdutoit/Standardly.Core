@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Moq;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
@@ -56,6 +57,9 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 templateProcessingService: templateProcessingServiceMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static List<string> CreateListOfStrings()
         {

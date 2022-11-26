@@ -144,8 +144,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     Times.Once);
                         });
 
-                        // TODO:  Add code for Appends
-
                         action.Appends.ForEach(append =>
                         {
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
