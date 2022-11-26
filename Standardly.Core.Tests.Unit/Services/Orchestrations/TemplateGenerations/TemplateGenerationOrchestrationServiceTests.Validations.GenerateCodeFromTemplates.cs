@@ -354,15 +354,20 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     append.AppendEvenIfContentAlreadyExist),
                                         Times.Once);
 
+                            this.templateProcessingServiceMock.Verify(templateProcessingService =>
+                                templateProcessingService
+                                    .TransformString(randomAppendedContent, randomReplacementDictionary),
+                                        Times.Once);
+
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
                                 fileProcessingService
                                     .WriteToFile(append.Target, randomAppendedContent),
-                                        Times.Once);
+                                        Times.Never);
                         });
 
                         this.executionProcessingServiceMock.Verify(executionProcessingService =>
                             executionProcessingService.Run(action.Executions, action.ExecutionFolder),
-                                Times.Once);
+                                Times.Never);
                     });
                 });
             }

@@ -106,6 +106,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             var templateOrchestrationDependencyValidationException =
                 new TemplateGenerationOrchestrationDependencyValidationException(exception.InnerException as Xeption);
 
+            this.loggingBroker.LogError(templateOrchestrationDependencyValidationException);
+
             throw templateOrchestrationDependencyValidationException;
         }
 
@@ -114,12 +116,17 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             var templateOrchestrationDependencyException =
                 new TemplateGenerationOrchestrationDependencyException(exception.InnerException as Xeption);
 
+            this.loggingBroker.LogError(templateOrchestrationDependencyException);
+
             throw templateOrchestrationDependencyException;
         }
 
         private TemplateGenerationOrchestrationServiceException CreateAndLogServiceException(Exception exception)
         {
-            var templateOrchestrationServiceException = new TemplateGenerationOrchestrationServiceException(exception);
+            var templateOrchestrationServiceException =
+                new TemplateGenerationOrchestrationServiceException(exception);
+
+            this.loggingBroker.LogError(templateOrchestrationServiceException);
 
             return templateOrchestrationServiceException;
         }

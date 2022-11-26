@@ -134,7 +134,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     $"Starting with {transformedTemplate.Name} > {task.Name} > {action.Name}");
 
                 this.PerformFileCreations(action.Files, replacementDictionary);
-                this.PerformAppendOpperations(action.Appends);
+                this.PerformAppendOpperations(action.Appends, replacementDictionary);
                 this.PerformExecutions(action.Executions, action.ExecutionFolder);
             });
         }
@@ -166,7 +166,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             });
         }
 
-        private void PerformAppendOpperations(List<Append> appends)
+        private void PerformAppendOpperations(
+            List<Append> appends,
+            Dictionary<string, string> replacementDictionary)
         {
             foreach (Append append in appends)
             {
@@ -180,7 +182,10 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     appendToBeginning: append.AppendToBeginning,
                     appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
 
-                this.fileProcessingService.WriteToFile(append.Target, appendedContent);
+                string transformedAppendedContent =
+                    this.templateProcessingService.TransformString(appendedContent, replacementDictionary);
+
+                this.fileProcessingService.WriteToFile(append.Target, transformedAppendedContent);
             }
         }
 

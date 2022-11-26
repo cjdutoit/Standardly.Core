@@ -90,6 +90,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     append.AppendToBeginning,
                                     append.AppendEvenIfContentAlreadyExist))
                                         .Returns(randomAppendedContent);
+
+                            this.templateProcessingServiceMock.Setup(templateProcessingService =>
+                                templateProcessingService.TransformString(
+                                    randomAppendedContent,
+                                    templateGenerationInfo.ReplacementDictionary))
+                                        .Returns(randomAppendedContent);
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
@@ -158,6 +164,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     append.ContentToAppend,
                                     append.AppendToBeginning,
                                     append.AppendEvenIfContentAlreadyExist),
+                                        Times.Once);
+
+                            this.templateProcessingServiceMock.Verify(templateProcessingService =>
+                                templateProcessingService.TransformString(
+                                    randomAppendedContent,
+                                    templateGenerationInfo.ReplacementDictionary),
                                         Times.Once);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
@@ -259,6 +271,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     append.AppendToBeginning,
                                     append.AppendEvenIfContentAlreadyExist))
                                         .Returns(randomAppendedContent);
+
+                            this.templateProcessingServiceMock.Setup(templateProcessingService =>
+                                templateProcessingService.TransformString(
+                                    randomAppendedContent,
+                                    templateGenerationInfo.ReplacementDictionary))
+                                        .Returns(randomAppendedContent);
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
@@ -330,6 +348,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     append.ContentToAppend,
                                     append.AppendToBeginning,
                                     append.AppendEvenIfContentAlreadyExist),
+                                        Times.Once);
+
+                            this.templateProcessingServiceMock.Verify(templateProcessingService =>
+                                templateProcessingService.TransformString(
+                                    randomAppendedContent,
+                                    templateGenerationInfo.ReplacementDictionary),
                                         Times.Once);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
