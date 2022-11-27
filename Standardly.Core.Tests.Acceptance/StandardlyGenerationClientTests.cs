@@ -8,11 +8,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Xunit.Abstractions;
 
 namespace Standardly.Core.Tests.Acceptance
 {
     public partial class StandardlyGenerationClientTests
     {
+        private readonly ITestOutputHelper output;
+
+        public StandardlyGenerationClientTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         private Dictionary<string, string> GetReplacementDictionary(
              string templateFolder,
              string nameSingular,

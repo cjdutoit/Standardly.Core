@@ -12,6 +12,7 @@ using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
+using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Orchestrations;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
@@ -28,7 +29,7 @@ namespace Standardly.Core.Clients
 {
     public class StandardlyGenerationClient : IStandardlyGenerationClient
     {
-        public event Action<DateTimeOffset, string, string> LogRaised = delegate { };
+        public event EventHandler<ProcessedEventArgs> Processed;
         private readonly ITemplateGenerationOrchestrationService templateGenerationOrchestrationService;
 
         public StandardlyGenerationClient()
@@ -86,8 +87,10 @@ namespace Standardly.Core.Clients
             }
         }
 
-        private void LogEventSetup() =>
-            this.templateGenerationOrchestrationService.LogRaised += this.LogRaised;
+        private void LogEventSetup()
+        {
+            this.templateGenerationOrchestrationService.Processed += ItemProcessed;
+        }
 
         private ITemplateGenerationOrchestrationService InitialiseClient(ILoggingBroker loggingBroker)
         {
@@ -130,6 +133,21 @@ namespace Standardly.Core.Clients
 
             ILogger<LoggingBroker> logger = loggerFactory.CreateLogger<LoggingBroker>();
             return new LoggingBroker(logger);
+        }
+
+
+        private void ItemProcessed(object sender, ProcessedEventArgs e)
+        {
+            OnProcessed(e);
+        }
+
+        protected virtual void OnProcessed(ProcessedEventArgs e)
+        {
+            EventHandler<ProcessedEventArgs> handler = Processed;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
+using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Orchestrations;
@@ -21,13 +22,16 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public partial class TemplateGenerationOrchestrationService : ITemplateGenerationOrchestrationService
     {
-        public event Action<DateTimeOffset, string, string> LogRaised = delegate { };
+        public event EventHandler<ProcessedEventArgs> Processed;
+
         public bool ScriptExecutionIsEnabled { get; set; } = true;
         private readonly IFileProcessingService fileProcessingService;
         private readonly IExecutionProcessingService executionProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
         private readonly ILoggingBroker loggingBroker;
         private string previousBranch = string.Empty;
+        private int processedItems { get; set; }
+        private int totalItems { get; set; }
 
         public TemplateGenerationOrchestrationService(
             IFileProcessingService fileProcessingService,
@@ -72,6 +76,17 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                             ? templateGenerationInfo.ReplacementDictionary["$previousBranch$"]
                             : templateGenerationInfo.ReplacementDictionary["$basebranch$"];
 
+                    this.processedItems = 0;
+                    this.totalItems = 0;
+
+                    templatesToGenerate.ForEach(template =>
+                    {
+                        template.Tasks.ForEach(task =>
+                        {
+                            this.totalItems += task.Actions.Count();
+                        });
+                    });
+
                     templatesToGenerate.ForEach(template =>
                     {
                         this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
@@ -106,6 +121,10 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                 this.previousBranch = this.templateProcessingService
                         .TransformString(transformedTemplate.Tasks[taskIndex].BranchName, replacementDictionary);
             }
+
+            this.LogMessage(
+                DateTimeOffset.UtcNow,
+                $"Completed code generation for required templates.");
         }
 
         private void PerformTask(
@@ -136,6 +155,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                 this.PerformFileCreations(action.Files, replacementDictionary);
                 this.PerformAppendOpperations(action.Appends, replacementDictionary);
                 this.PerformExecutions(action.Executions, action.ExecutionFolder);
+
+                this.processedItems += 1;
             });
         }
 
@@ -210,12 +231,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 
                 this.LogMessage(DateTimeOffset.UtcNow, scripts.ToString());
             }
-        }
-
-        private void LogMessage(DateTimeOffset date, string message)
-        {
-            this.LogRaised(date, $"", Status.Information);
-            this.loggingBroker.LogInformation($"{date} - {message}");
         }
 
         private List<Template> GetOnlyTheTemplatesThatRequireGeneratingCode(
@@ -299,6 +314,30 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             });
 
             return actionsToRemove;
+        }
+
+        private void LogMessage(DateTimeOffset date, string message)
+        {
+            this.OnProcessed(
+                new ProcessedEventArgs
+                {
+                    TimeStamp = date,
+                    Message = message,
+                    Status = Status.Information,
+                    ProcessedItems = this.processedItems,
+                    TotalItems = this.totalItems,
+                });
+
+            this.loggingBroker.LogInformation($"{date} - {message}");
+        }
+
+        protected virtual void OnProcessed(ProcessedEventArgs e)
+        {
+            EventHandler<ProcessedEventArgs> handler = Processed;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }
