@@ -121,6 +121,10 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                 this.previousBranch = this.templateProcessingService
                         .TransformString(transformedTemplate.Tasks[taskIndex].BranchName, replacementDictionary);
             }
+
+            this.LogMessage(
+                DateTimeOffset.UtcNow,
+                $"Completed code generation for required templates.");
         }
 
         private void PerformTask(
@@ -144,8 +148,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         {
             task.Actions.ForEach(action =>
             {
-                this.processedItems += 1;
-
                 this.LogMessage(
                     DateTimeOffset.UtcNow,
                     $"Starting with {transformedTemplate.Name} > {task.Name} > {action.Name}");
@@ -153,6 +155,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                 this.PerformFileCreations(action.Files, replacementDictionary);
                 this.PerformAppendOpperations(action.Appends, replacementDictionary);
                 this.PerformExecutions(action.Executions, action.ExecutionFolder);
+
+                this.processedItems += 1;
             });
         }
 

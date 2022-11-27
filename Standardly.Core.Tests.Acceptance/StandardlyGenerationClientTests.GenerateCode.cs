@@ -94,6 +94,7 @@ namespace Standardly.Core.Tests.Acceptance
         private void ItemProcessed(object sender, ProcessedEventArgs e)
         {
             output.WriteLine($"{e.TimeStamp} - {e.Status} - {e.Message}");
+            output.WriteLine($"Processed: {e.ProcessedItems} of {e.TotalItems}");
         }
 
         private List<FileLocations> GetFileLocations(
