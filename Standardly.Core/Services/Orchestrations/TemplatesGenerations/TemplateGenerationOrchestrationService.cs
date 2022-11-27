@@ -30,6 +30,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         private readonly ITemplateProcessingService templateProcessingService;
         private readonly ILoggingBroker loggingBroker;
         private string previousBranch = string.Empty;
+        private int processedItems { get; set; }
+        private int totalItems { get; set; }
 
         public TemplateGenerationOrchestrationService(
             IFileProcessingService fileProcessingService,
@@ -73,6 +75,17 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                         !string.IsNullOrWhiteSpace(templateGenerationInfo.ReplacementDictionary["$previousBranch$"])
                             ? templateGenerationInfo.ReplacementDictionary["$previousBranch$"]
                             : templateGenerationInfo.ReplacementDictionary["$basebranch$"];
+
+                    this.processedItems = 0;
+                    this.totalItems = 0;
+
+                    templatesToGenerate.ForEach(template =>
+                    {
+                        template.Tasks.ForEach(task =>
+                        {
+                            this.totalItems += task.Actions.Count();
+                        });
+                    });
 
                     templatesToGenerate.ForEach(template =>
                     {
@@ -131,6 +144,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         {
             task.Actions.ForEach(action =>
             {
+                this.processedItems += 1;
+
                 this.LogMessage(
                     DateTimeOffset.UtcNow,
                     $"Starting with {transformedTemplate.Name} > {task.Name} > {action.Name}");
@@ -304,7 +319,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                 {
                     TimeStamp = date,
                     Message = message,
-                    Status = Status.Information
+                    Status = Status.Information,
+                    ProcessedItems = this.processedItems,
+                    TotalItems = this.totalItems,
                 });
 
             this.loggingBroker.LogInformation($"{date} - {message}");

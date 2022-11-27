@@ -13,5 +13,7 @@ namespace Standardly.Core.Models.Events
         public DateTimeOffset TimeStamp { get; set; }
         public string Message { get; set; }
         public string Status { get; set; }
+        public int ProcessedItems { get; set; }
+        public int TotalItems { get; set; }
     }
 }

@@ -13,7 +13,9 @@ The library offers a template retrieval client that will scan for template defin
 
 The template definition files is `json` files that define `Tasks` with `Actions`. Tasks can be seen as everything in a Pull Request and Actions as the things that you would do in the commits that make up the Pull Request.
 
-One or more of the templates found can then be passed to the template generation client with a replacement dictionary.  The template generation client will then substitute any variables found with the values from the replacement dictionary and then execute all the actions defined per task per template.  
+One or more of the templates found, can then be passed to the template generation client with a replacement dictionary.  The template generation client will then substitute any variables found with the values from the replacement dictionary and then execute all the actions defined per task per template.  
+
+As items are processed, events are raised.  The event will provide a timestamp, status and message which can be used for realtime information on progress in a UI.
 
 (The script generation client has the ability to disable script execution. This can be useful where you only want to generate code, but not necessarily want to check in code to GitHub or do NuGet installs.) 
 
@@ -36,5 +38,15 @@ One or more of the templates found can then be passed to the template generation
       ScriptExecutionIsEnabled = true
   };
   
+  standardlyGenerationClient.Processed += ItemProcessed;
+
   standardlyGenerationClient.GenerateCode(templates, replacementDictionary);
+```
+and acting on the events
+```
+private void ItemProcessed(object sender, ProcessedEventArgs event)
+{
+    Console.WriteLine($"{event.TimeStamp} - {event.Status} - {event.Message}");
+    Console.WriteLine($"Procesed: {event.ProcessedItems} of {event.TotalItems}");
+}
 ```
