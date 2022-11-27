@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://github.com/cjdutoit/Standardly.Core/blob/main/Resources/Banner.png?raw=true">
-</p>
+![image](https://raw.githubusercontent.com/cjdutoit/Standardly.Core/main/Resources/Banner.png)
 
 [![.NET](https://github.com/cjdutoit/Standardly.Core/actions/workflows/build.yml/badge.svg)](https://github.com/cjdutoit/Standardly.Core/actions/workflows/build.yml)
 [![Nuget](https://img.shields.io/nuget/v/Standardly.Core)](https://www.nuget.org/packages/Standardly.Core)
