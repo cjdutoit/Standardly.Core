@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using FluentAssertions;
 using Standardly.Core.Clients;
+using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.EntityModels;
 using Standardly.Core.Models.Orchestrations;
@@ -53,7 +54,7 @@ namespace Standardly.Core.Tests.Acceptance
                 rootNameSpace: "Standardly",
                 solutionFolder: solutionFolder,
                 displayName: "Test User",
-                gitHubUsername: "test.user@domain.com");
+                gitHubUsername: "TestUser");
 
             List<EntityModel> entityModelDefinition = new List<EntityModel>();
 
@@ -76,11 +77,7 @@ namespace Standardly.Core.Tests.Acceptance
                 ScriptExecutionIsEnabled = false
             };
 
-
-            standardlyGenerationClient.LogRaised += (date, message, type) =>
-            {
-                System.Diagnostics.Debug.WriteLine($"{date} - {type} - {message}");
-            };
+            standardlyGenerationClient.Processed += ItemProcessed;
 
             //when
             standardlyGenerationClient.GenerateCode(templateGenerationInfo);
@@ -92,6 +89,11 @@ namespace Standardly.Core.Tests.Acceptance
                 var expectedResult = File.ReadAllText(fileLocations.ExpectedFilePath);
                 actualResult.Should().BeEquivalentTo(expectedResult);
             }
+        }
+
+        private void ItemProcessed(object sender, ProcessedEventArgs e)
+        {
+            output.WriteLine($"{e.TimeStamp} - {e.Status} - {e.Message}");
         }
 
         private List<FileLocations> GetFileLocations(

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
+using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Orchestrations;
@@ -21,7 +22,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public partial class TemplateGenerationOrchestrationService : ITemplateGenerationOrchestrationService
     {
-        public event Action<DateTimeOffset, string, string> LogRaised = delegate { };
+        public event EventHandler<ProcessedEventArgs> Processed;
+
         public bool ScriptExecutionIsEnabled { get; set; } = true;
         private readonly IFileProcessingService fileProcessingService;
         private readonly IExecutionProcessingService executionProcessingService;
@@ -212,12 +214,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             }
         }
 
-        private void LogMessage(DateTimeOffset date, string message)
-        {
-            this.LogRaised(date, $"", Status.Information);
-            this.loggingBroker.LogInformation($"{date} - {message}");
-        }
-
         private List<Template> GetOnlyTheTemplatesThatRequireGeneratingCode(
             List<Template> templates,
             Dictionary<string, string> replacementDictionary)
@@ -299,6 +295,28 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             });
 
             return actionsToRemove;
+        }
+
+        private void LogMessage(DateTimeOffset date, string message)
+        {
+            this.OnProcessed(
+                new ProcessedEventArgs
+                {
+                    TimeStamp = date,
+                    Message = message,
+                    Status = Status.Information
+                });
+
+            this.loggingBroker.LogInformation($"{date} - {message}");
+        }
+
+        protected virtual void OnProcessed(ProcessedEventArgs e)
+        {
+            EventHandler<ProcessedEventArgs> handler = Processed;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }

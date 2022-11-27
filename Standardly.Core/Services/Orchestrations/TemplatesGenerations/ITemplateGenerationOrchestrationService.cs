@@ -5,13 +5,14 @@
 // ---------------------------------------------------------------
 
 using System;
+using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Orchestrations;
 
 namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public interface ITemplateGenerationOrchestrationService
     {
-        event Action<DateTimeOffset, string, string> LogRaised;
+        event EventHandler<ProcessedEventArgs> Processed;
         bool ScriptExecutionIsEnabled { get; set; }
         void GenerateCode(TemplateGenerationInfo templateGenerationInfo);
     }

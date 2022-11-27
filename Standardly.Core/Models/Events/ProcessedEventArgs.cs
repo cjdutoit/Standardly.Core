@@ -5,14 +5,13 @@
 // ---------------------------------------------------------------
 
 using System;
-using Standardly.Core.Models.Events;
-using Standardly.Core.Models.Orchestrations;
 
-namespace Standardly.Core.Clients
+namespace Standardly.Core.Models.Events
 {
-    public interface IStandardlyGenerationClient
+    public class ProcessedEventArgs : EventArgs
     {
-        event EventHandler<ProcessedEventArgs> Processed;
-        void GenerateCode(TemplateGenerationInfo templateGenerationInfo);
+        public DateTimeOffset TimeStamp { get; set; }
+        public string Message { get; set; }
+        public string Status { get; set; }
     }
 }
