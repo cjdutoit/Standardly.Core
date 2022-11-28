@@ -75,7 +75,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             bool appendEvenIfContentAlreadyExist = false;
 
             var regularExpressionTemplateException
-                = new RegularExpressionTemplateException("No match found. Please verify the expression and source");
+                = new RegularExpressionTemplateException(
+                    "Regular expression match not found. Please verify the expression and source.  "
+                    + $"Could not find a match for {regexToMatch} in {sourceContent}");
 
             var expectedTemplateValidationException =
                 new TemplateValidationException(regularExpressionTemplateException);

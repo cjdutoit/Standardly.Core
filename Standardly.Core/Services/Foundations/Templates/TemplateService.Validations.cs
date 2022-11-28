@@ -38,11 +38,13 @@ namespace Standardly.Core.Services.Foundations.Templates
             Validate<InvalidArgumentTemplateException>((Rule: IsInvalid(content), Parameter: nameof(content)));
         }
 
-        private static void ValidateExpressionMatch(bool matchFound)
+        private static void ValidateExpressionMatch(bool matchFound, string sourceContent, string regularExpression)
         {
             if (!matchFound)
             {
-                throw new RegularExpressionTemplateException("No match found. Please verify the expression and source");
+                throw new RegularExpressionTemplateException(
+                    "Regular expression match not found. Please verify the expression and source.  "
+                    + $"Could not find a match for {regularExpression} in {sourceContent}");
             }
         }
 
