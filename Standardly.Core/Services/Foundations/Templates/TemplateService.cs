@@ -93,7 +93,7 @@ namespace Standardly.Core.Services.Foundations.Templates
                         this.regularExpressionBroker
                             .CheckForExpressionMatch(regexToMatchForAppend, sourceContent);
 
-                    ValidateExpressionMatch(matchFound);
+                    ValidateExpressionMatch(matchFound, sourceContent, regexToMatchForAppend);
 
                     if (appendEvenIfContentAlreadyExist == false && match.Contains(appendContent))
                     {
