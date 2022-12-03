@@ -37,7 +37,6 @@ As items are processed, events are raised.  The event will provide a timestamp, 
   };
   
   standardlyGenerationClient.Processed += ItemProcessed;
-
   standardlyGenerationClient.GenerateCode(templates, replacementDictionary);
 ```
 and acting on the events
