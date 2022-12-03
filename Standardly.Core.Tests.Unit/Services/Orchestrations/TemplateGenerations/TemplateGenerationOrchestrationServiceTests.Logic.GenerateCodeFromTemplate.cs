@@ -31,7 +31,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             string randomTransformedTemplateString = GetRandomString();
             string randomFileContent = GetRandomString();
             string randomAppendedContent = GetRandomString();
-            this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = true;
             List<EntityModel> entityModelDefinition = new List<EntityModel>();
 
             TemplateGenerationInfo templateGenerationInfo =
@@ -39,7 +38,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 {
                     Templates = inputTemplates,
                     ReplacementDictionary = inputDictionary,
-                    EntityModelDefinition = entityModelDefinition
+                    EntityModelDefinition = entityModelDefinition,
+                    ScriptExecutionIsEnabled = true
                 };
 
             for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
@@ -211,7 +211,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             string randomTransformedTemplateString = GetRandomString();
             string randomFileContent = GetRandomString();
             string randomAppendedContent = GetRandomString();
-            this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = false;
             List<EntityModel> entityModelDefinition = new List<EntityModel>();
 
             TemplateGenerationInfo templateGenerationInfo =
@@ -219,7 +218,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 {
                     Templates = inputTemplates,
                     ReplacementDictionary = inputDictionary,
-                    EntityModelDefinition = entityModelDefinition
+                    EntityModelDefinition = entityModelDefinition,
+                    ScriptExecutionIsEnabled = false
                 };
 
             for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)

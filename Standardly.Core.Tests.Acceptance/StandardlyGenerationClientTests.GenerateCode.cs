@@ -69,14 +69,11 @@ namespace Standardly.Core.Tests.Acceptance
                 {
                     Templates = templates,
                     ReplacementDictionary = replacementDictionary,
-                    EntityModelDefinition = entityModelDefinition
+                    EntityModelDefinition = entityModelDefinition,
+                    ScriptExecutionIsEnabled = false
                 };
 
-            var standardlyGenerationClient = new StandardlyGenerationClient()
-            {
-                ScriptExecutionIsEnabled = false
-            };
-
+            var standardlyGenerationClient = new StandardlyGenerationClient();
             standardlyGenerationClient.Processed += ItemProcessed;
 
             //when

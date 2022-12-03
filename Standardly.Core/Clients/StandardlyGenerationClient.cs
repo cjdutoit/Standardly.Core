@@ -50,12 +50,6 @@ namespace Standardly.Core.Clients
             this.LogEventSetup();
         }
 
-        public bool ScriptExecutionIsEnabled
-        {
-            get { return this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled; }
-            set { this.templateGenerationOrchestrationService.ScriptExecutionIsEnabled = value; }
-        }
-
         public void GenerateCode(TemplateGenerationInfo templateGenerationInfo)
         {
             try

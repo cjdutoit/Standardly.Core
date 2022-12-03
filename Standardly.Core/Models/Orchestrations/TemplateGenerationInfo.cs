@@ -15,5 +15,6 @@ namespace Standardly.Core.Models.Orchestrations
         public List<Template> Templates { get; set; }
         public Dictionary<string, string> ReplacementDictionary { get; set; }
         public List<EntityModel> EntityModelDefinition { get; set; }
+        public bool ScriptExecutionIsEnabled { get; set; } = true;
     }
 }
