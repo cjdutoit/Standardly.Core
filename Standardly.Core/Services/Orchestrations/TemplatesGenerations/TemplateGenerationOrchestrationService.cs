@@ -24,7 +24,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
     {
         public event EventHandler<ProcessedEventArgs> Processed;
 
-        public bool ScriptExecutionIsEnabled { get; set; } = true;
         private readonly IFileProcessingService fileProcessingService;
         private readonly IExecutionProcessingService executionProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
@@ -90,13 +89,16 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     templatesToGenerate.ForEach(template =>
                     {
                         this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
-                        GenerateTemplate(template, templateGenerationInfo.ReplacementDictionary);
+
+                        GenerateTemplate(
+                            template,
+                            templateGenerationInfo);
                     });
                 });
 
         private void GenerateTemplate(
             Template template,
-            Dictionary<string, string> replacementDictionary)
+            TemplateGenerationInfo templateGenerationInfo)
         {
             this.LogMessage(
                 DateTimeOffset.UtcNow,
@@ -106,20 +108,27 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             {
                 var currentBranchName =
                     this.templateProcessingService
-                        .TransformString(template.Tasks[taskIndex].BranchName, replacementDictionary);
+                        .TransformString(
+                            content: template.Tasks[taskIndex].BranchName,
+                            replacementDictionary: templateGenerationInfo.ReplacementDictionary);
 
-                replacementDictionary["$currentBranch$"] = currentBranchName;
+                templateGenerationInfo.ReplacementDictionary["$currentBranch$"] = currentBranchName;
 
                 var transformedTemplate =
                     this.templateProcessingService
-                        .TransformTemplate(template, replacementDictionary);
+                        .TransformTemplate(
+                            template,
+                            replacementDictionary: templateGenerationInfo.ReplacementDictionary);
 
                 PerformTask(
-                    transformedTemplate.Tasks[taskIndex],
-                    transformedTemplate, replacementDictionary);
+                    task: transformedTemplate.Tasks[taskIndex],
+                    transformedTemplate,
+                    templateGenerationInfo: templateGenerationInfo);
 
                 this.previousBranch = this.templateProcessingService
-                        .TransformString(transformedTemplate.Tasks[taskIndex].BranchName, replacementDictionary);
+                        .TransformString(
+                            content: transformedTemplate.Tasks[taskIndex].BranchName,
+                            replacementDictionary: templateGenerationInfo.ReplacementDictionary);
             }
 
             this.LogMessage(
@@ -130,7 +139,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         private void PerformTask(
             Models.Foundations.Templates.Tasks.Task task,
             Template transformedTemplate,
-            Dictionary<string, string> replacementDictionary)
+            TemplateGenerationInfo templateGenerationInfo)
         {
             previousBranch = task.BranchName;
 
@@ -138,13 +147,16 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                 DateTimeOffset.UtcNow,
                 $"Starting with {transformedTemplate.Name} > {task.Name}");
 
-            PerformActions(task, transformedTemplate, replacementDictionary);
+            PerformActions(
+                task,
+                transformedTemplate,
+                templateGenerationInfo);
         }
 
         private void PerformActions(
             Models.Foundations.Templates.Tasks.Task task,
             Template transformedTemplate,
-            Dictionary<string, string> replacementDictionary)
+            TemplateGenerationInfo templateGenerationInfo)
         {
             task.Actions.ForEach(action =>
             {
@@ -152,9 +164,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     DateTimeOffset.UtcNow,
                     $"Starting with {transformedTemplate.Name} > {task.Name} > {action.Name}");
 
-                this.PerformFileCreations(action.Files, replacementDictionary);
-                this.PerformAppendOpperations(action.Appends, replacementDictionary);
-                this.PerformExecutions(action.Executions, action.ExecutionFolder);
+                this.PerformFileCreations(action.Files, templateGenerationInfo);
+                this.PerformAppendOpperations(action.Appends, templateGenerationInfo);
+                this.PerformExecutions(action.Executions, action.ExecutionFolder, templateGenerationInfo);
 
                 this.processedItems += 1;
             });
@@ -162,14 +174,16 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 
         private void PerformFileCreations(
             List<Models.Foundations.Templates.Tasks.Actions.Files.File> files,
-            Dictionary<string, string> replacementDictionary)
+            TemplateGenerationInfo templateGenerationInfo)
         {
             files.ForEach(file =>
             {
                 string sourceString = this.fileProcessingService.ReadFromFile(file.Template);
 
                 string transformedSourceString =
-                    this.templateProcessingService.TransformString(sourceString, replacementDictionary);
+                    this.templateProcessingService.TransformString(
+                        content: sourceString,
+                        replacementDictionary: templateGenerationInfo.ReplacementDictionary);
 
                 transformedSourceString = transformedSourceString.Replace("##n##", "\\n");
 
@@ -189,7 +203,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 
         private void PerformAppendOpperations(
             List<Append> appends,
-            Dictionary<string, string> replacementDictionary)
+            TemplateGenerationInfo templateGenerationInfo)
         {
             foreach (Append append in appends)
             {
@@ -204,7 +218,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
 
                 string transformedAppendedContent =
-                    this.templateProcessingService.TransformString(appendedContent, replacementDictionary);
+                    this.templateProcessingService.TransformString(
+                        content: appendedContent,
+                        replacementDictionary: templateGenerationInfo.ReplacementDictionary);
 
                 this.fileProcessingService.WriteToFile(append.Target, transformedAppendedContent);
             }
@@ -212,9 +228,10 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 
         private void PerformExecutions(
             List<Models.Foundations.Executions.Execution> executions,
-            string executionFolder)
+            string executionFolder,
+            TemplateGenerationInfo templateGenerationInfo)
         {
-            if (this.ScriptExecutionIsEnabled == true)
+            if (templateGenerationInfo.ScriptExecutionIsEnabled == true)
             {
                 string outcome = this.executionProcessingService.Run(executions, executionFolder);
                 this.LogMessage(DateTimeOffset.UtcNow, $"{outcome}");

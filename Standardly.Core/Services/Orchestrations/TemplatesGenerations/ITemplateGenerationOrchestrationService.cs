@@ -13,7 +13,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
     public interface ITemplateGenerationOrchestrationService
     {
         event EventHandler<ProcessedEventArgs> Processed;
-        bool ScriptExecutionIsEnabled { get; set; }
         void GenerateCode(TemplateGenerationInfo templateGenerationInfo);
     }
 }
