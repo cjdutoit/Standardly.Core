@@ -4,15 +4,15 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using Xeptions;
 
 namespace Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions
 {
-    public class TemplateRetrievalOrchestrationValidationException : Xeption
+    public class TemplateRetrievalOrchestrationServiceException : Xeption
     {
-        public TemplateRetrievalOrchestrationValidationException(Xeption innerException)
-            : base(message: "Template orcgestration validation errors occurred, please try again.",
-                  innerException)
+        public TemplateRetrievalOrchestrationServiceException(Exception innerException)
+            : base(message: "Template orchestration service error occurred, contact support.", innerException)
         { }
     }
 }

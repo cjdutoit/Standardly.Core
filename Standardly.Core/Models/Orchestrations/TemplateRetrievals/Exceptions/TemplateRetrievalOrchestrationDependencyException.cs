@@ -8,11 +8,10 @@ using Xeptions;
 
 namespace Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions
 {
-    public class TemplateRetrievalOrchestrationValidationException : Xeption
+    public class TemplateRetrievalOrchestrationDependencyException : Xeption
     {
-        public TemplateRetrievalOrchestrationValidationException(Xeption innerException)
-            : base(message: "Template orcgestration validation errors occurred, please try again.",
-                  innerException)
+        public TemplateRetrievalOrchestrationDependencyException(Xeption innerException) :
+            base(message: "Template orchestration dependency error occurred, contact support.", innerException)
         { }
     }
 }

@@ -32,6 +32,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
         public List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName) =>
             TryCatch(() =>
             {
+                ValidateFindTemplateArguments(templateFolderPath, templateDefinitionFileName);
+
                 List<Template> templates = new List<Template>();
 
                 var fileList = this.fileProcessingService

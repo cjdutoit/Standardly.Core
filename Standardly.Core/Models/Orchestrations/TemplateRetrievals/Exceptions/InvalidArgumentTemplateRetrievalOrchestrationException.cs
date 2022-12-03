@@ -6,7 +6,7 @@
 
 using Xeptions;
 
-namespace Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions
+namespace Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions
 {
     public class InvalidArgumentTemplateRetrievalOrchestrationException : Xeption
     {

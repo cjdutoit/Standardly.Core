@@ -8,8 +8,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
-using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
+using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
 using Xunit;
@@ -26,7 +25,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         {
             // given
             string templateFolderPath = invalidText;
-            string templateDefinitionFile = invalidText;
+            string templateDefinitionFileName = invalidText;
 
             var invalidArgumentTemplateRetrievalOrchestrationException = new
                 InvalidArgumentTemplateRetrievalOrchestrationException();
@@ -36,7 +35,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                 values: "Text is required");
 
             invalidArgumentTemplateRetrievalOrchestrationException.AddData(
-                key: nameof(templateDefinitionFile),
+                key: nameof(templateDefinitionFileName),
                 values: "Text is required");
 
             var expectedTemplateRetrievalOrchestrationValidationException =
@@ -46,7 +45,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             // when
             System.Action findAllTemplatesAction = () =>
                 this.templateRetrievalOrchestrationService
-                    .FindAllTemplates(templateFolderPath, templateDefinitionFile);
+                    .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
 
             TemplateRetrievalOrchestrationValidationException actualTemplateRetrievalOrchestrationValidationException =
                 Assert.Throws<TemplateRetrievalOrchestrationValidationException>(findAllTemplatesAction);
@@ -54,6 +53,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             // then
             actualTemplateRetrievalOrchestrationValidationException.Should()
                 .BeEquivalentTo(expectedTemplateRetrievalOrchestrationValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTemplateRetrievalOrchestrationValidationException))),
+                        Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

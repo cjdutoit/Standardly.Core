@@ -7,8 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
-using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
+using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
@@ -25,6 +24,11 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
             try
             {
                 return returningTemplateListFunction();
+            }
+            catch (InvalidArgumentTemplateRetrievalOrchestrationException
+                invalidArgumentTemplateRetrievalOrchestrationException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentTemplateRetrievalOrchestrationException);
             }
             catch (FileProcessingValidationException fileServiceValidationException)
             {
@@ -77,42 +81,42 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
             catch (Exception exception)
             {
                 var failedTemplateOrchestrationServiceException =
-                    new FailedTemplateGenerationOrchestrationServiceException(exception.InnerException as Xeption);
+                    new FailedTemplateRetrievalOrchestrationServiceException(exception.InnerException as Xeption);
 
                 throw CreateAndLogServiceException(failedTemplateOrchestrationServiceException);
             }
         }
 
-        private TemplateGenerationOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
+        private TemplateRetrievalOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
         {
             var templateOrchestrationValidationException =
-                new TemplateGenerationOrchestrationValidationException(exception);
+                new TemplateRetrievalOrchestrationValidationException(exception);
 
             this.loggingBroker.LogError(templateOrchestrationValidationException);
 
             return templateOrchestrationValidationException;
         }
 
-        private TemplateGenerationOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(
+        private TemplateRetrievalOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(
         Xeption exception)
         {
             var templateOrchestrationDependencyValidationException =
-                new TemplateGenerationOrchestrationDependencyValidationException(exception.InnerException as Xeption);
+                new TemplateRetrievalOrchestrationDependencyValidationException(exception.InnerException as Xeption);
 
             throw templateOrchestrationDependencyValidationException;
         }
 
-        private TemplateGenerationOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
+        private TemplateRetrievalOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
         {
             var templateOrchestrationDependencyException =
-                new TemplateGenerationOrchestrationDependencyException(exception.InnerException as Xeption);
+                new TemplateRetrievalOrchestrationDependencyException(exception.InnerException as Xeption);
 
             throw templateOrchestrationDependencyException;
         }
 
-        private TemplateGenerationOrchestrationServiceException CreateAndLogServiceException(Exception exception)
+        private TemplateRetrievalOrchestrationServiceException CreateAndLogServiceException(Exception exception)
         {
-            var templateOrchestrationServiceException = new TemplateGenerationOrchestrationServiceException(exception);
+            var templateOrchestrationServiceException = new TemplateRetrievalOrchestrationServiceException(exception);
 
             return templateOrchestrationServiceException;
         }
