@@ -11,6 +11,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
 {
     public interface ITemplateRetrievalOrchestrationService
     {
-        List<Template> FindAllTemplates();
+        List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName);
     }
 }

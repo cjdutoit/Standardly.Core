@@ -15,7 +15,6 @@ using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
 using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Services.Foundations.Executions;
@@ -35,49 +34,60 @@ namespace Standardly.Core.Clients
 
         public StandardlyTemplateClient()
         {
-            string assembly = Assembly.GetExecutingAssembly().Location;
-            string templateFolderPath = Path.Combine(Path.GetDirectoryName(assembly), @"Templates");
-            string templateDefinitionFileName = "Template.json";
             ILoggingBroker loggingBroker = this.InitialiseLogger();
 
             this.templateRetrievalOrchestrationService =
-                this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
+                this.InitialiseClient(loggingBroker);
         }
 
         public StandardlyTemplateClient(ILoggingBroker loggingBroker)
         {
-            string assembly = Assembly.GetExecutingAssembly().Location;
-            string templateFolderPath = Path.Combine(Path.GetDirectoryName(assembly), @"Templates");
-            string templateDefinitionFileName = "Template.json";
-
             this.templateRetrievalOrchestrationService =
-                this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
-        }
-
-        public StandardlyTemplateClient(
-            string templateFolderPath,
-            string templateDefinitionFileName)
-        {
-            ILoggingBroker loggingBroker = this.InitialiseLogger();
-
-            this.templateRetrievalOrchestrationService =
-                this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
-        }
-
-        public StandardlyTemplateClient(
-            string templateFolderPath,
-            string templateDefinitionFileName,
-            ILoggingBroker loggingBroker)
-        {
-            this.templateRetrievalOrchestrationService =
-                this.InitialiseClient(templateFolderPath, templateDefinitionFileName, loggingBroker);
+                this.InitialiseClient(loggingBroker);
         }
 
         public List<Template> FindAllTemplates()
         {
             try
             {
-                return this.templateRetrievalOrchestrationService.FindAllTemplates();
+                string assembly = Assembly.GetExecutingAssembly().Location;
+                string templateFolderPath = Path.Combine(Path.GetDirectoryName(assembly), @"Templates");
+                string templateDefinitionFileName = "Template.json";
+
+                return this.templateRetrievalOrchestrationService
+                    .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
+            }
+            catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
+            {
+                throw new StandardlyClientValidationException(
+                    templateOrchestrationValidationException.InnerException as Xeption);
+            }
+            catch (TemplateGenerationOrchestrationDependencyValidationException
+                templateOrchestrationDependencyValidationException)
+            {
+                throw new StandardlyClientValidationException(
+                    templateOrchestrationDependencyValidationException.InnerException as Xeption);
+            }
+            catch (TemplateGenerationOrchestrationDependencyException
+                templateOrchestrationDependencyException)
+            {
+                throw new StandardlyClientDependencyException(
+                    templateOrchestrationDependencyException.InnerException as Xeption);
+            }
+            catch (TemplateGenerationOrchestrationServiceException
+                templateOrchestrationServiceException)
+            {
+                throw new StandardlyClientServiceException(
+                    templateOrchestrationServiceException.InnerException as Xeption);
+            }
+        }
+
+        public List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName)
+        {
+            try
+            {
+                return this.templateRetrievalOrchestrationService
+                    .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
             }
             catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
             {
@@ -105,8 +115,6 @@ namespace Standardly.Core.Clients
         }
 
         private ITemplateRetrievalOrchestrationService InitialiseClient(
-            string templateFolderPath,
-            string templateDefinitionFileName,
             ILoggingBroker loggingBroker)
         {
             var fileProcessingService = new FileProcessingService(
@@ -129,12 +137,9 @@ namespace Standardly.Core.Clients
                     loggingBroker: loggingBroker),
                 loggingBroker: loggingBroker);
 
-            var templateConfig = new TemplateConfig(templateFolderPath, templateDefinitionFileName);
-
             return new TemplateRetrievalOrchestrationService(
                 fileProcessingService,
                 templateProcessingService,
-                templateConfig,
                 loggingBroker);
         }
 

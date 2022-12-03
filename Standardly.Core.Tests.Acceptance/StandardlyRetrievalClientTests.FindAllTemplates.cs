@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Acceptance
         }
 
         [Fact]
-        public void ShouldFindListOfTemplatesWithCustomConfig()
+        public void ShouldFindListOfTemplatesWithCustomPath()
         {
             //given
             string assembly = Assembly.GetExecutingAssembly().Location;
@@ -42,10 +42,11 @@ namespace Standardly.Core.Tests.Acceptance
             string templateDefinitionFileName = "Template.json";
 
             var standardlyTemplateClient =
-                new StandardlyTemplateClient(templateFolderPath, templateDefinitionFileName);
+                new StandardlyTemplateClient();
 
             //when
-            List<Template> templates = standardlyTemplateClient.FindAllTemplates();
+            List<Template> templates = standardlyTemplateClient
+                .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
 
             //then
             templates.Count().Should().Be(3);

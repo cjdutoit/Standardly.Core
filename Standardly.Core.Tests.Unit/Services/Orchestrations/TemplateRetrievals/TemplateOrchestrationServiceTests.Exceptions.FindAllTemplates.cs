@@ -21,8 +21,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             Exception dependencyValidationException)
         {
             // given
-            string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
-            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
+            string templateFolderPath = GetRandomString();
+            string templateDefinitionFile = GetRandomString();
             string somePath = GetRandomString();
             string someContent = GetRandomString();
 
@@ -32,13 +32,13 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             this.fileProcessingServiceMock.Setup(service =>
                 service.RetrieveListOfFiles(
-                    templatefolder,
+                    templateFolderPath,
                     templateDefinitionFile))
                         .Throws(dependencyValidationException);
 
             // when
             Action findAllTemplatesAction = () =>
-                templateRetrievalOrchestrationService.FindAllTemplates();
+                templateRetrievalOrchestrationService.FindAllTemplates(templateFolderPath, templateDefinitionFile);
 
             TemplateGenerationOrchestrationDependencyValidationException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationDependencyValidationException>(findAllTemplatesAction);
@@ -47,7 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
+                broker.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -62,19 +62,21 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             // given
             string somePath = GetRandomString();
             string someContent = GetRandomString();
-            string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
-            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
+            string templateFolderPath = GetRandomString();
+            string templateDefinitionFile = GetRandomString();
 
             var expectedTemplateGenerationOrchestrationDependencyException =
-                new TemplateGenerationOrchestrationDependencyException(dependencyException.InnerException as Xeption);
+                new TemplateGenerationOrchestrationDependencyException(
+                    dependencyException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(broker =>
-                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
+                broker.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile))
                     .Throws(dependencyException);
 
             // when
             Action findAllTemplatesAction = () =>
-                this.templateRetrievalOrchestrationService.FindAllTemplates();
+                this.templateRetrievalOrchestrationService
+                    .FindAllTemplates(templateFolderPath, templateDefinitionFile);
 
             TemplateGenerationOrchestrationDependencyException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationDependencyException>(findAllTemplatesAction);
@@ -83,7 +85,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
+                broker.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -94,13 +96,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         public void ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
         {
             // given
+            string templateFolderPath = GetRandomString();
+            string templateDefinitionFile = GetRandomString();
             var serviceException = new Exception();
 
             var failedTemplateGenerationOrchestrationServiceException =
                 new FailedTemplateGenerationOrchestrationServiceException(serviceException);
 
             var expectedTemplateGenerationOrchestrationServiceException =
-                new TemplateGenerationOrchestrationServiceException(failedTemplateGenerationOrchestrationServiceException);
+                new TemplateGenerationOrchestrationServiceException(
+                    failedTemplateGenerationOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Setup(broker =>
                 broker.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()))
@@ -108,13 +113,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             // when
             Action findAllTemplatesAction = () =>
-                this.templateRetrievalOrchestrationService.FindAllTemplates();
+                this.templateRetrievalOrchestrationService
+                    .FindAllTemplates(templateFolderPath, templateDefinitionFile);
 
             TemplateGenerationOrchestrationServiceException actualException =
                 Assert.Throws<TemplateGenerationOrchestrationServiceException>(findAllTemplatesAction);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationServiceException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateGenerationOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()),

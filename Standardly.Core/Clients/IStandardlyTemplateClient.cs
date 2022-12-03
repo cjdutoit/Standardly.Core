@@ -11,6 +11,6 @@ namespace Standardly.Core.Clients
 {
     public interface IStandardlyTemplateClient
     {
-        List<Template> FindAllTemplates();
+        List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName);
     }
 }
