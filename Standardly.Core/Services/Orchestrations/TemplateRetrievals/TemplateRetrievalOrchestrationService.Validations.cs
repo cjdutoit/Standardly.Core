@@ -4,51 +4,44 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Collections.Generic;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
+using System;
+using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
 
 namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
 {
     public partial class TemplateRetrievalOrchestrationService
     {
-        private static void ValidateTemplateArguments(
-            List<Template> templates,
-            Dictionary<string, string> replacementDictionary)
+        private static void ValidateFindTemplateArguments(
+            string templateFolderPath,
+            string templateDefinitionFileName)
         {
             Validate(
-                (Rule: IsInvalid(templates), Parameter: nameof(templates)),
-                (Rule: IsInvalid(replacementDictionary), Parameter: nameof(replacementDictionary)));
+                (Rule: IsInvalid(templateFolderPath), Parameter: nameof(templateFolderPath)),
+                (Rule: IsInvalid(templateDefinitionFileName), Parameter: nameof(templateDefinitionFileName)));
         }
 
-        private static dynamic IsInvalid(List<Template> templates) => new
+        private static dynamic IsInvalid(string text) => new
         {
-            Condition = templates == null,
-            Message = "Templates is required"
-        };
-
-        private static dynamic IsInvalid(Dictionary<string, string> replacementDictionary) => new
-        {
-            Condition = replacementDictionary == null,
-            Message = "Dictionary values is required"
+            Condition = String.IsNullOrWhiteSpace(text),
+            Message = "Text is required"
         };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidArgumentTemplateOrchestrationException =
-                new InvalidArgumentTemplateGenerationOrchestrationException();
+            var invalidArgumentTemplateRetrievalOrchestrationException =
+                new InvalidArgumentTemplateRetrievalOrchestrationException();
 
             foreach ((dynamic rule, string parameter) in validations)
             {
                 if (rule.Condition)
                 {
-                    invalidArgumentTemplateOrchestrationException.UpsertDataList(
+                    invalidArgumentTemplateRetrievalOrchestrationException.UpsertDataList(
                         key: parameter,
                         value: rule.Message);
                 }
             }
 
-            invalidArgumentTemplateOrchestrationException.ThrowIfContainsErrors();
+            invalidArgumentTemplateRetrievalOrchestrationException.ThrowIfContainsErrors();
         }
     }
 }

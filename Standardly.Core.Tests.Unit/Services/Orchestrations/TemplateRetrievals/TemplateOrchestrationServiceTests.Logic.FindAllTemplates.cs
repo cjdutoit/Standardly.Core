@@ -19,8 +19,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         public void ShouldFindAllTemplates()
         {
             // given
-            string templatefolder = this.templateConfigMock.Object.TemplateFolderPath;
-            string templateDefinitionFile = this.templateConfigMock.Object.TemplateDefinitionFileName;
+            string templateFolderPath = GetRandomString();
+            string templateDefinitionFile = GetRandomString();
             List<string> randomFileList = GetRandomStringList();
             List<string> expectedFileList = randomFileList;
             string randomTemplateString = GetRandomString();
@@ -32,7 +32,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
 
             fileProcessingServiceMock.Setup(fileService =>
-                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile))
+                fileService.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile))
                     .Returns(expectedFileList);
 
             this.fileProcessingServiceMock.Setup(fileService =>
@@ -44,13 +44,14 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     .Returns(outputTemplate);
 
             // when
-            List<Template> actualTemplates = this.templateRetrievalOrchestrationService.FindAllTemplates();
+            List<Template> actualTemplates = this.templateRetrievalOrchestrationService
+                .FindAllTemplates(templateFolderPath, templateDefinitionFile);
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.RetrieveListOfFiles(templatefolder, templateDefinitionFile),
+                fileService.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile),
                         Times.Once);
 
             this.fileProcessingServiceMock.Verify(fileService =>
@@ -63,6 +64,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

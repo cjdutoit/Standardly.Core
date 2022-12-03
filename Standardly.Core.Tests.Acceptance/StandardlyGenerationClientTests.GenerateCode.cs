@@ -59,10 +59,10 @@ namespace Standardly.Core.Tests.Acceptance
             List<EntityModel> entityModelDefinition = new List<EntityModel>();
 
             var standardlyTemplateClient =
-                new StandardlyTemplateClient(templateFolderPath, templateDefinitionFileName);
+                new StandardlyTemplateClient();
 
             List<Template> templates =
-                standardlyTemplateClient.FindAllTemplates();
+                standardlyTemplateClient.FindAllTemplates(templateFolderPath, templateDefinitionFileName);
 
             TemplateGenerationInfo templateGenerationInfo =
                 new TemplateGenerationInfo

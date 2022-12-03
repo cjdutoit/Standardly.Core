@@ -24,9 +24,9 @@ As items are processed, events are raised.  The event will provide a timestamp, 
   string templateDefinitionFileName = "Template.json";
 
   var standardlyTemplateClient =
-      new StandardlyTemplateClient(templateFolderPath, templateDefinitionFileName);
+      new StandardlyTemplateClient();
 
-  List<Template> templates = standardlyTemplateClient.FindAllTemplates();
+  List<Template> templates = standardlyTemplateClient.FindAllTemplates(templateFolderPath, templateDefinitionFileName);
 ```
 
 ## Template Generation Client

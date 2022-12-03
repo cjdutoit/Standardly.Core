@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
 using Xunit;
@@ -16,10 +17,59 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 {
     public partial class TemplateRetrievalOrchestrationServiceTests
     {
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void ShouldThrowValidationExceptionOnFindIfArgumentsIsInvalidAndLogItAsync(string invalidText)
+        {
+            // given
+            string templateFolderPath = invalidText;
+            string templateDefinitionFileName = invalidText;
+
+            var invalidArgumentTemplateRetrievalOrchestrationException = new
+                InvalidArgumentTemplateRetrievalOrchestrationException();
+
+            invalidArgumentTemplateRetrievalOrchestrationException.AddData(
+                key: nameof(templateFolderPath),
+                values: "Text is required");
+
+            invalidArgumentTemplateRetrievalOrchestrationException.AddData(
+                key: nameof(templateDefinitionFileName),
+                values: "Text is required");
+
+            var expectedTemplateRetrievalOrchestrationValidationException =
+                new TemplateRetrievalOrchestrationValidationException(
+                    invalidArgumentTemplateRetrievalOrchestrationException);
+
+            // when
+            System.Action findAllTemplatesAction = () =>
+                this.templateRetrievalOrchestrationService
+                    .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
+
+            TemplateRetrievalOrchestrationValidationException actualTemplateRetrievalOrchestrationValidationException =
+                Assert.Throws<TemplateRetrievalOrchestrationValidationException>(findAllTemplatesAction);
+
+            // then
+            actualTemplateRetrievalOrchestrationValidationException.Should()
+                .BeEquivalentTo(expectedTemplateRetrievalOrchestrationValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedTemplateRetrievalOrchestrationValidationException))),
+                        Times.Once);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
         [Fact]
         public void ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTests()
         {
             // given
+            string templateFolderPath = GetRandomString();
+            string templateDefinitionFile = GetRandomString();
             int itemsToGenerate = GetRandomNumber();
             List<string> randomFileList = CreateListOfStrings();
             List<string> expectedFileList = randomFileList;
@@ -47,7 +97,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                 .Returns(outputTemplate);
 
             // when
-            List<Template> actualTemplates = this.templateRetrievalOrchestrationService.FindAllTemplates();
+            List<Template> actualTemplates = this.templateRetrievalOrchestrationService
+                .FindAllTemplates(templateFolderPath, templateDefinitionFile);
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count - 1);
@@ -66,6 +117,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

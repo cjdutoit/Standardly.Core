@@ -7,13 +7,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Moq;
 using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
@@ -32,7 +32,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         private readonly Mock<IFileProcessingService> fileProcessingServiceMock;
         private readonly Mock<IExecutionProcessingService> executionProcessingServiceMock;
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
-        private readonly Mock<ITemplateConfig> templateConfigMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateRetrievalOrchestrationService templateRetrievalOrchestrationService;
 
@@ -40,21 +39,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         {
             this.fileProcessingServiceMock = new Mock<IFileProcessingService>();
             this.templateProcessingServiceMock = new Mock<ITemplateProcessingService>();
-            this.templateConfigMock = new Mock<ITemplateConfig>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
-
-            this.templateConfigMock
-                .Setup(config => config.TemplateFolderPath).Returns("c:\\Standardly\\Templates");
-
-            this.templateConfigMock
-                .Setup(config => config.TemplateDefinitionFileName).Returns("Template.json");
 
             templateRetrievalOrchestrationService = new TemplateRetrievalOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
                 templateProcessingService: templateProcessingServiceMock.Object,
-                templateConfig: templateConfigMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static List<string> CreateListOfStrings()
         {
