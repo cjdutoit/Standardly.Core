@@ -51,6 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
 
@@ -88,6 +89,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                 broker.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile),
                     Times.Once);
 
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
@@ -128,6 +130,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
     }

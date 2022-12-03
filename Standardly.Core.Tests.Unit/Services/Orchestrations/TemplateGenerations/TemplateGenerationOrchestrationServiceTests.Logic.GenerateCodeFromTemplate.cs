@@ -192,6 +192,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -291,7 +292,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 .GenerateCode(templateGenerationInfo);
 
             // then
-
             for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
@@ -331,8 +331,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                 fileProcessingService.WriteToFile(file.Target, randomTransformedTemplateString),
                                     Times.Once);
                         });
-
-                        // TODO:  Add code for Appends
 
                         action.Appends.ForEach(append =>
                         {
@@ -376,6 +374,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
