@@ -5,15 +5,12 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "weekly"
-    commit-message:
-      prefix: "DEPENDENCIES"
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: "DEPENDENCIES"
+      prefix: "CONFIG"
+    labels:
+      - "nuget"
+      - "dependencies"
