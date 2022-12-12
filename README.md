@@ -31,9 +31,15 @@ As items are processed, events are raised.  The event will provide a timestamp, 
 
 ## Template Generation Client
 ```cs
+  TemplateGenerationInfo templateGenerationInfo =
+    new TemplateGenerationInfo
+    {
+        . . .
+    };
+
   var standardlyGenerationClient = new StandardlyGenerationClient();
   standardlyGenerationClient.Processed += ItemProcessed;
-  standardlyGenerationClient.GenerateCode(templates, replacementDictionary);
+  standardlyGenerationClient.GenerateCode(templateGenerationInfo);
 ```
 and acting on the events
 ```
