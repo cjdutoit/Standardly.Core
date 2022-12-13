@@ -65,16 +65,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(loggingBroker =>
-                loggingBroker.LogInformation(It.IsAny<string>()),
-                    Times.AtLeastOnce());
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedDependencyValidationException))),
-                        Times.Once);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
@@ -124,16 +114,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(loggingBroker =>
-                loggingBroker.LogInformation(It.IsAny<string>()),
-                    Times.AtLeastOnce());
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateOrchestrationDependencyException))),
-                        Times.Once);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
@@ -186,16 +166,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(loggingBroker =>
-                loggingBroker.LogInformation(It.IsAny<string>()),
-                    Times.AtLeastOnce());
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateGenerationOrchestrationServiceException))),
-                        Times.Once);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();

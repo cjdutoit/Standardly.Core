@@ -42,17 +42,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFilesProcessingValidationException))),
-                        Times.Once);
-
             this.fileServiceMock.Verify(service =>
                 service.ReadFromFile(invalidFilePath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

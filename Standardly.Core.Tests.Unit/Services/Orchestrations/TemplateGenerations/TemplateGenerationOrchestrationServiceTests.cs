@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Moq;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
@@ -34,7 +33,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         private readonly Mock<IExecutionProcessingService> executionProcessingServiceMock;
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
         private readonly Mock<ITemplateConfig> templateConfigMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateGenerationOrchestrationService templateGenerationOrchestrationService;
 
         public TemplateGenerationOrchestrationServiceTests()
@@ -43,7 +41,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             this.executionProcessingServiceMock = new Mock<IExecutionProcessingService>();
             this.templateProcessingServiceMock = new Mock<ITemplateProcessingService>();
             this.templateConfigMock = new Mock<ITemplateConfig>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.templateConfigMock
                 .Setup(config => config.TemplateFolderPath).Returns("c:\\Standardly\\Templates");
@@ -54,8 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             templateGenerationOrchestrationService = new TemplateGenerationOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
                 executionProcessingService: executionProcessingServiceMock.Object,
-                templateProcessingService: templateProcessingServiceMock.Object,
-                loggingBroker: loggingBrokerMock.Object);
+                templateProcessingService: templateProcessingServiceMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

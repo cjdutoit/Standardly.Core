@@ -48,13 +48,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                 broker.Run(someExecutions, somePath),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedExecutionServiceException))),
-                        Times.Once);
-
             this.executionBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

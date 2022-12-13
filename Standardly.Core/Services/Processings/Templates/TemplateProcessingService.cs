@@ -5,7 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Services.Foundations.Templates;
 
@@ -14,14 +13,10 @@ namespace Standardly.Core.Services.Processings.Templates
     public partial class TemplateProcessingService : ITemplateProcessingService
     {
         private readonly ITemplateService templateService;
-        private readonly ILoggingBroker loggingBroker;
 
-        public TemplateProcessingService(
-            ITemplateService templateService,
-            ILoggingBroker loggingBroker)
+        public TemplateProcessingService(ITemplateService templateService)
         {
             this.templateService = templateService;
-            this.loggingBroker = loggingBroker;
         }
 
         public Template ConvertStringToTemplate(string content) =>

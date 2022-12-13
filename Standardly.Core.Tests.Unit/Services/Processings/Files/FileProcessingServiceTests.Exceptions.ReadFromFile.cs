@@ -43,13 +43,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 service.ReadFromFile(inputPath),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFileProcessingDependencyValidationException))),
-                        Times.Once);
-
             this.fileServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -81,13 +75,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 service.ReadFromFile(inputPath),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFileProcessingDependencyException))),
-                        Times.Once);
-
             this.fileServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -122,13 +110,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 service.ReadFromFile(inputPath),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFileProcessingServiveException))),
-                        Times.Once);
-
             this.fileServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

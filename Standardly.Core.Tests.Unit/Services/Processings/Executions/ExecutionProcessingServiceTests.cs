@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Moq;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Executions.Exceptions;
 using Standardly.Core.Services.Foundations.Executions;
@@ -22,17 +21,14 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
     public partial class ExecutionProcessingServiceTests
     {
         private readonly Mock<IExecutionService> executionServiceMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IExecutionProcessingService executionProcessingService;
 
         public ExecutionProcessingServiceTests()
         {
             this.executionServiceMock = new Mock<IExecutionService>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.executionProcessingService = new ExecutionProcessingService(
-                executionService: this.executionServiceMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                executionService: this.executionServiceMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

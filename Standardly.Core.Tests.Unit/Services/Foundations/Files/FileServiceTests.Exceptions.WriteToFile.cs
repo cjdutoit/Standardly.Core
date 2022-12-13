@@ -48,13 +48,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 broker.WriteToFile(somePath, someContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFileDependencyValidationException))),
-                        Times.Once);
-
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -95,17 +89,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 broker.WriteToFile(somePath, someContent),
                     Times.AtLeastOnce);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogInformation(It.IsAny<string>()),
-                    Times.Between(0, 3, Moq.Range.Inclusive));
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFileDependencyException))),
-                        Times.Once);
-
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -146,13 +130,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 broker.WriteToFile(somePath, someContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedFileDependencyException))),
-                        Times.Once);
-
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -187,13 +165,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 broker.WriteToFile(somePath, someContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFileServiceException))),
-                        Times.Once);
-
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

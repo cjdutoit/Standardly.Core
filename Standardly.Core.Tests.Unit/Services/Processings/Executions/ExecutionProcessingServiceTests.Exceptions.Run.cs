@@ -47,13 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 service.Run(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedExecutionProcessingDependencyValidationException))),
-                        Times.Once);
-
             this.executionServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -87,13 +81,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 service.Run(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedExecutionProcessingDependencyException))),
-                        Times.Once);
-
             this.executionServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -130,13 +118,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                 service.Run(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedExecutionProcessingServiveException))),
-                        Times.Once);
-
             this.executionServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

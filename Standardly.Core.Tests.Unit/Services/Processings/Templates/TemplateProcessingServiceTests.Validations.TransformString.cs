@@ -51,11 +51,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateProcessingValidationException))),
-                        Times.Once);
-
             this.templateServiceMock.Verify(service =>
                 service.TransformString(It.IsAny<string>(), nullDictionary),
                     Times.Never);
@@ -65,7 +60,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     Times.Never());
 
             this.templateServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

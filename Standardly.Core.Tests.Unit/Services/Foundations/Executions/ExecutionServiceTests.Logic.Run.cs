@@ -40,7 +40,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
                     Times.Once);
 
             this.executionBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

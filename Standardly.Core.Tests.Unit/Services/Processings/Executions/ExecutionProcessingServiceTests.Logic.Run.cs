@@ -41,7 +41,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
                     Times.Once());
 
             this.executionServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

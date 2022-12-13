@@ -29,7 +29,6 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

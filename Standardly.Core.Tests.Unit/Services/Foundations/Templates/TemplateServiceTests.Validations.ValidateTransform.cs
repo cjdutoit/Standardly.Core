@@ -6,7 +6,6 @@
 
 using System;
 using FluentAssertions;
-using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Xunit;
@@ -43,13 +42,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // then
             actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateValidationException))),
-                        Times.Once);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -79,13 +71,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             // then
             actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateValidationException))),
-                        Times.Once);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

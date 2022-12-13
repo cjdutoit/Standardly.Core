@@ -45,17 +45,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             actualExecutionProcessingValidationException.Should()
                 .BeEquivalentTo(expectedExecutionProcessingValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedExecutionProcessingValidationException))),
-                        Times.Once);
-
             this.executionServiceMock.Verify(service =>
                 service.Run(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -89,17 +83,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             actualExecutionProcessingValidationException.Should()
                 .BeEquivalentTo(expectedExecutionProcessingValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedExecutionProcessingValidationException))),
-                        Times.Once);
-
             this.executionServiceMock.Verify(service =>
                 service.Run(nullExecutions, executionFolder),
                     Times.Never);
 
             this.executionServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

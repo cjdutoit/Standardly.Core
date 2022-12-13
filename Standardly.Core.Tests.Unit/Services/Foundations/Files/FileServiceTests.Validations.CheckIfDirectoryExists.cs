@@ -40,18 +40,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedFileValidationException))),
-                        Times.Once);
-
             this.fileBrokerMock.Verify(broker =>
                 broker.CheckIfDirectoryExists(
                     It.IsAny<string>()),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
