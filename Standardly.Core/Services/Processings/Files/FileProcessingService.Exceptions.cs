@@ -164,8 +164,6 @@ namespace Standardly.Core.Services.Processings.Files
             var fileProcessingValidationException =
                 new FileProcessingValidationException(exception);
 
-            this.loggingBroker.LogError(fileProcessingValidationException);
-
             return fileProcessingValidationException;
         }
 
@@ -174,8 +172,6 @@ namespace Standardly.Core.Services.Processings.Files
             var fileProcessingDependencyValidationException =
                 new FileProcessingDependencyValidationException(
                     exception.InnerException as Xeption);
-
-            this.loggingBroker.LogError(fileProcessingDependencyValidationException);
 
             return fileProcessingDependencyValidationException;
         }
@@ -186,8 +182,6 @@ namespace Standardly.Core.Services.Processings.Files
                 new FileProcessingDependencyException(
                     exception.InnerException as Xeption);
 
-            this.loggingBroker.LogError(fileProcessingDependencyException);
-
             return fileProcessingDependencyException;
         }
 
@@ -195,8 +189,6 @@ namespace Standardly.Core.Services.Processings.Files
         {
             var fileProcessingServiceException = new
                 FileProcessingServiceException(exception);
-
-            this.loggingBroker.LogError(fileProcessingServiceException);
 
             return fileProcessingServiceException;
         }

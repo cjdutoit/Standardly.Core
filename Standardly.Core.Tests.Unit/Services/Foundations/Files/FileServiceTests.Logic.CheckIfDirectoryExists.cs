@@ -37,7 +37,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

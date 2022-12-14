@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Moq;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
@@ -32,19 +31,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         private readonly Mock<IFileProcessingService> fileProcessingServiceMock;
         private readonly Mock<IExecutionProcessingService> executionProcessingServiceMock;
         private readonly Mock<ITemplateProcessingService> templateProcessingServiceMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateRetrievalOrchestrationService templateRetrievalOrchestrationService;
 
         public TemplateRetrievalOrchestrationServiceTests()
         {
             this.fileProcessingServiceMock = new Mock<IFileProcessingService>();
             this.templateProcessingServiceMock = new Mock<ITemplateProcessingService>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             templateRetrievalOrchestrationService = new TemplateRetrievalOrchestrationService(
                 fileProcessingService: fileProcessingServiceMock.Object,
-                templateProcessingService: templateProcessingServiceMock.Object,
-                loggingBroker: loggingBrokerMock.Object);
+                templateProcessingService: templateProcessingServiceMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

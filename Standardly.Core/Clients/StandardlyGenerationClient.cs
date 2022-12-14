@@ -5,10 +5,8 @@
 // ---------------------------------------------------------------
 
 using System;
-using Microsoft.Extensions.Logging;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Brokers.Files;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
@@ -34,18 +32,8 @@ namespace Standardly.Core.Clients
 
         public StandardlyGenerationClient()
         {
-            ILoggingBroker loggingBroker = this.InitialiseLogger();
-
             this.templateGenerationOrchestrationService =
-                this.InitialiseClient(loggingBroker);
-
-            this.LogEventSetup();
-        }
-
-        public StandardlyGenerationClient(ILoggingBroker loggingBroker)
-        {
-            this.templateGenerationOrchestrationService =
-                this.InitialiseClient(loggingBroker);
+                this.InitialiseClient();
 
             this.LogEventSetup();
         }
@@ -86,49 +74,27 @@ namespace Standardly.Core.Clients
             this.templateGenerationOrchestrationService.Processed += ItemProcessed;
         }
 
-        private ITemplateGenerationOrchestrationService InitialiseClient(ILoggingBroker loggingBroker)
+        private ITemplateGenerationOrchestrationService InitialiseClient()
         {
             var fileProcessingService = new FileProcessingService(
                 fileService: new FileService(
                     fileBroker: new FileBroker(),
-                    retryConfig: new RetryConfig(),
-                    loggingBroker: loggingBroker),
-                loggingBroker: loggingBroker);
+                    retryConfig: new RetryConfig()));
 
             var executionProcessingService = new ExecutionProcessingService(
                 executionService: new ExecutionService(
-                    executionBroker: new ExecutionBroker(),
-                    loggingBroker: loggingBroker),
-                loggingBroker: loggingBroker);
+                    executionBroker: new ExecutionBroker()));
 
             var templateProcessingService = new TemplateProcessingService(
                 templateService: new TemplateService(
                     fileBroker: new FileBroker(),
-                    regularExpressionBroker: new RegularExpressionBroker(),
-                    loggingBroker: loggingBroker),
-                loggingBroker: loggingBroker);
+                    regularExpressionBroker: new RegularExpressionBroker()));
 
             return new TemplateGenerationOrchestrationService(
                 fileProcessingService,
                 executionProcessingService,
-                templateProcessingService,
-                loggingBroker);
+                templateProcessingService);
         }
-
-        private ILoggingBroker InitialiseLogger()
-        {
-            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder
-                    .AddFilter("Microsoft", LogLevel.Warning)
-                    .AddFilter("System", LogLevel.Warning)
-                    .AddFilter("Standardly", LogLevel.Warning);
-            });
-
-            ILogger<LoggingBroker> logger = loggerFactory.CreateLogger<LoggingBroker>();
-            return new LoggingBroker(logger);
-        }
-
 
         private void ItemProcessed(object sender, ProcessedEventArgs e)
         {

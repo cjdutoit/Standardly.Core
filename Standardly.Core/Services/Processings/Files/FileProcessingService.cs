@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Services.Foundations.Files;
 
 namespace Standardly.Core.Services.Processings.Files
@@ -14,12 +13,10 @@ namespace Standardly.Core.Services.Processings.Files
     public partial class FileProcessingService : IFileProcessingService
     {
         private readonly IFileService fileService;
-        private readonly ILoggingBroker loggingBroker;
 
-        public FileProcessingService(IFileService fileService, ILoggingBroker loggingBroker)
+        public FileProcessingService(IFileService fileService)
         {
             this.fileService = fileService;
-            this.loggingBroker = loggingBroker;
         }
 
         public bool CheckIfFileExists(string path) =>

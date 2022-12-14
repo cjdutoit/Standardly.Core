@@ -59,7 +59,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             this.regularExpressionBrokerMock.VerifyNoOtherCalls();
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -109,7 +108,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             this.regularExpressionBrokerMock.VerifyNoOtherCalls();
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -160,7 +158,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             this.regularExpressionBrokerMock.VerifyNoOtherCalls();
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -211,7 +208,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             this.regularExpressionBrokerMock.VerifyNoOtherCalls();
             this.fileBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

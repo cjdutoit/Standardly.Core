@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Foundations.Templates;
@@ -27,7 +26,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         private readonly IFileProcessingService fileProcessingService;
         private readonly IExecutionProcessingService executionProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
-        private readonly ILoggingBroker loggingBroker;
         private string previousBranch = string.Empty;
         private int processedItems { get; set; }
         private int totalItems { get; set; }
@@ -35,13 +33,11 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         public TemplateGenerationOrchestrationService(
             IFileProcessingService fileProcessingService,
             IExecutionProcessingService executionProcessingService,
-            ITemplateProcessingService templateProcessingService,
-            ILoggingBroker loggingBroker)
+            ITemplateProcessingService templateProcessingService)
         {
             this.fileProcessingService = fileProcessingService;
             this.executionProcessingService = executionProcessingService;
             this.templateProcessingService = templateProcessingService;
-            this.loggingBroker = loggingBroker;
         }
 
         public void GenerateCode(TemplateGenerationInfo templateGenerationInfo) =>
@@ -344,8 +340,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     ProcessedItems = this.processedItems,
                     TotalItems = this.totalItems,
                 });
-
-            this.loggingBroker.LogInformation($"{date} - {message}");
         }
 
         protected virtual void OnProcessed(ProcessedEventArgs e)

@@ -59,8 +59,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // given
             Template someTemplate = new Template()
             {
+                ModelSingularName = invalidString,
+                ModelPluralName = invalidString,
                 Name = invalidString,
                 Description = invalidString,
+                Stack = invalidString,
+                Language = invalidString,
                 TemplateType = invalidString,
                 ProjectsRequired = invalidString,
             };
@@ -77,6 +81,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             invalidTemplateException.AddData(
                 key: "Template Description",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Template Stack",
+                values: "Text is required");
+
+            invalidTemplateException.AddData(
+                key: "Template Language",
                 values: "Text is required");
 
             invalidTemplateException.AddData(
@@ -114,8 +126,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // given
             Template someTemplate = new Template()
             {
+                ModelSingularName = GetRandomString(),
+                ModelPluralName = GetRandomString(),
                 Name = GetRandomString(),
                 Description = GetRandomString(),
+                Stack = GetRandomString(),
+                Language = GetRandomString(),
                 TemplateType = GetRandomString(),
                 ProjectsRequired = GetRandomString()
             };
@@ -169,8 +185,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // given
             Template someTemplate = new Template()
             {
+                ModelSingularName = GetRandomString(),
+                ModelPluralName = GetRandomString(),
                 Name = GetRandomString(),
                 Description = GetRandomString(),
+                Stack = GetRandomString(),
+                Language = GetRandomString(),
                 TemplateType = GetRandomString(),
                 ProjectsRequired = GetRandomString()
             };
@@ -225,8 +245,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // given
             Template someTemplate = new Template()
             {
+                ModelSingularName = GetRandomString(),
+                ModelPluralName = GetRandomString(),
                 Name = GetRandomString(),
                 Description = GetRandomString(),
+                Stack = GetRandomString(),
+                Language = GetRandomString(),
                 TemplateType = GetRandomString(),
                 ProjectsRequired = GetRandomString()
             };
@@ -300,8 +324,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // given
             Template someTemplate = new Template()
             {
+                ModelSingularName = GetRandomString(),
+                ModelPluralName = GetRandomString(),
                 Name = GetRandomString(),
                 Description = GetRandomString(),
+                Stack = GetRandomString(),
+                Language = GetRandomString(),
                 TemplateType = GetRandomString(),
                 ProjectsRequired = GetRandomString()
             };
@@ -387,8 +415,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             // given
             Template someTemplate = new Template()
             {
+                ModelSingularName = GetRandomString(),
+                ModelPluralName = GetRandomString(),
                 Name = GetRandomString(),
                 Description = GetRandomString(),
+                Stack = GetRandomString(),
+                Language = GetRandomString(),
                 TemplateType = GetRandomString(),
                 ProjectsRequired = GetRandomString()
             };

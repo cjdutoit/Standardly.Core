@@ -93,8 +93,6 @@ namespace Standardly.Core.Services.Processings.Templates
             var templateProcessingValidationException =
                 new TemplateProcessingValidationException(exception);
 
-            this.loggingBroker.LogError(templateProcessingValidationException);
-
             return templateProcessingValidationException;
         }
 
@@ -103,8 +101,6 @@ namespace Standardly.Core.Services.Processings.Templates
             var templateProcessingDependencyValidationException =
                 new TemplateProcessingDependencyValidationException(
                     exception.InnerException as Xeption);
-
-            this.loggingBroker.LogError(templateProcessingDependencyValidationException);
 
             return templateProcessingDependencyValidationException;
         }
@@ -115,8 +111,6 @@ namespace Standardly.Core.Services.Processings.Templates
                 new TemplateProcessingDependencyException(
                     exception.InnerException as Xeption);
 
-            this.loggingBroker.LogError(templateProcessingDependencyException);
-
             return templateProcessingDependencyException;
         }
 
@@ -124,8 +118,6 @@ namespace Standardly.Core.Services.Processings.Templates
         {
             var countryProcessingServiceException = new
                 TemplateProcessingServiceException(exception);
-
-            this.loggingBroker.LogError(countryProcessingServiceException);
 
             return countryProcessingServiceException;
         }
