@@ -54,12 +54,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             actualTemplateRetrievalOrchestrationValidationException.Should()
                 .BeEquivalentTo(expectedTemplateRetrievalOrchestrationValidationException);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateRetrievalOrchestrationValidationException))),
-                        Times.Once);
-
-            this.loggingBrokerMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
@@ -117,7 +111,6 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

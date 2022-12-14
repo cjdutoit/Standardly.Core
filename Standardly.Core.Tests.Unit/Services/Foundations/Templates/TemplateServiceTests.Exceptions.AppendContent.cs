@@ -34,8 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             TemplateService templateService = new TemplateService(
                 fileBroker: fileBrokerMock.Object,
-                regularExpressionBroker: regularExpressionBrokerMock.Object,
-                loggingBroker: loggingBrokerMock.Object);
+                regularExpressionBroker: regularExpressionBrokerMock.Object);
 
             var invalidRegularExpressionTemplateException =
                 new InvalidRegularExpressionTemplateException(
@@ -69,18 +68,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 broker.CheckForExpressionMatch(regexToMatch, sourceContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateDependencyValidationException))),
-                        Times.Once);
-
             regularExpressionBrokerMock.Verify(broker =>
                 broker.Replace(sourceContent, regexToMatch, appendContent),
                     Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
             regularExpressionBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -99,8 +92,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
             TemplateService templateService = new TemplateService(
                 fileBroker: fileBrokerMock.Object,
-                regularExpressionBroker: regularExpressionBrokerMock.Object,
-                loggingBroker: loggingBrokerMock.Object);
+                regularExpressionBroker: regularExpressionBrokerMock.Object);
 
             var serviceException = new Exception();
 
@@ -134,18 +126,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 broker.CheckForExpressionMatch(regexToMatch, sourceContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateServiceException))),
-                        Times.Once);
-
             regularExpressionBrokerMock.Verify(broker =>
                 broker.Replace(sourceContent, regexToMatch, appendContent),
                     Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
             regularExpressionBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

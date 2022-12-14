@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using Standardly.Core.Brokers.Files;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Configurations.Retries;
 
 namespace Standardly.Core.Services.Foundations.Files
@@ -15,13 +14,11 @@ namespace Standardly.Core.Services.Foundations.Files
     {
         private readonly IFileBroker fileBroker;
         private readonly IRetryConfig retryConfig;
-        private readonly ILoggingBroker loggingBroker;
 
-        public FileService(IFileBroker fileBroker, IRetryConfig retryConfig, ILoggingBroker loggingBroker)
+        public FileService(IFileBroker fileBroker, IRetryConfig retryConfig)
         {
             this.fileBroker = fileBroker;
             this.retryConfig = retryConfig;
-            this.loggingBroker = loggingBroker;
         }
 
         public bool CheckIfFileExists(string path) =>

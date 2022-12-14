@@ -11,7 +11,6 @@ using System.Text;
 using Moq;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
@@ -28,19 +27,16 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     {
         private readonly Mock<IFileBroker> fileBrokerMock;
         private readonly Mock<IRegularExpressionBroker> regularExpressionBrokerMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateService templateService;
 
         public TemplateServiceTests()
         {
             this.fileBrokerMock = new Mock<IFileBroker>();
             this.regularExpressionBrokerMock = new Mock<IRegularExpressionBroker>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.templateService = new TemplateService(
                 fileBroker: fileBrokerMock.Object,
-                regularExpressionBroker: regularExpressionBrokerMock.Object,
-                loggingBroker: loggingBrokerMock.Object);
+                regularExpressionBroker: regularExpressionBrokerMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

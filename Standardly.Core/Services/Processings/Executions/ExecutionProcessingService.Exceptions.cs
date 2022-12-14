@@ -56,8 +56,6 @@ namespace Standardly.Core.Services.Processings.Executions
             var executionProcessingValidationException =
                 new ExecutionProcessingValidationException(exception);
 
-            this.loggingBroker.LogError(executionProcessingValidationException);
-
             return executionProcessingValidationException;
         }
 
@@ -66,8 +64,6 @@ namespace Standardly.Core.Services.Processings.Executions
             var executionProcessingDependencyValidationException =
                 new ExecutionProcessingDependencyValidationException(
                     exception.InnerException as Xeption);
-
-            this.loggingBroker.LogError(executionProcessingDependencyValidationException);
 
             return executionProcessingDependencyValidationException;
         }
@@ -78,8 +74,6 @@ namespace Standardly.Core.Services.Processings.Executions
                 new ExecutionProcessingDependencyException(
                     exception.InnerException as Xeption);
 
-            this.loggingBroker.LogError(executionProcessingDependencyException);
-
             return executionProcessingDependencyException;
         }
 
@@ -87,8 +81,6 @@ namespace Standardly.Core.Services.Processings.Executions
         {
             var executionProcessingServiceException = new
                 ExecutionProcessingServiceException(exception);
-
-            this.loggingBroker.LogError(executionProcessingServiceException);
 
             return executionProcessingServiceException;
         }

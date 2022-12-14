@@ -295,7 +295,6 @@ namespace Standardly.Core.Services.Foundations.Files
         private FileValidationException CreateAndLogValidationException(Xeption exception)
         {
             var fileValidationException = new FileValidationException(exception);
-            this.loggingBroker.LogError(fileValidationException);
 
             return fileValidationException;
         }
@@ -305,15 +304,12 @@ namespace Standardly.Core.Services.Foundations.Files
             var fileServiceDependencyValidationException =
                 new FileDependencyValidationException(exception);
 
-            this.loggingBroker.LogError(fileServiceDependencyValidationException);
-
             return fileServiceDependencyValidationException;
         }
 
         private FileDependencyException CreateAndLogDependencyException(Xeption exception)
         {
             var fileServiceDependencyException = new FileDependencyException(exception);
-            this.loggingBroker.LogError(fileServiceDependencyException);
 
             return fileServiceDependencyException;
         }
@@ -322,7 +318,6 @@ namespace Standardly.Core.Services.Foundations.Files
             Xeption exception)
         {
             var fileServiceDependencyException = new FileDependencyException(exception);
-            this.loggingBroker.LogCritical(fileServiceDependencyException);
 
             return fileServiceDependencyException;
         }
@@ -331,7 +326,6 @@ namespace Standardly.Core.Services.Foundations.Files
             Xeption exception)
         {
             var fileServiceException = new FileServiceException(exception);
-            this.loggingBroker.LogError(fileServiceException);
 
             return fileServiceException;
         }
