@@ -52,8 +52,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
 
                         templates.Add(template);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex.ToString());
                     }
                 }
 

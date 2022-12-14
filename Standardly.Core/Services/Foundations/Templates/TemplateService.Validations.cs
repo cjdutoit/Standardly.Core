@@ -65,6 +65,8 @@ namespace Standardly.Core.Services.Foundations.Templates
             {
                 (Rule: IsInvalid(template.Name), Parameter: "Template Name"),
                 (Rule: IsInvalid(template.Description), Parameter: "Template Description"),
+                (Rule: IsInvalid(template.Stack), Parameter: "Template Stack"),
+                (Rule: IsInvalid(template.Language), Parameter: "Template Language"),
                 (Rule: IsInvalid(template.TemplateType), Parameter: "Template Type"),
                 (Rule: IsInvalid(template.ProjectsRequired), Parameter: "Template Projects Required"),
                 (Rule: IsInvalid(template.Tasks), Parameter: "Template Tasks")
