@@ -40,7 +40,6 @@ namespace Standardly
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
         }
 
         private static void AddBrokers(IServiceCollection services)

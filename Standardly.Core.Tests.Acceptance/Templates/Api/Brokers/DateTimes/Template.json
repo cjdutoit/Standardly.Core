@@ -1,7 +1,9 @@
 {
   "name": "BROKERS: DateTime Broker",
   "description": "Generates a DateTime Broker",
-  "templateType": "API",
+  "stack": "Backend",
+  "language": "C#",
+  "templateType": "Broker",
   "projectsRequired": "Api",
   "sortOrder": 1,
   "modelSingularName": "DateTime",

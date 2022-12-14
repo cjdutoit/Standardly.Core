@@ -1,7 +1,9 @@
 {
   "name": "BROKERS: Logging Broker",
   "description": "Generates a Logging Broker",
-  "templateType": "API",
+  "stack": "Backend",
+  "language": "C#",
+  "templateType": "Broker",
   "projectsRequired": "Api",
   "sortOrder": 1,
   "modelSingularName": "Logging",
@@ -472,6 +474,6 @@
     "----------------------------------------------------",
     "* Resolve / remove any TODO items in the task list",
     "* Link the pull request(s) to related issues by adding e.g. #CLOSES 123 to the description",
-    "* Review Draft Pull Requests (and add more commits by pushing to any of the branches if needed):",
+    "* Review Draft Pull Requests (and add more commits by pushing to any of the branches if needed):"
   ]
 }
