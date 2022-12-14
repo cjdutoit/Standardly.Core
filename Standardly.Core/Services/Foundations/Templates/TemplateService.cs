@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Foundations.Templates;
 
@@ -19,16 +18,13 @@ namespace Standardly.Core.Services.Foundations.Templates
     {
         private readonly IFileBroker fileBroker;
         private readonly IRegularExpressionBroker regularExpressionBroker;
-        private readonly ILoggingBroker loggingBroker;
 
         public TemplateService(
             IFileBroker fileBroker,
-            IRegularExpressionBroker regularExpressionBroker,
-            ILoggingBroker loggingBroker)
+            IRegularExpressionBroker regularExpressionBroker)
         {
             this.fileBroker = fileBroker;
             this.regularExpressionBroker = regularExpressionBroker;
-            this.loggingBroker = loggingBroker;
         }
 
         public string TransformString(

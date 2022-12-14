@@ -92,8 +92,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
             var templateOrchestrationValidationException =
                 new TemplateRetrievalOrchestrationValidationException(exception);
 
-            this.loggingBroker.LogError(templateOrchestrationValidationException);
-
             return templateOrchestrationValidationException;
         }
 

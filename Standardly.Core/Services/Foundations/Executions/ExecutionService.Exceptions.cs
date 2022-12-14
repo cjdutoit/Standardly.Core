@@ -36,7 +36,6 @@ namespace Standardly.Core.Services.Foundations.Executions
         private ExecutionValidationException CreateAndLogValidationException(Xeption exception)
         {
             var executionValidationException = new ExecutionValidationException(exception);
-            this.loggingBroker.LogError(executionValidationException);
 
             return executionValidationException;
         }
@@ -44,7 +43,6 @@ namespace Standardly.Core.Services.Foundations.Executions
         private ExecutionServiceException CreateAndLogServiceException(Xeption exception)
         {
             var executionServiceException = new ExecutionServiceException(exception);
-            this.loggingBroker.LogError(executionServiceException);
 
             return executionServiceException;
         }

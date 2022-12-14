@@ -44,13 +44,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 service.ConvertStringToTemplate(inputContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateProcessingDependencyValidationException))),
-                        Times.Once);
-
             this.templateServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -82,13 +76,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 service.ConvertStringToTemplate(inputContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateProcessingDependencyException))),
-                        Times.Once);
-
             this.templateServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -123,13 +111,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 service.ConvertStringToTemplate(inputContent),
                     Times.Once);
 
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedTemplateProcessingServiveException))),
-                        Times.Once);
-
             this.templateServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -185,14 +185,9 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 });
             }
 
-            this.loggingBrokerMock.Verify(loggingBroker =>
-                loggingBroker.LogInformation(It.IsAny<string>()),
-                    Times.AtLeastOnce());
-
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -367,14 +362,9 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 });
             }
 
-            this.loggingBrokerMock.Verify(loggingBroker =>
-                loggingBroker.LogInformation(It.IsAny<string>()),
-                    Times.AtLeastOnce());
-
             this.templateProcessingServiceMock.VerifyNoOtherCalls();
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

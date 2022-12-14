@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
@@ -17,16 +16,13 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
     {
         private readonly IFileProcessingService fileProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
-        private readonly ILoggingBroker loggingBroker;
 
         public TemplateRetrievalOrchestrationService(
             IFileProcessingService fileProcessingService,
-            ITemplateProcessingService templateProcessingService,
-            ILoggingBroker loggingBroker)
+            ITemplateProcessingService templateProcessingService)
         {
             this.fileProcessingService = fileProcessingService;
             this.templateProcessingService = templateProcessingService;
-            this.loggingBroker = loggingBroker;
         }
 
         public List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName) =>

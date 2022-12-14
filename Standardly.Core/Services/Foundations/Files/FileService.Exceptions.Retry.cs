@@ -35,11 +35,6 @@ namespace Standardly.Core.Services.Foundations.Files
                 {
                     if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
                     {
-                        this.loggingBroker
-                            .LogInformation(
-                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
-                                    $"Exception: {ex.Message}");
-
                         if (attempts == this.retryConfig.MaxRetryAttempts)
                         {
                             throw;
@@ -70,11 +65,6 @@ namespace Standardly.Core.Services.Foundations.Files
                 {
                     if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
                     {
-                        this.loggingBroker
-                            .LogInformation(
-                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
-                                    $"Exception: {ex.Message}");
-
                         if (attempts == this.retryConfig.MaxRetryAttempts)
                         {
                             throw;
@@ -105,11 +95,6 @@ namespace Standardly.Core.Services.Foundations.Files
                 {
                     if (retryExceptionTypes.Any(exception => exception == ex.GetType()))
                     {
-                        this.loggingBroker
-                            .LogInformation(
-                                $"Error found. Retry attempt {attempts}/{this.retryConfig.MaxRetryAttempts}. " +
-                                    $"Exception: {ex.Message}");
-
                         if (attempts == this.retryConfig.MaxRetryAttempts)
                         {
                             throw;

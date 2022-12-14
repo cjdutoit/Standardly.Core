@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Moq;
 using Newtonsoft.Json;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
@@ -26,17 +25,14 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         private readonly Mock<ITemplateService> templateServiceMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly ITemplateProcessingService templateProcessingService;
 
         public TemplateProcessingServiceTests()
         {
             this.templateServiceMock = new Mock<ITemplateService>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.templateProcessingService = new TemplateProcessingService(
-                templateService: this.templateServiceMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                templateService: this.templateServiceMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>

@@ -7,10 +7,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Brokers.Files;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
@@ -34,16 +32,8 @@ namespace Standardly.Core.Clients
 
         public StandardlyTemplateClient()
         {
-            ILoggingBroker loggingBroker = this.InitialiseLogger();
-
             this.templateRetrievalOrchestrationService =
-                this.InitialiseClient(loggingBroker);
-        }
-
-        public StandardlyTemplateClient(ILoggingBroker loggingBroker)
-        {
-            this.templateRetrievalOrchestrationService =
-                this.InitialiseClient(loggingBroker);
+                this.InitialiseClient();
         }
 
         public List<Template> FindAllTemplates()
@@ -114,47 +104,25 @@ namespace Standardly.Core.Clients
             }
         }
 
-        private ITemplateRetrievalOrchestrationService InitialiseClient(
-            ILoggingBroker loggingBroker)
+        private ITemplateRetrievalOrchestrationService InitialiseClient()
         {
             var fileProcessingService = new FileProcessingService(
                 fileService: new FileService(
                     fileBroker: new FileBroker(),
-                    retryConfig: new RetryConfig(),
-                    loggingBroker: loggingBroker),
-                loggingBroker: loggingBroker);
+                    retryConfig: new RetryConfig()));
 
             var executionProcessingService = new ExecutionProcessingService(
                 executionService: new ExecutionService(
-                    executionBroker: new ExecutionBroker(),
-                    loggingBroker: loggingBroker),
-                loggingBroker: loggingBroker);
+                    executionBroker: new ExecutionBroker()));
 
             var templateProcessingService = new TemplateProcessingService(
                 templateService: new TemplateService(
                     fileBroker: new FileBroker(),
-                    regularExpressionBroker: new RegularExpressionBroker(),
-                    loggingBroker: loggingBroker),
-                loggingBroker: loggingBroker);
+                    regularExpressionBroker: new RegularExpressionBroker()));
 
             return new TemplateRetrievalOrchestrationService(
                 fileProcessingService,
-                templateProcessingService,
-                loggingBroker);
-        }
-
-        private ILoggingBroker InitialiseLogger()
-        {
-            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder
-                    .AddFilter("Microsoft", LogLevel.Warning)
-                    .AddFilter("System", LogLevel.Warning)
-                    .AddFilter("Standardly", LogLevel.Warning);
-            });
-
-            ILogger<LoggingBroker> logger = loggerFactory.CreateLogger<LoggingBroker>();
-            return new LoggingBroker(logger);
+                templateProcessingService);
         }
     }
 }

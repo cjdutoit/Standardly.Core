@@ -111,7 +111,6 @@ namespace Standardly.Core.Services.Foundations.Templates
         private TemplateValidationException CreateAndLogValidationException(Xeption exception)
         {
             var templateValidationException = new TemplateValidationException(exception);
-            this.loggingBroker.LogError(templateValidationException);
 
             return templateValidationException;
         }
@@ -119,7 +118,6 @@ namespace Standardly.Core.Services.Foundations.Templates
         private TemplateDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
             var templateDependencyValidationException = new TemplateDependencyValidationException(exception);
-            this.loggingBroker.LogError(templateDependencyValidationException);
 
             return templateDependencyValidationException;
         }
@@ -127,7 +125,6 @@ namespace Standardly.Core.Services.Foundations.Templates
         private TemplateServiceException CreateAndLogServiceException(Exception exception)
         {
             var templateOrchestrationServiceException = new TemplateServiceException(exception);
-            this.loggingBroker.LogError(templateOrchestrationServiceException);
 
             return templateOrchestrationServiceException;
         }

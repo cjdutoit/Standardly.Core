@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Moq;
-using Standardly.Core.Brokers.Loggings;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Services.Foundations.Files;
 using Standardly.Core.Services.Processings.Files;
@@ -21,17 +20,14 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         private readonly Mock<IFileService> fileServiceMock;
-        private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IFileProcessingService fileProcessingService;
 
         public FileProcessingServiceTests()
         {
             this.fileServiceMock = new Mock<IFileService>();
-            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
             this.fileProcessingService = new FileProcessingService(
-                fileService: this.fileServiceMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
+                fileService: this.fileServiceMock.Object);
         }
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
