@@ -124,9 +124,9 @@ namespace Standardly.Core.Services.Foundations.Templates
 
         private TemplateServiceException CreateAndLogServiceException(Exception exception)
         {
-            var templateOrchestrationServiceException = new TemplateServiceException(exception);
+            var templateServiceException = new TemplateServiceException(exception);
 
-            return templateOrchestrationServiceException;
+            return templateServiceException;
         }
     }
 }

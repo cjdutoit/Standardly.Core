@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Executions.Exceptions;
 using Xeptions;
 
@@ -12,13 +13,13 @@ namespace Standardly.Core.Services.Foundations.Executions
 {
     public partial class ExecutionService
     {
-        private delegate string ReturningStringFunction();
+        private delegate ValueTask<string> ReturningStringFunction();
 
-        private string TryCatch(ReturningStringFunction returningStringFunction)
+        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
         {
             try
             {
-                return returningStringFunction();
+                return await returningStringFunction();
             }
             catch (InvalidArgumentExecutionException invalidArgumentExecutionException)
             {

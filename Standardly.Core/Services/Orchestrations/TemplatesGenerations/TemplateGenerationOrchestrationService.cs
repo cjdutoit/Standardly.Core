@@ -229,7 +229,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         {
             if (templateGenerationInfo.ScriptExecutionIsEnabled == true)
             {
-                string outcome = this.executionProcessingService.Run(executions, executionFolder);
+                string outcome = this.executionProcessingService.Run(executions, executionFolder).Result;
                 this.LogMessage(DateTimeOffset.UtcNow, $"{outcome}");
             }
             else

@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Services.Foundations.Executions;
 
@@ -19,12 +20,12 @@ namespace Standardly.Core.Services.Processings.Executions
             this.executionService = executionService;
         }
 
-        public string Run(List<Execution> executions, string executionFolder) =>
-            TryCatch(() =>
+        public ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
+            TryCatch(async () =>
             {
                 ValidateRunArguments(executions, executionFolder);
 
-                return this.executionService.Run(executions, executionFolder);
+                return await this.executionService.RunAsync(executions, executionFolder);
             });
     }
 }

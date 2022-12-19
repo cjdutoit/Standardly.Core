@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Standardly.Commands;
 using Standardly.Core.Models.Foundations.Executions;
 
@@ -13,15 +14,18 @@ namespace Standardly.Core.Brokers.Executions
 {
     public class ExecutionBroker : IExecutionBroker
     {
-        public string Run(List<Execution> executions, string executionFolder)
+        public async ValueTask<string> RunAsync(List<Execution> executions, string executionFolder)
         {
-            using (CommandClient commandClient = new CommandClient("cmd.exe"))
+            return await Task.Run(() =>
             {
-                List<string> instructions = executions
-                    .Select(execution => execution.Instruction).ToList();
+                using (CommandClient commandClient = new CommandClient("cmd.exe"))
+                {
+                    List<string> instructions = executions
+                        .Select(execution => execution.Instruction).ToList();
 
-                return commandClient.ExecuteCommand(instructions);
-            }
+                    return commandClient.ExecuteCommand(instructions);
+                }
+            });
         }
     }
 }

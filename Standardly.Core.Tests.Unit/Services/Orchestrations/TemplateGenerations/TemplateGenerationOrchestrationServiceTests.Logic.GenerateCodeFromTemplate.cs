@@ -100,7 +100,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
                             executionProcessingService.Run(action.Executions, action.ExecutionFolder))
-                                .Returns(randomExecutionOutcome);
+                                .ReturnsAsync(randomExecutionOutcome);
                     });
                 });
             }
@@ -277,7 +277,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
                             executionProcessingService.Run(action.Executions, action.ExecutionFolder))
-                                .Returns(randomExecutionOutcome);
+                                .ReturnsAsync(randomExecutionOutcome);
                     });
                 });
             }
