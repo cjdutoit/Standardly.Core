@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public void ShouldWriteToFile()
+        public async Task ShouldWriteToFile()
         {
             // given
             string randomFilePath = GetRandomString();
@@ -21,11 +22,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             string inputContent = randomContent;
 
             // when
-            this.fileService.WriteToFile(inputFilePath, inputContent);
+            await this.fileService.WriteToFileAsync(inputFilePath, inputContent);
 
             // then
             this.fileBrokerMock.Verify(broker =>
-                broker.WriteToFile(inputFilePath, inputContent),
+                broker.WriteToFileAsync(inputFilePath, inputContent),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

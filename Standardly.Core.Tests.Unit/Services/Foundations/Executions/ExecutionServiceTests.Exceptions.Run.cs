@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
 
             this.executionBrokerMock.Setup(broker =>
                 broker.RunAsync(someExecutions, somePath))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<string> runTask = this.executionService.RunAsync(someExecutions, somePath);

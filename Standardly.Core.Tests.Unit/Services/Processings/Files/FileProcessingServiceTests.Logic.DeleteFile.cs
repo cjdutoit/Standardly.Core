@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         [Fact]
-        public void ShouldDeleteFile()
+        public async Task ShouldDeleteFile()
         {
             // given
             string randomPath = GetRandomString();
@@ -21,11 +22,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             string inputContent = randomContent;
 
             // when
-            this.fileProcessingService.DeleteFile(inputFilePath);
+            await this.fileProcessingService.DeleteFileAsync(inputFilePath);
 
             // then
             this.fileServiceMock.Verify(service =>
-                service.DeleteFile(inputFilePath),
+                service.DeleteFileAsync(inputFilePath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

@@ -20,7 +20,7 @@ namespace Standardly.Core.Services.Foundations.Files
                 typeof(IOException)
             };
 
-        private bool WithRetry(ReturningBooleanFunction returningBooleanFunction)
+        private async ValueTask<bool> WithRetry(ReturningBooleanFunction returningBooleanFunction)
         {
             var attempts = 0;
 
@@ -29,7 +29,7 @@ namespace Standardly.Core.Services.Foundations.Files
                 try
                 {
                     attempts++;
-                    return returningBooleanFunction();
+                    return await returningBooleanFunction();
                 }
                 catch (Exception ex)
                 {
@@ -50,7 +50,7 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private string WithRetry(ReturningStringFunction returningStringFunction)
+        private async ValueTask<string> WithRetry(ReturningStringFunction returningStringFunction)
         {
             var attempts = 0;
 
@@ -59,7 +59,7 @@ namespace Standardly.Core.Services.Foundations.Files
                 try
                 {
                     attempts++;
-                    return returningStringFunction();
+                    return await returningStringFunction();
                 }
                 catch (Exception ex)
                 {
@@ -80,7 +80,7 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private List<string> WithRetry(ReturningStringListFunction returningStringListFunction)
+        private async ValueTask<List<string>> WithRetry(ReturningStringListFunction returningStringListFunction)
         {
             var attempts = 0;
 
@@ -89,7 +89,7 @@ namespace Standardly.Core.Services.Foundations.Files
                 try
                 {
                     attempts++;
-                    return returningStringListFunction();
+                    return await returningStringListFunction();
                 }
                 catch (Exception ex)
                 {

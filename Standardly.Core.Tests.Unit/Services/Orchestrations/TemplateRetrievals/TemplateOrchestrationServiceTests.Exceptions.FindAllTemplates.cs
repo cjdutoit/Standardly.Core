@@ -31,7 +31,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(service =>
-                service.RetrieveListOfFiles(
+                service.RetrieveListOfFilesAsync(
                     templateFolderPath,
                     templateDefinitionFile))
                         .Throws(dependencyValidationException);
@@ -47,7 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile),
+                broker.RetrieveListOfFilesAsync(templateFolderPath, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -70,7 +70,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     dependencyException.InnerException as Xeption);
 
             this.fileProcessingServiceMock.Setup(broker =>
-                broker.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile))
+                broker.RetrieveListOfFilesAsync(templateFolderPath, templateDefinitionFile))
                     .Throws(dependencyException);
 
             // when
@@ -85,7 +85,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             actualException.Should().BeEquivalentTo(expectedTemplateRetrievalOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(broker =>
-                broker.RetrieveListOfFiles(templateFolderPath, templateDefinitionFile),
+                broker.RetrieveListOfFilesAsync(templateFolderPath, templateDefinitionFile),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -108,7 +108,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     failedTemplateRetrievalOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Setup(broker =>
-                broker.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()))
+                broker.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
                     .Throws(serviceException);
 
             // when
@@ -124,7 +124,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                 .BeEquivalentTo(expectedTemplateRetrievalOrchestrationServiceException);
 
             this.fileProcessingServiceMock.Verify(service =>
-                service.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()),
+                service.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

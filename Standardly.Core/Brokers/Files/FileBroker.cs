@@ -7,49 +7,50 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Standardly.Core.Brokers.Files
 {
     public class FileBroker : IFileBroker
     {
-        public bool CheckIfFileExists(string path) =>
-            File.Exists(path);
+        public async ValueTask<bool> CheckIfFileExistsAsync(string path) =>
+            await Task.FromResult(File.Exists(path));
 
-        public bool WriteToFile(string path, string content)
+        public async ValueTask<bool> WriteToFileAsync(string path, string content)
         {
             File.WriteAllText(path, content);
 
-            return true;
+            return await Task.FromResult(true);
         }
 
-        public string ReadFile(string path) =>
-            File.ReadAllText(path);
+        public async ValueTask<string> ReadFileAsync(string path) =>
+            await Task.FromResult(File.ReadAllText(path));
 
-        public bool DeleteFile(string path)
+        public async ValueTask<bool> DeleteFileAsync(string path)
         {
             File.Delete(path);
 
-            return true;
+            return await Task.FromResult(true);
         }
 
-        public List<string> GetListOfFiles(string path, string searchPattern = "*") =>
-            Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories).ToList();
+        public async ValueTask<List<string>> GetListOfFilesAsync(string path, string searchPattern = "*") =>
+            await Task.FromResult(Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories).ToList());
 
-        public bool CheckIfDirectoryExists(string path) =>
-            Directory.Exists(path);
+        public async ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
+            await Task.FromResult(Directory.Exists(path));
 
-        public bool CreateDirectory(string path)
+        public async ValueTask<bool> CreateDirectoryAsync(string path)
         {
             Directory.CreateDirectory(path);
 
-            return true;
+            return await Task.FromResult(true);
         }
 
-        public bool DeleteDirectory(string path, bool recursive = false)
+        public async ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false)
         {
             Directory.Delete(path, recursive);
 
-            return true;
+            return await Task.FromResult(true);
         }
     }
 }

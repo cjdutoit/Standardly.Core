@@ -4,6 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -17,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAndLogIt(
             string invalidInput)
         {
             // given
@@ -39,18 +41,18 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            System.Action retrieveListOfFilesAction = () =>
+            ValueTask<List<string>> retrieveListOfFilesTask =
                 this.fileProcessingService
-                    .RetrieveListOfFiles(path: invalidPath, searchPattern: invalidSearchPattern);
+                    .RetrieveListOfFilesAsync(path: invalidPath, searchPattern: invalidSearchPattern);
 
             FileProcessingValidationException actualException =
-                Assert.Throws<FileProcessingValidationException>(retrieveListOfFilesAction);
+                await Assert.ThrowsAsync<FileProcessingValidationException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
 
             this.fileServiceMock.Verify(service =>
-                service.RetrieveListOfFiles(invalidPath, invalidSearchPattern),
+                service.RetrieveListOfFilesAsync(invalidPath, invalidSearchPattern),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

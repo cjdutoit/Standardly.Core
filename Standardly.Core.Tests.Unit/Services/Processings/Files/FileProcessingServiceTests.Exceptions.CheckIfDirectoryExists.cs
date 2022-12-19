@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -16,8 +17,9 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAndLogIt(
-            Xeption dependencyValidationException)
+        public async Task
+            ShouldThrowDependencyValidationOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAndLogIt(
+                Xeption dependencyValidationException)
         {
             // given
             string randomPath = GetRandomString();
@@ -28,19 +30,20 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(inputPath))
-                    .Throws(dependencyValidationException);
+                service.CheckIfDirectoryExistsAsync(inputPath))
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action checkIfDirectoryExistsAction = () =>
-                this.fileProcessingService.CheckIfDirectoryExists(inputPath);
+            ValueTask<bool> checkIfDirectoryExistsTask =
+                this.fileProcessingService.CheckIfDirectoryExistsAsync(inputPath);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                Assert.Throws<FileProcessingDependencyValidationException>(checkIfDirectoryExistsAction);
+                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(
+                    checkIfDirectoryExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(inputPath),
+                service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();
@@ -48,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public void ShouldThrowDependencyOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -60,26 +63,26 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(inputPath))
-                    .Throws(dependencyException);
+                service.CheckIfDirectoryExistsAsync(inputPath))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action checkIfDirectoryExistsAction = () =>
-                this.fileProcessingService.CheckIfDirectoryExists(inputPath);
+            ValueTask<bool> checkIfDirectoryExistsTask =
+                this.fileProcessingService.CheckIfDirectoryExistsAsync(inputPath);
 
             // then
             FileProcessingDependencyException actualException =
-                Assert.Throws<FileProcessingDependencyException>(checkIfDirectoryExistsAction);
+                await Assert.ThrowsAsync<FileProcessingDependencyException>(checkIfDirectoryExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(inputPath),
+                service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public void ShouldThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomPath = GetRandomString();
@@ -95,19 +98,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(inputPath))
-                    .Throws(serviceException);
+                service.CheckIfDirectoryExistsAsync(inputPath))
+                    .ThrowsAsync(serviceException);
 
             // when
-            Action checkIfDirectoryExistsTask = () =>
-                this.fileProcessingService.CheckIfDirectoryExists(inputPath);
+            ValueTask<bool> checkIfDirectoryExistsTask =
+                this.fileProcessingService.CheckIfDirectoryExistsAsync(inputPath);
 
             // then
             FileProcessingServiceException actualException =
-                Assert.Throws<FileProcessingServiceException>(checkIfDirectoryExistsTask);
+                await Assert.ThrowsAsync<FileProcessingServiceException>(checkIfDirectoryExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(inputPath),
+                service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

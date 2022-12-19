@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -16,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationExceptionOnReadFromFileIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationExceptionOnReadFromFileIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -30,21 +31,21 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFile(somePath))
-                    .Throws(dependencyValidationException);
+                broker.ReadFileAsync(somePath))
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action readFileAction = () =>
-                this.fileService.ReadFromFile(somePath);
+            ValueTask<string> readFileTask =
+                this.fileService.ReadFromFileAsync(somePath);
 
             FileDependencyValidationException actualException =
-                Assert.Throws<FileDependencyValidationException>(readFileAction);
+                await Assert.ThrowsAsync<FileDependencyValidationException>(readFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(somePath),
+                broker.ReadFileAsync(somePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
@@ -52,7 +53,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public void ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -70,21 +71,21 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFile(somePath))
-                    .Throws(dependencyException);
+                broker.ReadFileAsync(somePath))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action readFromFileAction = () =>
-                this.fileService.ReadFromFile(somePath);
+            ValueTask<string> readFromFileTask =
+                this.fileService.ReadFromFileAsync(somePath);
 
             FileDependencyException actualException =
-                Assert.Throws<FileDependencyException>(readFromFileAction);
+                await Assert.ThrowsAsync<FileDependencyException>(readFromFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(somePath),
+                broker.ReadFileAsync(somePath),
                     Times.AtLeastOnce);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
@@ -92,7 +93,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public void ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogItCritical(
+        public async Task ShouldThrowDependencyExceptionOnReadFromFileIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -110,28 +111,28 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFile(somePath))
-                    .Throws(dependencyException);
+                broker.ReadFileAsync(somePath))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action readFromFileAction = () =>
-                this.fileService.ReadFromFile(somePath);
+            ValueTask<string> readFromFileTask =
+                this.fileService.ReadFromFileAsync(somePath);
 
             FileDependencyException actualException =
-                Assert.Throws<FileDependencyException>(readFromFileAction);
+                await Assert.ThrowsAsync<FileDependencyException>(readFromFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(somePath),
+                broker.ReadFileAsync(somePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public void ShoudThrowServiceExceptionOnReadFromFileIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnReadFromFileIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -144,21 +145,21 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFile(somePath))
-                    .Throws(serviceException);
+                broker.ReadFileAsync(somePath))
+                    .ThrowsAsync(serviceException);
 
             // when
-            Action readFromFileAction = () =>
-                this.fileService.ReadFromFile(somePath);
+            ValueTask<string> readFromFileTask =
+                this.fileService.ReadFromFileAsync(somePath);
 
             FileServiceException actualException =
-                Assert.Throws<FileServiceException>(readFromFileAction);
+                await Assert.ThrowsAsync<FileServiceException>(readFromFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(somePath),
+                broker.ReadFileAsync(somePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

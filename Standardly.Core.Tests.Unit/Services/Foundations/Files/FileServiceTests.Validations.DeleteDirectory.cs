@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -17,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnDeleteDirectoryIfArgumantsIsInvalid(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnDeleteDirectoryIfArgumantsIsInvalid(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;
@@ -34,17 +35,17 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            System.Action writeToFileAction = () =>
-                this.fileService.DeleteDirectory(invalidPath, recursive);
+            ValueTask<bool> writeToFileAction =
+                this.fileService.DeleteDirectoryAsync(invalidPath, recursive);
 
             FileValidationException actualException =
-                Assert.Throws<FileValidationException>(writeToFileAction);
+                await Assert.ThrowsAsync<FileValidationException>(writeToFileAction.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectory(invalidPath, recursive),
+                broker.DeleteDirectoryAsync(invalidPath, recursive),
                         Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

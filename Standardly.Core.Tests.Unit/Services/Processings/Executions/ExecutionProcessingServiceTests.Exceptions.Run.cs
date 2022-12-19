@@ -34,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             this.executionServiceMock.Setup(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder))
-                    .Throws(dependencyValidationException);
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<string> runTask =
@@ -68,7 +68,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             this.executionServiceMock.Setup(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<string> runTask =
@@ -105,7 +105,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             this.executionServiceMock.Setup(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
             ValueTask<string> runTask =

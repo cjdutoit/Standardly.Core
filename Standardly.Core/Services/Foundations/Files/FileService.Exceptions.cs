@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Xeptions;
 
@@ -15,16 +16,16 @@ namespace Standardly.Core.Services.Foundations.Files
 {
     public partial class FileService
     {
-        private delegate bool ReturningBooleanFunction();
-        private delegate string ReturningStringFunction();
-        private delegate List<string> ReturningStringListFunction();
-        private delegate void ReturningNothingFunction();
+        private delegate ValueTask<bool> ReturningBooleanFunction();
+        private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<List<string>> ReturningStringListFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
-        private bool TryCatch(ReturningBooleanFunction returningBooleanFunction)
+        private async ValueTask<bool> TryCatch(ReturningBooleanFunction returningBooleanFunction)
         {
             try
             {
-                return returningBooleanFunction();
+                return await returningBooleanFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -88,11 +89,11 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private string TryCatch(ReturningStringFunction returningStringFunction)
+        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
         {
             try
             {
-                return returningStringFunction();
+                return await returningStringFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -156,11 +157,11 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private List<string> TryCatch(ReturningStringListFunction returningStringListFunction)
+        private async ValueTask<List<string>> TryCatch(ReturningStringListFunction returningStringListFunction)
         {
             try
             {
-                return returningStringListFunction();
+                return await returningStringListFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {
@@ -224,11 +225,11 @@ namespace Standardly.Core.Services.Foundations.Files
             }
         }
 
-        private void TryCatch(ReturningNothingFunction returningNothingFunction)
+        private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
             try
             {
-                returningNothingFunction();
+                await returningNothingFunction();
             }
             catch (InvalidArgumentFileException invalidArgumentFileException)
             {

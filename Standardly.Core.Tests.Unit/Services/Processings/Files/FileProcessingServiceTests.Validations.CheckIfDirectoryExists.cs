@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
@@ -17,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnCheckIfDirectoryExistsIfPathIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnCheckIfDirectoryExistsIfPathIsInvalidAndLogIt(
             string invalidFilePath)
         {
             // given
@@ -32,17 +33,17 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 new FileProcessingValidationException(invalidFilesProcessingException);
 
             // when
-            System.Action checkIfDirectoryExistsTask = () =>
-                this.fileProcessingService.CheckIfDirectoryExists(invalidFilePath);
+            ValueTask<bool> checkIfDirectoryExistsTask =
+                this.fileProcessingService.CheckIfDirectoryExistsAsync(invalidFilePath);
 
             FileProcessingValidationException actualException =
-                Assert.Throws<FileProcessingValidationException>(checkIfDirectoryExistsTask);
+                await Assert.ThrowsAsync<FileProcessingValidationException>(checkIfDirectoryExistsTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(invalidFilePath),
+                service.CheckIfDirectoryExistsAsync(invalidFilePath),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

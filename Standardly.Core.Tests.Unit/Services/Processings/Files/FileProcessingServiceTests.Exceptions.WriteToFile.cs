@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -16,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationOnWriteToFileAsyncIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationOnWriteToFileAsyncIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -29,23 +30,23 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(It.IsAny<string>()))
-                    .Throws(dependencyValidationException);
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action writeToFileAction = () =>
-                this.fileProcessingService.WriteToFile(inputPath, inputContent);
+            ValueTask<bool> writeToFileTask =
+                this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                Assert.Throws<FileProcessingDependencyValidationException>(writeToFileAction);
+                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(It.IsAny<string>()),
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFile(inputPath, inputContent),
+                service.WriteToFileAsync(inputPath, inputContent),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();
@@ -53,7 +54,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public void ShouldThrowDependencyOnWriteToFileAsyncIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnWriteToFileAsyncIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -66,30 +67,30 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(It.IsAny<string>()))
-                    .Throws(dependencyException);
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action writeToFileAction = () =>
-                this.fileProcessingService.WriteToFile(inputPath, inputContent);
+            ValueTask<bool> writeToFileTask =
+                this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
             FileProcessingDependencyException actualException =
-                Assert.Throws<FileProcessingDependencyException>(writeToFileAction);
+                await Assert.ThrowsAsync<FileProcessingDependencyException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(It.IsAny<string>()),
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFile(inputPath, inputContent),
+                service.WriteToFileAsync(inputPath, inputContent),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public void ShouldThrowServiceExceptionOnWriteToFileAsyncIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnWriteToFileAsyncIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomPath = GetRandomString();
@@ -106,27 +107,27 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(It.IsAny<string>()))
-                    .Throws(serviceException);
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
+                    .ThrowsAsync(serviceException);
 
             this.fileServiceMock.Setup(service =>
-                service.WriteToFile(It.IsAny<string>(), inputContent))
-                    .Throws(serviceException);
+                service.WriteToFileAsync(It.IsAny<string>(), inputContent))
+                    .ThrowsAsync(serviceException);
 
             // when
-            Action writeToFileAction = () =>
-                this.fileProcessingService.WriteToFile(inputPath, inputContent);
+            ValueTask<bool> writeToFileTask =
+                this.fileProcessingService.WriteToFileAsync(inputPath, inputContent);
 
             // then
             FileProcessingServiceException actualException =
-                Assert.Throws<FileProcessingServiceException>(writeToFileAction);
+                await Assert.ThrowsAsync<FileProcessingServiceException>(writeToFileTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-            service.CheckIfDirectoryExists(It.IsAny<string>()),
+            service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
                 Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFile(inputPath, inputContent),
+                service.WriteToFileAsync(inputPath, inputContent),
                     Times.Never);
 
             this.fileServiceMock.VerifyNoOtherCalls();

@@ -75,16 +75,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             Template outputTemplate = randomTemplate;
 
             this.fileProcessingServiceMock.Setup(fileService =>
-                fileService.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()))
-                    .Returns(expectedFileList);
+                fileService.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
+                    .ReturnsAsync(expectedFileList);
 
             this.fileProcessingServiceMock.Setup(fileService =>
-                fileService.ReadFromFile(It.IsAny<string>()))
-                    .Returns(expectedTemplateString);
+                fileService.ReadFromFileAsync(It.IsAny<string>()))
+                    .ReturnsAsync(expectedTemplateString);
 
             this.fileProcessingServiceMock.Setup(fileService =>
-                fileService.ReadFromFile(randomFileList[0]))
-                    .Throws(new FileProcessingDependencyException(new Xeption(randomFileList[0])));
+                fileService.ReadFromFileAsync(randomFileList[0]))
+                    .ThrowsAsync(new FileProcessingDependencyException(new Xeption(randomFileList[0])));
 
             this.templateProcessingServiceMock.Setup(templateService =>
                 templateService.ConvertStringToTemplate(rawTemplateString))
@@ -98,11 +98,11 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             actualTemplates.Count.Should().Be(expectedFileList.Count - 1);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.RetrieveListOfFiles(It.IsAny<string>(), It.IsAny<string>()),
+                fileService.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()),
                     Times.Once);
 
             this.fileProcessingServiceMock.Verify(fileService =>
-                fileService.ReadFromFile(It.IsAny<string>()),
+                fileService.ReadFromFileAsync(It.IsAny<string>()),
                     Times.Exactly(expectedFileList.Count));
 
             this.templateProcessingServiceMock.Verify(templateService =>

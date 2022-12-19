@@ -33,15 +33,15 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
                 List<Template> templates = new List<Template>();
 
                 var fileList = this.fileProcessingService
-                    .RetrieveListOfFiles(
+                    .RetrieveListOfFilesAsync(
                         path: templateFolderPath,
-                        searchPattern: templateDefinitionFileName);
+                        searchPattern: templateDefinitionFileName).Result;
 
                 foreach (string file in fileList)
                 {
                     try
                     {
-                        string rawTemplate = this.fileProcessingService.ReadFromFile(file);
+                        string rawTemplate = this.fileProcessingService.ReadFromFileAsync(file).Result;
 
                         Template template = this.templateProcessingService
                             .ConvertStringToTemplate(rawTemplate);

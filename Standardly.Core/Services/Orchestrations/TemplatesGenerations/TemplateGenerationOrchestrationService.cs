@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Configurations.Statuses;
 using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Foundations.Templates;
@@ -168,13 +169,13 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             });
         }
 
-        private void PerformFileCreations(
+        private async ValueTask PerformFileCreations(
             List<Models.Foundations.Templates.Tasks.Actions.Files.File> files,
             TemplateGenerationInfo templateGenerationInfo)
         {
             files.ForEach(file =>
             {
-                string sourceString = this.fileProcessingService.ReadFromFile(file.Template);
+                string sourceString = this.fileProcessingService.ReadFromFileAsync(file.Template).Result;
 
                 string transformedSourceString =
                     this.templateProcessingService.TransformString(
@@ -183,7 +184,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 
                 transformedSourceString = transformedSourceString.Replace("##n##", "\\n");
 
-                var fileExists = this.fileProcessingService.CheckIfFileExists(file.Target);
+                var fileExists = this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result;
                 var isRequired = !fileExists || file.Replace == true;
 
                 if (isRequired)
@@ -192,7 +193,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                         DateTimeOffset.UtcNow,
                         $"Adding file '{file.Target}'");
 
-                    this.fileProcessingService.WriteToFile(file.Target, transformedSourceString);
+                    bool result = this.fileProcessingService
+                        .WriteToFileAsync(file.Target, transformedSourceString).Result;
                 }
             });
         }
@@ -203,7 +205,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         {
             foreach (Append append in appends)
             {
-                string fileContent = this.fileProcessingService.ReadFromFile(append.Target);
+                string fileContent = this.fileProcessingService.ReadFromFileAsync(append.Target).Result;
 
                 string appendedContent = this.templateProcessingService.AppendContent(
                     sourceContent: fileContent,
@@ -218,7 +220,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                         content: appendedContent,
                         replacementDictionary: templateGenerationInfo.ReplacementDictionary);
 
-                this.fileProcessingService.WriteToFile(append.Target, transformedAppendedContent);
+                var result = this.fileProcessingService
+                    .WriteToFileAsync(append.Target, transformedAppendedContent).Result;
             }
         }
 
@@ -311,7 +314,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             {
                 foreach (Models.Foundations.Templates.Tasks.Actions.Files.File file in action.Files.ToList())
                 {
-                    bool fileExist = this.fileProcessingService.CheckIfFileExists(file.Target);
+                    bool fileExist = this.fileProcessingService.CheckIfFileExistsAsync(file.Target).Result;
                     bool isRequired = fileExist == false || (fileExist && file.Replace == true);
 
                     if (!isRequired)
