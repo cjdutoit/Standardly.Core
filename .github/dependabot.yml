@@ -12,5 +12,4 @@ updates:
     commit-message:
       prefix: "CONFIG"
     labels:
-      - "nuget"
       - "dependencies"
