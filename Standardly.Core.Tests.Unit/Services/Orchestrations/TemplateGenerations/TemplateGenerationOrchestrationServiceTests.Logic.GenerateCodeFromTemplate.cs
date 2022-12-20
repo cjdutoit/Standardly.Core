@@ -46,16 +46,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary))
-                                .Returns(outputTemplates[i]);
+                                .ReturnsAsync(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
                     this.templateProcessingServiceMock.Setup(templateProcessingService =>
                         templateProcessingService
-                            .TransformString(task.BranchName, templateGenerationInfo.ReplacementDictionary));
+                            .TransformStringAsync(task.BranchName, templateGenerationInfo.ReplacementDictionary));
 
                     task.Actions.ForEach(action =>
                     {
@@ -71,8 +71,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomTemplateString, It.IsAny<Dictionary<string, string>>()))
-                                        .Returns(randomTransformedTemplateString);
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()))
+                                        .ReturnsAsync(randomTransformedTemplateString);
                         });
 
                         action.Appends.ForEach(append =>
@@ -82,20 +82,20 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     .ReturnsAsync(randomFileContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                                templateProcessingService.AppendContent(
+                                templateProcessingService.AppendContentAsync(
                                     randomFileContent,
                                     append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
                                     append.ContentToAppend,
                                     append.AppendToBeginning,
                                     append.AppendEvenIfContentAlreadyExist))
-                                        .Returns(randomAppendedContent);
+                                        .ReturnsAsync(randomAppendedContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                                templateProcessingService.TransformString(
+                                templateProcessingService.TransformStringAsync(
                                     randomAppendedContent,
                                     templateGenerationInfo.ReplacementDictionary))
-                                        .Returns(randomAppendedContent);
+                                        .ReturnsAsync(randomAppendedContent);
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
@@ -107,14 +107,14 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             templateGenerationOrchestrationService
-                .GenerateCode(templateGenerationInfo);
+                .GenerateCodeAsync(templateGenerationInfo);
 
             // then
             for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary),
                                 Times.Exactly(2));
@@ -123,7 +123,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 {
                     this.templateProcessingServiceMock.Verify(templateProcessingService =>
                         templateProcessingService
-                            .TransformString(
+                            .TransformStringAsync(
                                 task.BranchName,
                                 templateGenerationInfo.ReplacementDictionary),
                                     Times.AtLeastOnce);
@@ -142,7 +142,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
                                         Times.AtLeastOnce);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
@@ -157,7 +157,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
-                                templateProcessingService.AppendContent(
+                                templateProcessingService.AppendContentAsync(
                                     randomFileContent,
                                     append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
@@ -167,7 +167,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                         Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
-                                templateProcessingService.TransformString(
+                                templateProcessingService.TransformStringAsync(
                                     randomAppendedContent,
                                     templateGenerationInfo.ReplacementDictionary),
                                         Times.Once);
@@ -221,16 +221,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary))
-                                .Returns(outputTemplates[i]);
+                                .ReturnsAsync(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
                     this.templateProcessingServiceMock.Setup(templateProcessingService =>
                         templateProcessingService
-                            .TransformString(
+                            .TransformStringAsync(
                                 task.BranchName,
                                 templateGenerationInfo.ReplacementDictionary));
 
@@ -248,8 +248,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomTemplateString, It.IsAny<Dictionary<string, string>>()))
-                                        .Returns(randomTransformedTemplateString);
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()))
+                                        .ReturnsAsync(randomTransformedTemplateString);
                         });
 
                         action.Appends.ForEach(append =>
@@ -259,20 +259,20 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     .ReturnsAsync(randomFileContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                                templateProcessingService.AppendContent(
+                                templateProcessingService.AppendContentAsync(
                                     randomFileContent,
                                     append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
                                     append.ContentToAppend,
                                     append.AppendToBeginning,
                                     append.AppendEvenIfContentAlreadyExist))
-                                        .Returns(randomAppendedContent);
+                                        .ReturnsAsync(randomAppendedContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                                templateProcessingService.TransformString(
+                                templateProcessingService.TransformStringAsync(
                                     randomAppendedContent,
                                     templateGenerationInfo.ReplacementDictionary))
-                                        .Returns(randomAppendedContent);
+                                        .ReturnsAsync(randomAppendedContent);
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
@@ -284,14 +284,14 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             // when
             templateGenerationOrchestrationService
-                .GenerateCode(templateGenerationInfo);
+                .GenerateCodeAsync(templateGenerationInfo);
 
             // then
             for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary),
                                 Times.Exactly(2));
@@ -300,7 +300,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 {
                     this.templateProcessingServiceMock.Verify(templateProcessingService =>
                         templateProcessingService
-                            .TransformString(
+                            .TransformStringAsync(
                                 task.BranchName,
                                 templateGenerationInfo.ReplacementDictionary),
                                     Times.AtLeastOnce);
@@ -319,7 +319,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
                                         Times.AtLeastOnce);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
@@ -334,7 +334,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
-                                templateProcessingService.AppendContent(
+                                templateProcessingService.AppendContentAsync(
                                     randomFileContent,
                                     append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
@@ -344,7 +344,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                                         Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
-                                templateProcessingService.TransformString(
+                                templateProcessingService.TransformStringAsync(
                                     randomAppendedContent,
                                     templateGenerationInfo.ReplacementDictionary),
                                         Times.Once);

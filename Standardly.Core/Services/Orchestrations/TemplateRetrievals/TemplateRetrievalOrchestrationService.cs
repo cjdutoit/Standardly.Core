@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Services.Processings.Files;
 using Standardly.Core.Services.Processings.Templates;
@@ -25,17 +26,17 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
             this.templateProcessingService = templateProcessingService;
         }
 
-        public List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName) =>
-            TryCatch(() =>
+        public ValueTask<List<Template>> FindAllTemplatesAsync(string templateFolderPath, string templateDefinitionFileName) =>
+            TryCatch(async () =>
             {
                 ValidateFindTemplateArguments(templateFolderPath, templateDefinitionFileName);
 
                 List<Template> templates = new List<Template>();
 
-                var fileList = this.fileProcessingService
+                var fileList = await this.fileProcessingService
                     .RetrieveListOfFilesAsync(
                         path: templateFolderPath,
-                        searchPattern: templateDefinitionFileName).Result;
+                        searchPattern: templateDefinitionFileName);
 
                 foreach (string file in fileList)
                 {
@@ -43,8 +44,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
                     {
                         string rawTemplate = this.fileProcessingService.ReadFromFileAsync(file).Result;
 
-                        Template template = this.templateProcessingService
-                            .ConvertStringToTemplate(rawTemplate);
+                        Template template = await this.templateProcessingService
+                            .ConvertStringToTemplateAsync(rawTemplate);
 
                         templates.Add(template);
                     }

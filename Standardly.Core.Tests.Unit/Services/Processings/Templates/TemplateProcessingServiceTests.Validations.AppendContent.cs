@@ -4,7 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnAppendContentIfArgumentsIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnAppendContentIfArgumentsIsInvalidAndLogIt(
             string invalidInput)
         {
             // given
@@ -48,9 +48,9 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
 
             // when
-            Action appendContentAction = () =>
+            ValueTask<string> appendContentAction =
                 this.templateProcessingService
-                    .AppendContent(
+                    .AppendContentAsync(
                         sourceContent,
                         doesNotContainContent,
                         regexToMatchForAppend,
@@ -59,13 +59,13 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         appendEvenIfContentAlreadyExist);
 
             TemplateProcessingValidationException actualException =
-                Assert.Throws<TemplateProcessingValidationException>(appendContentAction);
+                await Assert.ThrowsAsync<TemplateProcessingValidationException>(appendContentAction.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
 
             this.templateServiceMock.Verify(service =>
-                service.AppendContent(
+                service.AppendContentAsync(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,

@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
@@ -14,15 +15,15 @@ namespace Standardly.Core.Services.Processings.Templates
 {
     public partial class TemplateProcessingService
     {
-        private delegate Template ReturningTemplateFunction();
+        private delegate ValueTask<Template> ReturningTemplateFunction();
 
-        private delegate string ReturningStringFunction();
+        private delegate ValueTask<string> ReturningStringFunction();
 
-        private Template TryCatch(ReturningTemplateFunction returningTemplateFunction)
+        private async ValueTask<Template> TryCatch(ReturningTemplateFunction returningTemplateFunction)
         {
             try
             {
-                return returningTemplateFunction();
+                return await returningTemplateFunction();
             }
             catch (InvalidArgumentTemplateProcessingException invalidContentTemplateProcessingException)
             {
@@ -53,11 +54,11 @@ namespace Standardly.Core.Services.Processings.Templates
             }
         }
 
-        private string TryCatch(ReturningStringFunction returningStringFunction)
+        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
         {
             try
             {
-                return returningStringFunction();
+                return await returningStringFunction();
             }
             catch (InvalidArgumentTemplateProcessingException invalidContentTemplateProcessingException)
             {

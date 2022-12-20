@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -21,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void ShouldThrowValidationExceptionOnFindIfArgumentsIsInvalidAndLogItAsync(string invalidText)
+        public async Task ShouldThrowValidationExceptionOnFindIfArgumentsIsInvalidAndLogItAsync(string invalidText)
         {
             // given
             string templateFolderPath = invalidText;
@@ -43,12 +44,13 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     invalidArgumentTemplateRetrievalOrchestrationException);
 
             // when
-            System.Action findAllTemplatesAction = () =>
+            ValueTask<List<Template>> findAllTemplatesAction =
                 this.templateRetrievalOrchestrationService
-                    .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
+                    .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFileName);
 
             TemplateRetrievalOrchestrationValidationException actualTemplateRetrievalOrchestrationValidationException =
-                Assert.Throws<TemplateRetrievalOrchestrationValidationException>(findAllTemplatesAction);
+                await Assert.ThrowsAsync<TemplateRetrievalOrchestrationValidationException>(
+                    findAllTemplatesAction.AsTask);
 
             // then
             actualTemplateRetrievalOrchestrationValidationException.Should()
@@ -59,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         }
 
         [Fact]
-        public void ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTests()
+        public async Task ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTests()
         {
             // given
             string templateFolderPath = GetRandomString();
@@ -87,12 +89,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     .ThrowsAsync(new FileProcessingDependencyException(new Xeption(randomFileList[0])));
 
             this.templateProcessingServiceMock.Setup(templateService =>
-                templateService.ConvertStringToTemplate(rawTemplateString))
-                .Returns(outputTemplate);
+                templateService.ConvertStringToTemplateAsync(rawTemplateString))
+                .ReturnsAsync(outputTemplate);
 
             // when
-            List<Template> actualTemplates = this.templateRetrievalOrchestrationService
-                .FindAllTemplates(templateFolderPath, templateDefinitionFile);
+            List<Template> actualTemplates = await this.templateRetrievalOrchestrationService
+                .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFile);
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count - 1);
@@ -106,7 +108,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     Times.Exactly(expectedFileList.Count));
 
             this.templateProcessingServiceMock.Verify(templateService =>
-                templateService.ConvertStringToTemplate(rawTemplateString),
+                templateService.ConvertStringToTemplateAsync(rawTemplateString),
                     Times.Exactly(expectedFileList.Count - 1));
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

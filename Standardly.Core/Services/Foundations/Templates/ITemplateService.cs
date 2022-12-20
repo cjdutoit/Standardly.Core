@@ -5,17 +5,18 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Foundations.Templates
 {
     public interface ITemplateService
     {
-        string TransformString(string content, Dictionary<string, string> replacementDictionary);
-        void ValidateTransformation(string content);
-        Template ConvertStringToTemplate(string content);
+        ValueTask<string> TransformStringAsync(string content, Dictionary<string, string> replacementDictionary);
+        ValueTask ValidateTransformationAsync(string content);
+        ValueTask<Template> ConvertStringToTemplateAsync(string content);
 
-        string AppendContent(
+        ValueTask<string> AppendContentAsync(
             string sourceContent,
             string doesNotContain,
             string regexToMatchForAppend,

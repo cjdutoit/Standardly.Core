@@ -5,8 +5,11 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
 using Xeptions;
 using Xunit;
@@ -17,7 +20,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogItAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -34,14 +37,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                 service.RetrieveListOfFilesAsync(
                     templateFolderPath,
                     templateDefinitionFile))
-                        .Throws(dependencyValidationException);
+                        .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action findAllTemplatesAction = () =>
-                templateRetrievalOrchestrationService.FindAllTemplates(templateFolderPath, templateDefinitionFile);
+            ValueTask<List<Template>> findAllTemplatesTask =
+                templateRetrievalOrchestrationService
+                    .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFile);
 
             TemplateRetrievalOrchestrationDependencyValidationException actualException =
-                Assert.Throws<TemplateRetrievalOrchestrationDependencyValidationException>(findAllTemplatesAction);
+                await Assert.ThrowsAsync<TemplateRetrievalOrchestrationDependencyValidationException>(
+                    findAllTemplatesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
@@ -56,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
-        public void ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -71,15 +76,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             this.fileProcessingServiceMock.Setup(broker =>
                 broker.RetrieveListOfFilesAsync(templateFolderPath, templateDefinitionFile))
-                    .Throws(dependencyException);
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action findAllTemplatesAction = () =>
+            ValueTask<List<Template>> findAllTemplatesTask =
                 this.templateRetrievalOrchestrationService
-                    .FindAllTemplates(templateFolderPath, templateDefinitionFile);
+                    .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFile);
 
             TemplateRetrievalOrchestrationDependencyException actualException =
-                Assert.Throws<TemplateRetrievalOrchestrationDependencyException>(findAllTemplatesAction);
+                await Assert.ThrowsAsync<TemplateRetrievalOrchestrationDependencyException>(
+                    findAllTemplatesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateRetrievalOrchestrationDependencyException);
@@ -93,7 +99,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         }
 
         [Fact]
-        public void ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
         {
             // given
             string templateFolderPath = GetRandomString();
@@ -109,15 +115,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             this.fileProcessingServiceMock.Setup(broker =>
                 broker.RetrieveListOfFilesAsync(It.IsAny<string>(), It.IsAny<string>()))
-                    .Throws(serviceException);
+                    .ThrowsAsync(serviceException);
 
             // when
-            Action findAllTemplatesAction = () =>
+            ValueTask<List<Template>> findAllTemplatesTask =
                 this.templateRetrievalOrchestrationService
-                    .FindAllTemplates(templateFolderPath, templateDefinitionFile);
+                    .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFile);
 
             TemplateRetrievalOrchestrationServiceException actualException =
-                Assert.Throws<TemplateRetrievalOrchestrationServiceException>(findAllTemplatesAction);
+                await Assert.ThrowsAsync<TemplateRetrievalOrchestrationServiceException>(
+                    findAllTemplatesTask.AsTask);
 
             // then
             actualException.Should()

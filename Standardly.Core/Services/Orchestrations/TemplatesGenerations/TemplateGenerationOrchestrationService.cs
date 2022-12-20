@@ -41,55 +41,58 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             this.templateProcessingService = templateProcessingService;
         }
 
-        public void GenerateCode(TemplateGenerationInfo templateGenerationInfo) =>
-            TryCatch(() =>
+        public ValueTask GenerateCodeAsync(TemplateGenerationInfo templateGenerationInfo) =>
+            TryCatch(async () =>
                 {
-                    this.LogMessage(DateTimeOffset.UtcNow, $"Validating inputs");
-                    ValidateTemplateGenerationInfoIsNotNull(templateGenerationInfo);
-                    ValidateTemplateArguments(templateGenerationInfo);
-                    List<Template> templatesToGenerate = new List<Template>();
-                    this.LogMessage(DateTimeOffset.UtcNow, $"Check what needs doing on the templates");
-
-                    if (!templateGenerationInfo.ReplacementDictionary.ContainsKey("$currentBranch$"))
+                    await Task.Run(() =>
                     {
-                        templateGenerationInfo.ReplacementDictionary
-                            .Add("$currentBranch$", templateGenerationInfo.ReplacementDictionary["$basebranch$"]);
-                    }
+                        this.LogMessage(DateTimeOffset.UtcNow, $"Validating inputs");
+                        ValidateTemplateGenerationInfoIsNotNull(templateGenerationInfo);
+                        ValidateTemplateArguments(templateGenerationInfo);
+                        List<Template> templatesToGenerate = new List<Template>();
+                        this.LogMessage(DateTimeOffset.UtcNow, $"Check what needs doing on the templates");
 
-                    if (!templateGenerationInfo.ReplacementDictionary.ContainsKey("$previousBranch$"))
-                    {
-                        templateGenerationInfo.ReplacementDictionary
-                            .Add("$previousBranch$", templateGenerationInfo.ReplacementDictionary["$basebranch$"]);
-                    }
-
-                    templatesToGenerate.AddRange(
-                        GetOnlyTheTemplatesThatRequireGeneratingCode(
-                            templateGenerationInfo.Templates,
-                            templateGenerationInfo.ReplacementDictionary));
-
-                    this.previousBranch =
-                        !string.IsNullOrWhiteSpace(templateGenerationInfo.ReplacementDictionary["$previousBranch$"])
-                            ? templateGenerationInfo.ReplacementDictionary["$previousBranch$"]
-                            : templateGenerationInfo.ReplacementDictionary["$basebranch$"];
-
-                    this.processedItems = 0;
-                    this.totalItems = 0;
-
-                    templatesToGenerate.ForEach(template =>
-                    {
-                        template.Tasks.ForEach(task =>
+                        if (!templateGenerationInfo.ReplacementDictionary.ContainsKey("$currentBranch$"))
                         {
-                            this.totalItems += task.Actions.Count();
+                            templateGenerationInfo.ReplacementDictionary
+                                .Add("$currentBranch$", templateGenerationInfo.ReplacementDictionary["$basebranch$"]);
+                        }
+
+                        if (!templateGenerationInfo.ReplacementDictionary.ContainsKey("$previousBranch$"))
+                        {
+                            templateGenerationInfo.ReplacementDictionary
+                                .Add("$previousBranch$", templateGenerationInfo.ReplacementDictionary["$basebranch$"]);
+                        }
+
+                        templatesToGenerate.AddRange(
+                            GetOnlyTheTemplatesThatRequireGeneratingCode(
+                                templateGenerationInfo.Templates,
+                                templateGenerationInfo.ReplacementDictionary));
+
+                        this.previousBranch =
+                            !string.IsNullOrWhiteSpace(templateGenerationInfo.ReplacementDictionary["$previousBranch$"])
+                                ? templateGenerationInfo.ReplacementDictionary["$previousBranch$"]
+                                : templateGenerationInfo.ReplacementDictionary["$basebranch$"];
+
+                        this.processedItems = 0;
+                        this.totalItems = 0;
+
+                        templatesToGenerate.ForEach(template =>
+                        {
+                            template.Tasks.ForEach(task =>
+                            {
+                                this.totalItems += task.Actions.Count();
+                            });
                         });
-                    });
 
-                    templatesToGenerate.ForEach(template =>
-                    {
-                        this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
+                        templatesToGenerate.ForEach(template =>
+                        {
+                            this.LogMessage(DateTimeOffset.UtcNow, $"Generating templates");
 
-                        GenerateTemplate(
-                            template,
-                            templateGenerationInfo);
+                            GenerateTemplate(
+                                template,
+                                templateGenerationInfo);
+                        });
                     });
                 });
 
@@ -105,17 +108,17 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             {
                 var currentBranchName =
                     this.templateProcessingService
-                        .TransformString(
+                        .TransformStringAsync(
                             content: template.Tasks[taskIndex].BranchName,
-                            replacementDictionary: templateGenerationInfo.ReplacementDictionary);
+                            replacementDictionary: templateGenerationInfo.ReplacementDictionary).Result;
 
                 templateGenerationInfo.ReplacementDictionary["$currentBranch$"] = currentBranchName;
 
                 var transformedTemplate =
                     this.templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             template,
-                            replacementDictionary: templateGenerationInfo.ReplacementDictionary);
+                            replacementDictionary: templateGenerationInfo.ReplacementDictionary).Result;
 
                 PerformTask(
                     task: transformedTemplate.Tasks[taskIndex],
@@ -123,9 +126,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                     templateGenerationInfo: templateGenerationInfo);
 
                 this.previousBranch = this.templateProcessingService
-                        .TransformString(
+                        .TransformStringAsync(
                             content: transformedTemplate.Tasks[taskIndex].BranchName,
-                            replacementDictionary: templateGenerationInfo.ReplacementDictionary);
+                            replacementDictionary: templateGenerationInfo.ReplacementDictionary).Result;
             }
 
             this.LogMessage(
@@ -169,7 +172,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             });
         }
 
-        private async ValueTask PerformFileCreations(
+        private void PerformFileCreations(
             List<Models.Foundations.Templates.Tasks.Actions.Files.File> files,
             TemplateGenerationInfo templateGenerationInfo)
         {
@@ -178,9 +181,9 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
                 string sourceString = this.fileProcessingService.ReadFromFileAsync(file.Template).Result;
 
                 string transformedSourceString =
-                    this.templateProcessingService.TransformString(
+                    this.templateProcessingService.TransformStringAsync(
                         content: sourceString,
-                        replacementDictionary: templateGenerationInfo.ReplacementDictionary);
+                        replacementDictionary: templateGenerationInfo.ReplacementDictionary).Result;
 
                 transformedSourceString = transformedSourceString.Replace("##n##", "\\n");
 
@@ -207,18 +210,18 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             {
                 string fileContent = this.fileProcessingService.ReadFromFileAsync(append.Target).Result;
 
-                string appendedContent = this.templateProcessingService.AppendContent(
+                string appendedContent = this.templateProcessingService.AppendContentAsync(
                     sourceContent: fileContent,
                     doesNotContainContent: append.DoesNotContainContent,
                     regexToMatchForAppend: append.RegexToMatchForAppend,
                     appendContent: append.ContentToAppend,
                     appendToBeginning: append.AppendToBeginning,
-                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist);
+                    appendEvenIfContentAlreadyExist: append.AppendEvenIfContentAlreadyExist).Result;
 
                 string transformedAppendedContent =
-                    this.templateProcessingService.TransformString(
+                    this.templateProcessingService.TransformStringAsync(
                         content: appendedContent,
-                        replacementDictionary: templateGenerationInfo.ReplacementDictionary);
+                        replacementDictionary: templateGenerationInfo.ReplacementDictionary).Result;
 
                 var result = this.fileProcessingService
                     .WriteToFileAsync(append.Target, transformedAppendedContent).Result;
@@ -259,7 +262,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
             {
                 var transformedTemplate =
                     this.templateProcessingService
-                        .TransformTemplate(template, replacementDictionary);
+                        .TransformTemplateAsync(template, replacementDictionary).Result;
 
                 bool templateRequired = CheckIfTemplateIsRequired(transformedTemplate);
 

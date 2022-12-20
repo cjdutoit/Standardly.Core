@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public void ShouldTransformString()
+        public async Task ShouldTransformString()
         {
             // given
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();
@@ -22,8 +23,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
             string inputStringTemplate = randomStringTemplate;
 
             // when
-            var actualTemplate = this.templateService
-                .TransformString(inputStringTemplate, inputReplacementDictionary);
+            var actualTemplate = await this.templateService
+                .TransformStringAsync(inputStringTemplate, inputReplacementDictionary);
 
             // then
             foreach (KeyValuePair<string, string> item in inputReplacementDictionary)

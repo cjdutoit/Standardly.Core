@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -16,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
     {
 
         [Fact]
-        public void ShouldFindAllTemplates()
+        public async Task ShouldFindAllTemplates()
         {
             // given
             string templateFolderPath = GetRandomString();
@@ -40,12 +41,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     .ReturnsAsync(expectedTemplateString);
 
             this.templateProcessingServiceMock.Setup(templateService =>
-                templateService.ConvertStringToTemplate(rawTemplateString))
-                    .Returns(outputTemplate);
+                templateService.ConvertStringToTemplateAsync(rawTemplateString))
+                    .ReturnsAsync(outputTemplate);
 
             // when
-            List<Template> actualTemplates = this.templateRetrievalOrchestrationService
-                .FindAllTemplates(templateFolderPath, templateDefinitionFile);
+            List<Template> actualTemplates = await this.templateRetrievalOrchestrationService
+                .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFile);
 
             // then
             actualTemplates.Count.Should().Be(expectedFileList.Count);
@@ -59,7 +60,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
                     Times.Exactly(expectedFileList.Count));
 
             this.templateProcessingServiceMock.Verify(templateService =>
-                templateService.ConvertStringToTemplate(rawTemplateString),
+                templateService.ConvertStringToTemplateAsync(rawTemplateString),
                     Times.Exactly(expectedFileList.Count));
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

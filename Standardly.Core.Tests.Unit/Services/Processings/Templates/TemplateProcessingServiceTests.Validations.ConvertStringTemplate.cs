@@ -4,9 +4,10 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionIfTemplateContentIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionIfTemplateContentIsInvalidAndLogIt(
             string invalidTemplateContent)
         {
             // given
@@ -33,17 +34,17 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateProcessingService.ConvertStringToTemplate(invalidTemplateContent);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateProcessingService.ConvertStringToTemplateAsync(invalidTemplateContent);
 
             TemplateProcessingValidationException actualException =
-                Assert.Throws<TemplateProcessingValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateProcessingValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplate(invalidTemplateContent),
+                service.ConvertStringToTemplateAsync(invalidTemplateContent),
                     Times.Never);
 
             this.templateServiceMock.VerifyNoOtherCalls();
