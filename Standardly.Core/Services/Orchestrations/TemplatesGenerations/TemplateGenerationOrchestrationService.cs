@@ -235,7 +235,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
         {
             if (templateGenerationInfo.ScriptExecutionIsEnabled == true)
             {
-                string outcome = this.executionProcessingService.Run(executions, executionFolder).Result;
+                string outcome = this.executionProcessingService.RunAsync(executions, executionFolder).Result;
                 this.LogMessage(DateTimeOffset.UtcNow, $"{outcome}");
             }
             else

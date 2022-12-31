@@ -38,7 +38,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             // when
             ValueTask<string> runTask =
-                this.executionProcessingService.Run(randomExecutions, inputExecutionFolder);
+                this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
 
             // then
             ExecutionProcessingDependencyValidationException actualException =
@@ -72,7 +72,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             // when
             ValueTask<string> runTask =
-                this.executionProcessingService.Run(randomExecutions, inputExecutionFolder);
+                this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
 
             // then
             ExecutionProcessingDependencyException actualException =
@@ -109,7 +109,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             // when
             ValueTask<string> runTask =
-                this.executionProcessingService.Run(randomExecutions, inputExecutionFolder);
+                this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
 
             // then
             ExecutionProcessingServiceException actualException =

@@ -36,7 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             // when
             ValueTask<string> runTask =
-                this.executionProcessingService.Run(nullExecutions, executionFolder);
+                this.executionProcessingService.RunAsync(nullExecutions, executionFolder);
 
             ExecutionProcessingValidationException actualExecutionProcessingValidationException =
                 await Assert.ThrowsAsync<ExecutionProcessingValidationException>(runTask.AsTask);
@@ -74,7 +74,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
 
             // when
             ValueTask<string> runTask =
-                this.executionProcessingService.Run(nullExecutions, executionFolder);
+                this.executionProcessingService.RunAsync(nullExecutions, executionFolder);
 
             ExecutionProcessingValidationException actualExecutionProcessingValidationException =
                 await Assert.ThrowsAsync<ExecutionProcessingValidationException>(runTask.AsTask);

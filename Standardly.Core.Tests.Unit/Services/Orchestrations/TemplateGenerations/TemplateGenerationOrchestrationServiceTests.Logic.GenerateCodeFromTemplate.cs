@@ -99,7 +99,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
-                            executionProcessingService.Run(action.Executions, action.ExecutionFolder))
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
                                 .ReturnsAsync(randomExecutionOutcome);
                     });
                 });
@@ -179,7 +179,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                         });
 
                         this.executionProcessingServiceMock.Verify(executionProcessingService =>
-                            executionProcessingService.Run(action.Executions, action.ExecutionFolder),
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder),
                                 Times.Once);
                     });
                 });
@@ -276,7 +276,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
-                            executionProcessingService.Run(action.Executions, action.ExecutionFolder))
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
                                 .ReturnsAsync(randomExecutionOutcome);
                     });
                 });
@@ -356,7 +356,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                         });
 
                         this.executionProcessingServiceMock.Verify(executionProcessingService =>
-                            executionProcessingService.Run(action.Executions, action.ExecutionFolder),
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder),
                                 Times.Never);
                     });
                 });

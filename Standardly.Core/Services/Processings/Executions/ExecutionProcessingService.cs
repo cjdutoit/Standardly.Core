@@ -20,7 +20,7 @@ namespace Standardly.Core.Services.Processings.Executions
             this.executionService = executionService;
         }
 
-        public ValueTask<string> Run(List<Execution> executions, string executionFolder) =>
+        public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
             TryCatch(async () =>
             {
                 ValidateRunArguments(executions, executionFolder);
