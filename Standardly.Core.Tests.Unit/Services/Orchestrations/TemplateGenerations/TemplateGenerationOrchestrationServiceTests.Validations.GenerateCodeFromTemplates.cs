@@ -158,7 +158,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             }
 
             // when
-            templateGenerationOrchestrationService
+            await templateGenerationOrchestrationService
                 .GenerateCodeAsync(templateGenerationInfo);
 
             // then
