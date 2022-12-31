@@ -12,12 +12,12 @@ namespace Standardly.Core.Brokers.Events
 {
     public partial class EventBroker : IEventBroker
     {
-        private static Func<Processed, ValueTask<Processed>> ProcessedEventHandler;
+        private static Func<ProcessedStatus, ValueTask<ProcessedStatus>> ProcessedEventHandler;
 
-        public void ListenToProcessedEvent(Func<Processed, ValueTask<Processed>> processedEventHandler) =>
+        public void ListenToProcessedEvent(Func<ProcessedStatus, ValueTask<ProcessedStatus>> processedEventHandler) =>
             ProcessedEventHandler = processedEventHandler;
 
-        public async ValueTask PublishProcessedEventAsync(Processed processed) =>
+        public async ValueTask PublishProcessedEventAsync(ProcessedStatus processed) =>
             await ProcessedEventHandler(processed);
     }
 }

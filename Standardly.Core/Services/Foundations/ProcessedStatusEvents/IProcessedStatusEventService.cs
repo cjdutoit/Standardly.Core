@@ -8,11 +8,11 @@ using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Events;
 
-namespace Standardly.Core.Brokers.Events
+namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
 {
-    public partial interface IEventBroker
+    public interface IProcessedStatusEventService
     {
-        void ListenToProcessedEvent(Func<ProcessedStatus, ValueTask<ProcessedStatus>> processedEventHandler);
-        ValueTask PublishProcessedEventAsync(ProcessedStatus processed);
+        void ListenToProcessedStatusEvent(Func<ProcessedStatus, ValueTask<ProcessedStatus>> processedEventHandler);
+        ValueTask<ProcessedStatus> PublishProcessedStatusAsync(ProcessedStatus status);
     }
 }

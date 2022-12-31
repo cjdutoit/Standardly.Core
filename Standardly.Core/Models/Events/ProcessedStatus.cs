@@ -8,7 +8,7 @@ using System;
 
 namespace Standardly.Core.Models.Events
 {
-    public class Processed
+    public class ProcessedStatus
     {
         public DateTimeOffset TimeStamp { get; set; }
         public string Message { get; set; }
