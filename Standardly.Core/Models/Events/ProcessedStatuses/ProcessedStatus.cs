@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Standardly.Core.Models.Events
+namespace Standardly.Core.Models.Events.ProcessedStatuses
 {
     public class ProcessedStatus
     {

@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Events;
+using Standardly.Core.Models.Events.ProcessedStatuses;
 
 namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
 {

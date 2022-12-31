@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Events;
+using Standardly.Core.Models.Events.ProcessedStatuses;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedStatusEvents
