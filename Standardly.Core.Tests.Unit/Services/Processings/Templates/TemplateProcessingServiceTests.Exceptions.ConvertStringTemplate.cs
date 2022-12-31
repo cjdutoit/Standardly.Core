@@ -5,7 +5,9 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Moq;
+using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Processings.Templates.Exceptions;
 using Xeptions;
 using Xunit;
@@ -16,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationOnConvertStringTemplateIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationOnConvertStringTemplateIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -28,20 +30,20 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     dependencyValidationException.InnerException as Xeption);
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplate(inputContent))
-                    .Throws(dependencyValidationException);
+                service.ConvertStringToTemplateAsync(inputContent))
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateProcessingService.ConvertStringToTemplate(inputContent);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
 
             // then
             TemplateProcessingDependencyValidationException actualException =
-                Assert.Throws<TemplateProcessingDependencyValidationException>(
-                    convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateProcessingDependencyValidationException>(
+                    convertStringToTemplateTask.AsTask);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplate(inputContent),
+                service.ConvertStringToTemplateAsync(inputContent),
                     Times.Once);
 
             this.templateServiceMock.VerifyNoOtherCalls();
@@ -49,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public void ShouldThrowDependencyOnConvertStringTemplateIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnConvertStringTemplateIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -61,26 +63,26 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     dependencyException.InnerException as Xeption);
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplate(inputContent))
-                    .Throws(dependencyException);
+                service.ConvertStringToTemplateAsync(inputContent))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateProcessingService.ConvertStringToTemplate(inputContent);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
 
             // then
             TemplateProcessingDependencyException actualException =
-                Assert.Throws<TemplateProcessingDependencyException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateProcessingDependencyException>(convertStringToTemplateTask.AsTask);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplate(inputContent),
+                service.ConvertStringToTemplateAsync(inputContent),
                     Times.Once);
 
             this.templateServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public void ShouldThrowServiceExceptionOnConvertStringTemplateIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnConvertStringTemplateIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomString = GetRandomString();
@@ -96,19 +98,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                     failedTemplateProcessingServiceException);
 
             this.templateServiceMock.Setup(service =>
-                service.ConvertStringToTemplate(inputContent))
-                    .Throws(serviceException);
+                service.ConvertStringToTemplateAsync(inputContent))
+                    .ThrowsAsync(serviceException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateProcessingService.ConvertStringToTemplate(inputContent);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
 
             // then
             TemplateProcessingServiceException actualException =
-                Assert.Throws<TemplateProcessingServiceException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateProcessingServiceException>(convertStringToTemplateTask.AsTask);
 
             this.templateServiceMock.Verify(service =>
-                service.ConvertStringToTemplate(inputContent),
+                service.ConvertStringToTemplateAsync(inputContent),
                     Times.Once);
 
             this.templateServiceMock.VerifyNoOtherCalls();

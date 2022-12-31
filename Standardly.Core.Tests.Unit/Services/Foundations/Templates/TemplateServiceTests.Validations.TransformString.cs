@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnTransformStringIfContentIsNullOrEmpty(string invalidString)
+        public async Task ShouldThrowValidationExceptionOnTransformStringIfContentIsNullOrEmpty(string invalidString)
         {
             // given
             string content = invalidString;
@@ -37,18 +37,18 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidArgumentTemplateException);
 
             // when
-            Action transformStringAction = () =>
-                this.templateService.TransformString(content, inputReplacementDictionary);
+            ValueTask<string> transformStringAction =
+                this.templateService.TransformStringAsync(content, inputReplacementDictionary);
 
             var actualException =
-                Assert.Throws<TemplateValidationException>(transformStringAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(transformStringAction.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
         }
 
         [Fact]
-        public void ShouldThrowValidationExceptionOnTransformStringIfDictionaryIsNull()
+        public async Task ShouldThrowValidationExceptionOnTransformStringIfDictionaryIsNull()
         {
             // given
             string randomString = GetRandomString();
@@ -67,11 +67,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidArgumentTemplateException);
 
             // when
-            Action transformStringAction = () =>
-                this.templateService.TransformString(content, inputReplacementDictionary);
+            ValueTask<string> transformStringAction =
+                this.templateService.TransformStringAsync(content, inputReplacementDictionary);
 
             var actualException =
-                Assert.Throws<TemplateValidationException>(transformStringAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(transformStringAction.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);

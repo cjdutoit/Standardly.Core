@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         [Fact]
-        public void ShouldWriteToFileAsync()
+        public async Task ShouldWriteToFileAsync()
         {
             // given
             string randomPath = GetRandomString();
@@ -21,23 +22,23 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             string inputContent = randomContent;
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(It.IsAny<string>()))
-                    .Returns(false);
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
+                    .ReturnsAsync(false);
 
             // when
-            this.fileProcessingService.WriteToFile(inputFilePath, inputContent);
+            await this.fileProcessingService.WriteToFileAsync(inputFilePath, inputContent);
 
             // then
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(It.IsAny<string>()),
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectory(It.IsAny<string>()),
+                service.CreateDirectoryAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.fileServiceMock.Verify(service =>
-                service.WriteToFile(inputFilePath, inputContent),
+                service.WriteToFileAsync(inputFilePath, inputContent),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

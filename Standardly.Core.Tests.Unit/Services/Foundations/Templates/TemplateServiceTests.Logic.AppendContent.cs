@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -13,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public void ShouldAppendContent()
+        public async Task ShouldAppendContent()
         {
             // given
             string sourceContent = GetRandomString();
@@ -37,8 +38,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = this.templateService
-                .AppendContent(
+            string actualResult = await this.templateService
+                .AppendContentAsync(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
@@ -62,7 +63,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public void ShouldNotAppendContent()
+        public async Task ShouldNotAppendContent()
         {
             // given
             string sourceContent = GetRandomString();
@@ -86,8 +87,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = this.templateService
-                .AppendContent(
+            string actualResult = await this.templateService
+                .AppendContentAsync(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
@@ -111,7 +112,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public void ShouldAppendIfTheDoesNotContainContentIsNotPresent()
+        public async Task ShouldAppendIfTheDoesNotContainContentIsNotPresent()
         {
             // given
             string innerContent = GetRandomString();
@@ -136,8 +137,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = this.templateService
-                .AppendContent(
+            string actualResult = await this.templateService
+                .AppendContentAsync(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,
@@ -161,7 +162,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public void ShouldNotAppendIfTheDoesNotContainContentIsPresent()
+        public async Task ShouldNotAppendIfTheDoesNotContainContentIsPresent()
         {
             // given
             string innerContent = GetRandomString();
@@ -186,8 +187,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                        .Returns(expectedResult);
 
             // when
-            string actualResult = this.templateService
-                .AppendContent(
+            string actualResult = await this.templateService
+                .AppendContentAsync(
                     sourceContent,
                     doesNotContainContent,
                     regexToMatchForAppend,

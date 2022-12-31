@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.RegularExpressions;
@@ -36,7 +37,7 @@ namespace Standardly.Core.Clients
                 this.InitialiseClient();
         }
 
-        public List<Template> FindAllTemplates()
+        public async ValueTask<List<Template>> FindAllTemplatesAsync()
         {
             try
             {
@@ -44,8 +45,8 @@ namespace Standardly.Core.Clients
                 string templateFolderPath = Path.Combine(Path.GetDirectoryName(assembly), @"Templates");
                 string templateDefinitionFileName = "Template.json";
 
-                return this.templateRetrievalOrchestrationService
-                    .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
+                return await this.templateRetrievalOrchestrationService
+                    .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFileName);
             }
             catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
             {
@@ -72,12 +73,12 @@ namespace Standardly.Core.Clients
             }
         }
 
-        public List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName)
+        public async ValueTask<List<Template>> FindAllTemplatesAsync(string templateFolderPath, string templateDefinitionFileName)
         {
             try
             {
-                return this.templateRetrievalOrchestrationService
-                    .FindAllTemplates(templateFolderPath, templateDefinitionFileName);
+                return await this.templateRetrievalOrchestrationService
+                    .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFileName);
             }
             catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
             {

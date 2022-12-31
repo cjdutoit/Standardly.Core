@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
@@ -15,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
     public partial class ExecutionServiceTests
     {
         [Fact]
-        public void ShouldRunExecutions()
+        public async Task ShouldRunExecutions()
         {
             // given
             List<Execution> randomExecutions = GetRandomExecutions();
@@ -26,17 +27,17 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
             string expectedResult = randomOutput;
 
             this.executionBrokerMock.Setup(broker =>
-                broker.Run(inputExecutions, inputFilePath))
-                    .Returns(randomOutput);
+                broker.RunAsync(inputExecutions, inputFilePath))
+                    .ReturnsAsync(randomOutput);
 
             // when
-            string actualResult = this.executionService.Run(inputExecutions, inputFilePath);
+            string actualResult = await this.executionService.RunAsync(inputExecutions, inputFilePath);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.executionBrokerMock.Verify(broker =>
-                broker.Run(inputExecutions, inputFilePath),
+                broker.RunAsync(inputExecutions, inputFilePath),
                     Times.Once);
 
             this.executionBrokerMock.VerifyNoOtherCalls();

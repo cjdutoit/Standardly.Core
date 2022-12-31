@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
@@ -15,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
     public partial class ExecutionProcessingServiceTests
     {
         [Fact]
-        public void ShouldRunExecution()
+        public async Task ShouldRunExecution()
         {
             // given
             string randomExecutionFolder = GetRandomString();
@@ -26,18 +27,18 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             string expectedResult = randomExecutionResult;
 
             this.executionServiceMock.Setup(service =>
-                service.Run(inputExecutions, inputExecutionFolder))
-                    .Returns(randomExecutionResult);
+                service.RunAsync(inputExecutions, inputExecutionFolder))
+                    .ReturnsAsync(randomExecutionResult);
 
             // when
-            string actualResult = this.executionProcessingService
-                .Run(inputExecutions, inputExecutionFolder);
+            string actualResult = await this.executionProcessingService
+                .RunAsync(inputExecutions, inputExecutionFolder);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.executionServiceMock.Verify(service =>
-                service.Run(inputExecutions, inputExecutionFolder),
+                service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once());
 
             this.executionServiceMock.VerifyNoOtherCalls();

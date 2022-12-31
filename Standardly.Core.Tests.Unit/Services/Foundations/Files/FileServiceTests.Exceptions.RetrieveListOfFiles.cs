@@ -5,6 +5,8 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -16,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationExceptionOnRetrieveListOfFilesIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveListOfFilesIfDependencyValidationErrorOccursAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -31,21 +33,21 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyValidationException(invalidFileServiceDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern))
-                    .Throws(dependencyValidationException);
+                broker.GetListOfFilesAsync(somePath, someSearchPattern))
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action retrieveListOfFilesAction = () =>
-                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
 
             FileDependencyValidationException actualException =
-                Assert.Throws<FileDependencyValidationException>(retrieveListOfFilesAction);
+                await Assert.ThrowsAsync<FileDependencyValidationException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern),
+                broker.GetListOfFilesAsync(somePath, someSearchPattern),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
@@ -53,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public void ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -72,21 +74,21 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern))
-                    .Throws(dependencyException);
+                broker.GetListOfFilesAsync(somePath, someSearchPattern))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action retrieveListOfFilesAction = () =>
-                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
 
             FileDependencyException actualException =
-                Assert.Throws<FileDependencyException>(retrieveListOfFilesAction);
+                await Assert.ThrowsAsync<FileDependencyException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern),
+                broker.GetListOfFilesAsync(somePath, someSearchPattern),
                     Times.AtLeastOnce);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
@@ -94,7 +96,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public void ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogItCritical(
+        public async Task ShouldThrowDependencyExceptionOnRetrieveListOfFilesIfDependencyErrorOccursAndLogItCritical(
             Exception dependencyException)
         {
             // given
@@ -113,28 +115,28 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileDependencyException(failedFileDependencyException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern))
-                    .Throws(dependencyException);
+                broker.GetListOfFilesAsync(somePath, someSearchPattern))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            Action retrieveListOfFilesAction = () =>
-                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
 
             FileDependencyException actualException =
-                Assert.Throws<FileDependencyException>(retrieveListOfFilesAction);
+                await Assert.ThrowsAsync<FileDependencyException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileDependencyException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern),
+                broker.GetListOfFilesAsync(somePath, someSearchPattern),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public void ShoudThrowServiceExceptionOnRetrieveListOfFilesIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnRetrieveListOfFilesIfServiceErrorOccurs()
         {
             // given
             string somePath = GetRandomString();
@@ -148,21 +150,21 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileServiceException(failedFileServiceException);
 
             this.fileBrokerMock.Setup(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern))
-                    .Throws(serviceException);
+                broker.GetListOfFilesAsync(somePath, someSearchPattern))
+                    .ThrowsAsync(serviceException);
 
             // when
-            Action retrieveListOfFilesAction = () =>
-                this.fileService.RetrieveListOfFiles(somePath, someSearchPattern);
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.fileService.RetrieveListOfFilesAsync(somePath, someSearchPattern);
 
             FileServiceException actualException =
-                Assert.Throws<FileServiceException>(retrieveListOfFilesAction);
+                await Assert.ThrowsAsync<FileServiceException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileServiceException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(somePath, someSearchPattern),
+                broker.GetListOfFilesAsync(somePath, someSearchPattern),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

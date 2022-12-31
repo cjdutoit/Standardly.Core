@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -21,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationExceptionOnGenerateCodeFromTemplateAndLogIt(
+        public async Task ShouldThrowDependencyValidationExceptionOnGenerateCodeFromTemplateAndLogIt(
             Exception dependencyValidationException)
         {
             // given
@@ -45,24 +46,24 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                     dependencyValidationException.InnerException as Xeption);
 
             this.templateProcessingServiceMock.Setup(service =>
-                service.TransformTemplate(
+                service.TransformTemplateAsync(
                     It.IsAny<Template>(),
                     inputDictionary))
-                        .Throws(dependencyValidationException);
+                        .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action generateCodeAction = () =>
-                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
+            ValueTask generateCodeTask =
+                this.templateGenerationOrchestrationService.GenerateCodeAsync(templateGenerationInfo);
 
             TemplateGenerationOrchestrationDependencyValidationException actualException =
-                Assert.Throws<TemplateGenerationOrchestrationDependencyValidationException>(
-                    generateCodeAction);
+                await Assert.ThrowsAsync<TemplateGenerationOrchestrationDependencyValidationException>(
+                    generateCodeTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
+                broker.TransformTemplateAsync(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -72,7 +73,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
-        public void ShouldThrowDependencyExceptionOnGenerateCodeFromTemplateAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnGenerateCodeFromTemplateAndLogIt(
             Exception dependencyException)
         {
             // given
@@ -95,23 +96,23 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 new TemplateGenerationOrchestrationDependencyException(dependencyException.InnerException as Xeption);
 
             this.templateProcessingServiceMock.Setup(service =>
-                service.TransformTemplate(
+                service.TransformTemplateAsync(
                     It.IsAny<Template>(),
                     inputDictionary))
-                        .Throws(dependencyException);
+                        .ThrowsAsync(dependencyException);
 
             // when
-            Action generateCodeAction = () =>
-                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
+            ValueTask generateCodeTask =
+                this.templateGenerationOrchestrationService.GenerateCodeAsync(templateGenerationInfo);
 
             TemplateGenerationOrchestrationDependencyException actualException =
-                Assert.Throws<TemplateGenerationOrchestrationDependencyException>(generateCodeAction);
+                await Assert.ThrowsAsync<TemplateGenerationOrchestrationDependencyException>(generateCodeTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
+                broker.TransformTemplateAsync(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -120,7 +121,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public void ShoudThrowServiceExceptionOnGenerateCodeFromTemplateAndLogIt()
+        public async Task ShoudThrowServiceExceptionOnGenerateCodeFromTemplateAndLogIt()
         {
             // given
             int randomNumber = GetRandomNumber();
@@ -147,23 +148,23 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 new TemplateGenerationOrchestrationServiceException(failedTemplateGenerationOrchestrationServiceException);
 
             this.templateProcessingServiceMock.Setup(service =>
-                service.TransformTemplate(
+                service.TransformTemplateAsync(
                     It.IsAny<Template>(),
                     inputDictionary))
-                        .Throws(serviceException);
+                        .ThrowsAsync(serviceException);
 
             // when
-            Action generateCodeAction = () =>
-                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
+            ValueTask generateCodeTask =
+                this.templateGenerationOrchestrationService.GenerateCodeAsync(templateGenerationInfo);
 
             TemplateGenerationOrchestrationServiceException actualException =
-                Assert.Throws<TemplateGenerationOrchestrationServiceException>(generateCodeAction);
+                await Assert.ThrowsAsync<TemplateGenerationOrchestrationServiceException>(generateCodeTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationServiceException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplate(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
+                broker.TransformTemplateAsync(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();

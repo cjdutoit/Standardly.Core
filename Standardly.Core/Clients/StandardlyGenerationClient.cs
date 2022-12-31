@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.RegularExpressions;
@@ -38,11 +39,11 @@ namespace Standardly.Core.Clients
             this.LogEventSetup();
         }
 
-        public void GenerateCode(TemplateGenerationInfo templateGenerationInfo)
+        public async ValueTask GenerateCodeAsync(TemplateGenerationInfo templateGenerationInfo)
         {
             try
             {
-                this.templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
+                await this.templateGenerationOrchestrationService.GenerateCodeAsync(templateGenerationInfo);
             }
             catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
             {

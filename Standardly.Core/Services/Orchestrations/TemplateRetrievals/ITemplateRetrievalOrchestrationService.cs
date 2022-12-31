@@ -5,12 +5,13 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 
 namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
 {
     public interface ITemplateRetrievalOrchestrationService
     {
-        List<Template> FindAllTemplates(string templateFolderPath, string templateDefinitionFileName);
+        ValueTask<List<Template>> FindAllTemplatesAsync(string templateFolderPath, string templateDefinitionFileName);
     }
 }

@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -13,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public void ShouldReadFromFile()
+        public async Task ShouldReadFromFile()
         {
             // given
             string randomFilePath = GetRandomString();
@@ -22,17 +23,17 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             string expectedResult = outputResult;
 
             this.fileBrokerMock.Setup(broker =>
-                broker.ReadFile(inputFilePath))
-                    .Returns(outputResult);
+                broker.ReadFileAsync(inputFilePath))
+                    .ReturnsAsync(outputResult);
 
             // when
-            string actualResult = this.fileService.ReadFromFile(inputFilePath);
+            string actualResult = await this.fileService.ReadFromFileAsync(inputFilePath);
 
             // then
             actualResult.Should().Be(expectedResult);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(inputFilePath),
+                broker.ReadFileAsync(inputFilePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

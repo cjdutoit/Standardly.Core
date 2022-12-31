@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -22,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnConvertStringToTemplateIfContentIsNullOrEmpty(
+        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfContentIsNullOrEmpty(
             string invalidString)
         {
             // given
@@ -39,11 +39,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidArgumentTemplateException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateService.ConvertStringToTemplate(content);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(content);
 
             var actualException =
-                Assert.Throws<TemplateValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
@@ -53,7 +53,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnConvertStringToTemplateIfTemplateIsInvalid(
+        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfTemplateIsInvalid(
             string invalidString)
         {
             // given
@@ -107,11 +107,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidTemplateException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateService.ConvertStringToTemplate(inputStringTemplate);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
 
             var actualException =
-                Assert.Throws<TemplateValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
@@ -121,7 +121,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnConvertIfTemplateTasksIsInvalid(string invalidString)
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTasksIsInvalid(string invalidString)
         {
             // given
             Template someTemplate = new Template()
@@ -165,11 +165,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidTemplateException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateService.ConvertStringToTemplate(inputStringTemplate);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
 
             TemplateValidationException actualException =
-                Assert.Throws<TemplateValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
@@ -179,7 +179,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionsIsInvalid(
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionsIsInvalid(
             string invalidString)
         {
             // given
@@ -225,11 +225,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidTemplateException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateService.ConvertStringToTemplate(inputStringTemplate);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
 
             TemplateValidationException actualException =
-                Assert.Throws<TemplateValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
@@ -239,7 +239,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemsIsInvalid(
+        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemsIsInvalid(
             string invalidString)
         {
             // given
@@ -304,11 +304,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidTemplateException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateService.ConvertStringToTemplate(inputStringTemplate);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
 
             TemplateValidationException actualException =
-                Assert.Throws<TemplateValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
@@ -318,7 +318,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionWhenTemplateTaskActionAppendItemsIsInvalid(
+        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionAppendItemsIsInvalid(
             string invalidString)
         {
             // given
@@ -395,11 +395,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidTemplateException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateService.ConvertStringToTemplate(inputStringTemplate);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
 
             TemplateValidationException actualException =
-                Assert.Throws<TemplateValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
@@ -409,7 +409,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionExecutionsIsInvalid(
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionExecutionsIsInvalid(
             string invalidString)
         {
             // given
@@ -473,11 +473,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 new TemplateValidationException(invalidTemplateException);
 
             // when
-            Action convertStringToTemplateAction = () =>
-                this.templateService.ConvertStringToTemplate(inputStringTemplate);
+            ValueTask<Template> convertStringToTemplateTask =
+                this.templateService.ConvertStringToTemplateAsync(inputStringTemplate);
 
             TemplateValidationException actualException =
-                Assert.Throws<TemplateValidationException>(convertStringToTemplateAction);
+                await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateValidationException);

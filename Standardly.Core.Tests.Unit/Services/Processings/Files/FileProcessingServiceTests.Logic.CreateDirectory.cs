@@ -21,11 +21,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             string inputContent = randomContent;
 
             // when
-            this.fileProcessingService.CreateDirectory(inputFilePath);
+            this.fileProcessingService.CreateDirectoryAsync(inputFilePath);
 
             // then
             this.fileServiceMock.Verify(service =>
-                service.CreateDirectory(inputFilePath),
+                service.CreateDirectoryAsync(inputFilePath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

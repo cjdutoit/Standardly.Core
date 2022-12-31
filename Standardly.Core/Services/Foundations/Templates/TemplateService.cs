@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.RegularExpressions;
@@ -27,10 +28,10 @@ namespace Standardly.Core.Services.Foundations.Templates
             this.regularExpressionBroker = regularExpressionBroker;
         }
 
-        public string TransformString(
+        public ValueTask<string> TransformStringAsync(
             string content,
             Dictionary<string, string> replacementDictionary) =>
-                TryCatch(() =>
+                TryCatch(async () =>
                 {
                     ValidateTransformString(content, replacementDictionary);
 
@@ -44,19 +45,22 @@ namespace Standardly.Core.Services.Foundations.Templates
                         }
                     }
 
-                    return template;
+                    return await Task.FromResult(template);
                 });
 
-        public void ValidateTransformation(string content) =>
-            TryCatch(() =>
+        public ValueTask ValidateTransformationAsync(string content) =>
+            TryCatch(async () =>
             {
-                ValidateTransformationArguments(content);
+                await Task.Run(() =>
+                {
+                    ValidateTransformationArguments(content);
 
-                CheckAllTagsHasBeenReplaced(content);
+                    CheckAllTagsHasBeenReplaced(content);
+                });
             });
 
-        public Template ConvertStringToTemplate(string content) =>
-            TryCatch(() =>
+        public ValueTask<Template> ConvertStringToTemplateAsync(string content) =>
+            TryCatch(async () =>
             {
                 ValidateConvertStringToTemplateArguments(content);
 
@@ -66,42 +70,45 @@ namespace Standardly.Core.Services.Foundations.Templates
                 template.RawTemplate = content;
                 ValidateTemplate(template);
 
-                return template;
+                return await Task.FromResult(template);
             });
 
-        public string AppendContent(
+        public ValueTask<string> AppendContentAsync(
             string sourceContent,
             string doesNotContain,
             string regexToMatchForAppend,
             string appendContent,
             bool appendToBeginning,
             bool appendEvenIfContentAlreadyExist) =>
-                TryCatch(() =>
+                TryCatch(async () =>
                 {
-                    ValidateAppendContent(sourceContent, regexToMatchForAppend, appendContent);
-
-                    if (!string.IsNullOrWhiteSpace(doesNotContain) && sourceContent.Contains(doesNotContain))
+                    return await Task.Run(() =>
                     {
-                        return sourceContent;
-                    }
+                        ValidateAppendContent(sourceContent, regexToMatchForAppend, appendContent);
 
-                    var (matchFound, match) =
-                        this.regularExpressionBroker
-                            .CheckForExpressionMatch(regexToMatchForAppend, sourceContent);
+                        if (!string.IsNullOrWhiteSpace(doesNotContain) && sourceContent.Contains(doesNotContain))
+                        {
+                            return sourceContent;
+                        }
 
-                    ValidateExpressionMatch(matchFound, sourceContent, regexToMatchForAppend);
+                        var (matchFound, match) =
+                            this.regularExpressionBroker
+                                .CheckForExpressionMatch(regexToMatchForAppend, sourceContent);
 
-                    if (appendEvenIfContentAlreadyExist == false && match.Contains(appendContent))
-                    {
-                        return sourceContent;
-                    }
+                        ValidateExpressionMatch(matchFound, sourceContent, regexToMatchForAppend);
 
-                    string mergedContent = AppendContentToExistingContent(appendContent, appendToBeginning, match);
+                        if (appendEvenIfContentAlreadyExist == false && match.Contains(appendContent))
+                        {
+                            return sourceContent;
+                        }
 
-                    string result = this.regularExpressionBroker
-                        .Replace(sourceContent, regexToMatchForAppend, mergedContent);
+                        string mergedContent = AppendContentToExistingContent(appendContent, appendToBeginning, match);
 
-                    return result;
+                        string result = this.regularExpressionBroker
+                            .Replace(sourceContent, regexToMatchForAppend, mergedContent);
+
+                        return result;
+                    });
                 });
 
         private static string AppendContentToExistingContent(string appendContent, bool appendToBeginning, string match)
