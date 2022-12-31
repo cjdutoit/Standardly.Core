@@ -6,7 +6,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Events.ProcessedStatuses;
 
 namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
@@ -14,6 +13,6 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
     public interface IProcessedStatusEventService
     {
         void ListenToProcessedStatusEvent(Func<ProcessedStatus, ValueTask<ProcessedStatus>> processedEventHandler);
-        ValueTask<ProcessedStatus> PublishProcessedStatusAsync(ProcessedStatus status);
+        ValueTask PublishProcessedStatusAsync(ProcessedStatus status);
     }
 }

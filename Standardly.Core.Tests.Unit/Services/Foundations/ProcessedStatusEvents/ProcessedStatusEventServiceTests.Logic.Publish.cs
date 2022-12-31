@@ -5,8 +5,6 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
-using FluentAssertions;
-using Force.DeepCloner;
 using Moq;
 using Standardly.Core.Models.Events.ProcessedStatuses;
 using Xunit;
@@ -21,16 +19,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedStatusEvents
             // given
             ProcessedStatus randomProcessedStatus = CreateRandomProcessedStatus();
             ProcessedStatus inputProcessedStatus = randomProcessedStatus;
-            ProcessedStatus expectedProcessedStatus = inputProcessedStatus.DeepClone();
 
             // when
-            ProcessedStatus actualProcessedStatus =
-                await this.processedStatusEventService
-                    .PublishProcessedStatusAsync(inputProcessedStatus);
+            await this.processedStatusEventService
+                .PublishProcessedStatusAsync(inputProcessedStatus);
 
             // then
-            actualProcessedStatus.Should().BeEquivalentTo(expectedProcessedStatus);
-
             this.eventBrokerMock.Verify(broker =>
                 broker.PublishProcessedEventAsync(inputProcessedStatus),
                     Times.Once);
