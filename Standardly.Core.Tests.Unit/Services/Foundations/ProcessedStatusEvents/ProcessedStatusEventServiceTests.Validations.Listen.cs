@@ -25,7 +25,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedStatusEvents
             var nullProcessedStatusEventHandler =
                 new NullProcessedStatusEventHandler();
 
-            var processedStatusEventValidationException =
+            var expectedProcessedStatusEventValidationException =
                 new ProcessedStatusEventValidationException(nullProcessedStatusEventHandler);
 
             Action listenToProcessedStatusEventAction = () => this.processedStatusEventService
@@ -36,7 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedStatusEvents
 
             // when
             actualProcessedStatusEventValidationException.Should()
-                .BeEquivalentTo(actualProcessedStatusEventValidationException);
+                .BeEquivalentTo(expectedProcessedStatusEventValidationException);
 
             // then
             this.eventBrokerMock.Verify(broker =>

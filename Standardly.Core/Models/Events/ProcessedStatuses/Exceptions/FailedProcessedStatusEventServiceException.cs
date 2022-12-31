@@ -4,15 +4,16 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using Xeptions;
 
 namespace Standardly.Core.Models.Events.ProcessedStatuses.Exceptions
 {
-    public class ProcessedStatusEventValidationException : Xeption
+    public class FailedProcessedStatusEventServiceException : Xeption
     {
-        public ProcessedStatusEventValidationException(Xeption innerException)
+        public FailedProcessedStatusEventServiceException(Exception innerException)
             : base(
-                message: "Processed Status event validation errors occurred, please try again.",
+                message: "Failed processed status event service error occurred, please contact support",
                 innerException)
         { }
     }
