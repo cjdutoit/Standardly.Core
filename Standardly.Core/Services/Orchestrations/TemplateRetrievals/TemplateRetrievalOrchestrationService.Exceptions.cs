@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -17,13 +18,13 @@ namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
 {
     public partial class TemplateRetrievalOrchestrationService
     {
-        private delegate List<Template> ReturningTemplateListFunction();
+        private delegate ValueTask<List<Template>> ReturningTemplateListFunction();
 
-        private List<Template> TryCatch(ReturningTemplateListFunction returningTemplateListFunction)
+        private async ValueTask<List<Template>> TryCatch(ReturningTemplateListFunction returningTemplateListFunction)
         {
             try
             {
-                return returningTemplateListFunction();
+                return await returningTemplateListFunction();
             }
             catch (InvalidArgumentTemplateRetrievalOrchestrationException
                 invalidArgumentTemplateRetrievalOrchestrationException)

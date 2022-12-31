@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Standardly.Core.Clients;
 using Standardly.Core.Models.Events;
@@ -21,7 +22,7 @@ namespace Standardly.Core.Tests.Acceptance
     public partial class StandardlyGenerationClientTests
     {
         [Fact]
-        public void ShouldGenerateCodeForTemplate()
+        public async Task ShouldGenerateCodeForTemplate()
         {
             //given
             string assembly = Assembly.GetExecutingAssembly().Location;
@@ -61,8 +62,8 @@ namespace Standardly.Core.Tests.Acceptance
             var standardlyTemplateClient =
                 new StandardlyTemplateClient();
 
-            List<Template> templates =
-                standardlyTemplateClient.FindAllTemplates(templateFolderPath, templateDefinitionFileName);
+            List<Template> templates = await standardlyTemplateClient
+                .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFileName);
 
             TemplateGenerationInfo templateGenerationInfo =
                 new TemplateGenerationInfo
@@ -77,7 +78,7 @@ namespace Standardly.Core.Tests.Acceptance
             standardlyGenerationClient.Processed += ItemProcessed;
 
             //when
-            standardlyGenerationClient.GenerateCode(templateGenerationInfo);
+            await standardlyGenerationClient.GenerateCodeAsync(templateGenerationInfo);
 
             //then
             foreach (FileLocations fileLocations in files)

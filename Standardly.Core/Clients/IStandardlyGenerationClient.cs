@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Orchestrations;
 
@@ -13,6 +14,6 @@ namespace Standardly.Core.Clients
     public interface IStandardlyGenerationClient
     {
         event EventHandler<ProcessedEventArgs> Processed;
-        void GenerateCode(TemplateGenerationInfo templateGenerationInfo);
+        ValueTask GenerateCodeAsync(TemplateGenerationInfo templateGenerationInfo);
     }
 }

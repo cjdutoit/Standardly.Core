@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         [Fact]
-        public void ShouldTransformString()
+        public async Task ShouldTransformString()
         {
             // given
             string randomString = GetRandomString();
@@ -25,22 +26,22 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             Dictionary<string, string> inputReplacementDictionary = randomReplacementDictionary;
 
             this.templateServiceMock.Setup(service =>
-                service.TransformString(inputString, inputReplacementDictionary))
-                    .Returns(expectedTransformedString);
+                service.TransformStringAsync(inputString, inputReplacementDictionary))
+                    .ReturnsAsync(expectedTransformedString);
 
             // when
-            string actualTransformedString = this.templateProcessingService
-                .TransformString(inputString, inputReplacementDictionary);
+            string actualTransformedString = await this.templateProcessingService
+                .TransformStringAsync(inputString, inputReplacementDictionary);
 
             // then
             actualTransformedString.Should().BeEquivalentTo(expectedTransformedString);
 
             this.templateServiceMock.Verify(service =>
-                service.TransformString(inputString, inputReplacementDictionary),
+                service.TransformStringAsync(inputString, inputReplacementDictionary),
                     Times.Once());
 
             this.templateServiceMock.Verify(service =>
-                service.ValidateTransformation(expectedTransformedString),
+                service.ValidateTransformationAsync(expectedTransformedString),
                     Times.Once());
 
             this.templateServiceMock.VerifyNoOtherCalls();

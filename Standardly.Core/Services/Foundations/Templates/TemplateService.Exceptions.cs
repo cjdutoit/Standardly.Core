@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
 using Standardly.Core.Models.Foundations.Templates;
 using Standardly.Core.Models.Foundations.Templates.Exceptions;
@@ -14,15 +15,15 @@ namespace Standardly.Core.Services.Foundations.Templates
 {
     public partial class TemplateService
     {
-        private delegate string ReturningStringFunction();
-        private delegate Template ReturningTemplateFunction();
-        private delegate void ReturningNothingFunction();
+        private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<Template> ReturningTemplateFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
-        private string TryCatch(ReturningStringFunction returningStringFunction)
+        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
         {
             try
             {
-                return returningStringFunction();
+                return await returningStringFunction();
             }
             catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {
@@ -62,11 +63,11 @@ namespace Standardly.Core.Services.Foundations.Templates
             }
         }
 
-        private Template TryCatch(ReturningTemplateFunction returningTemplateFunction)
+        private async ValueTask<Template> TryCatch(ReturningTemplateFunction returningTemplateFunction)
         {
             try
             {
-                return returningTemplateFunction();
+                return await returningTemplateFunction();
             }
             catch (InvalidArgumentTemplateException invalidArgumentTemplateException)
             {
@@ -85,11 +86,11 @@ namespace Standardly.Core.Services.Foundations.Templates
             }
         }
 
-        private void TryCatch(ReturningNothingFunction returningNothingFunction)
+        private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
             try
             {
-                returningNothingFunction();
+                await returningNothingFunction();
             }
             catch (InvalidReplacementTemplateException invalidReplacementException)
             {
@@ -124,9 +125,9 @@ namespace Standardly.Core.Services.Foundations.Templates
 
         private TemplateServiceException CreateAndLogServiceException(Exception exception)
         {
-            var templateOrchestrationServiceException = new TemplateServiceException(exception);
+            var templateServiceException = new TemplateServiceException(exception);
 
-            return templateOrchestrationServiceException;
+            return templateServiceException;
         }
     }
 }

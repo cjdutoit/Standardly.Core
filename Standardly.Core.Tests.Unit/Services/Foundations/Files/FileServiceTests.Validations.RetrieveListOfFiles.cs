@@ -4,6 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -17,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnRetrieveListOfFilesIfPathIsInvalid(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfPathIsInvalid(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;
@@ -38,17 +40,17 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            System.Action retrieveListOfFilesTask = () =>
-                this.fileService.RetrieveListOfFiles(invalidPath, invalidSearchPattern);
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.fileService.RetrieveListOfFilesAsync(invalidPath, invalidSearchPattern);
 
             FileValidationException actualException =
-                Assert.Throws<FileValidationException>(retrieveListOfFilesTask);
+                await Assert.ThrowsAsync<FileValidationException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(invalidPath, invalidSearchPattern),
+                broker.GetListOfFilesAsync(invalidPath, invalidSearchPattern),
                     Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

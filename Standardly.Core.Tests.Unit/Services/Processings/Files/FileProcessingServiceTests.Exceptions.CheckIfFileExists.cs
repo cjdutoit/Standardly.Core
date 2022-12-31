@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
@@ -16,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public void ShouldThrowDependencyValidationOnCheckIfFileExistsIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationOnCheckIfFileExistsIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
             // given
@@ -28,19 +29,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyValidationException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfFileExists(inputPath))
-                    .Throws(dependencyValidationException);
+                service.CheckIfFileExistsAsync(inputPath))
+                    .ThrowsAsync(dependencyValidationException);
 
             // when
-            Action checkIfFileExistsAction = () =>
-                this.fileProcessingService.CheckIfFileExists(inputPath);
+            ValueTask<bool> checkIfFileExistsTask =
+                this.fileProcessingService.CheckIfFileExistsAsync(inputPath);
 
             // then
             FileProcessingDependencyValidationException actualException =
-                Assert.Throws<FileProcessingDependencyValidationException>(checkIfFileExistsAction);
+                await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(checkIfFileExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfFileExists(inputPath),
+                service.CheckIfFileExistsAsync(inputPath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();
@@ -48,7 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public void ShouldThrowDependencyOnCheckIfFileExistsIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnCheckIfFileExistsIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
             // given
@@ -60,26 +61,26 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     dependencyException.InnerException as Xeption);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfFileExists(inputPath))
-                    .Throws(dependencyException);
+                service.CheckIfFileExistsAsync(inputPath))
+                    .ThrowsAsync(dependencyException);
 
             // when
-            System.Action checkIfFileExistsAction = () =>
-                this.fileProcessingService.CheckIfFileExists(inputPath);
+            ValueTask<bool> checkIfFileExistsTask =
+                this.fileProcessingService.CheckIfFileExistsAsync(inputPath);
 
             // then
             FileProcessingDependencyException actualException =
-                Assert.Throws<FileProcessingDependencyException>(checkIfFileExistsAction);
+                await Assert.ThrowsAsync<FileProcessingDependencyException>(checkIfFileExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfFileExists(inputPath),
+                service.CheckIfFileExistsAsync(inputPath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public void ShouldThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccursAndLogIt()
         {
             // given
             string randomPath = GetRandomString();
@@ -95,19 +96,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                     failedFileProcessingServiceException);
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfFileExists(inputPath))
-                    .Throws(serviceException);
+                service.CheckIfFileExistsAsync(inputPath))
+                    .ThrowsAsync(serviceException);
 
             // when
-            Action checkIfFileExistsAction = () =>
-                this.fileProcessingService.CheckIfFileExists(inputPath);
+            ValueTask<bool> checkIfFileExistsTask =
+                this.fileProcessingService.CheckIfFileExistsAsync(inputPath);
 
             // then
             FileProcessingServiceException actualException =
-                Assert.Throws<FileProcessingServiceException>(checkIfFileExistsAction);
+                await Assert.ThrowsAsync<FileProcessingServiceException>(checkIfFileExistsTask.AsTask);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfFileExists(inputPath),
+                service.CheckIfFileExistsAsync(inputPath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

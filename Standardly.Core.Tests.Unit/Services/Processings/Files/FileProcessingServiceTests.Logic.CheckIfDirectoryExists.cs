@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -13,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         [Fact]
-        public void ShouldCheckIfDirectoryExists()
+        public async Task ShouldCheckIfDirectoryExists()
         {
             // given
             string randomPath = GetRandomString();
@@ -21,18 +22,18 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             bool expectedResult = true;
 
             this.fileServiceMock.Setup(service =>
-                service.CheckIfDirectoryExists(randomPath))
-                    .Returns(expectedResult);
+                service.CheckIfDirectoryExistsAsync(randomPath))
+                    .ReturnsAsync(expectedResult);
 
             // when
-            bool actualResult = this.fileProcessingService
-                .CheckIfDirectoryExists(inputFilePath);
+            bool actualResult = await this.fileProcessingService
+                .CheckIfDirectoryExistsAsync(inputFilePath);
 
             // then
             actualResult.Should().Be(expectedResult);
 
             this.fileServiceMock.Verify(service =>
-                service.CheckIfDirectoryExists(inputFilePath),
+                service.CheckIfDirectoryExistsAsync(inputFilePath),
                     Times.Once);
 
             this.fileServiceMock.VerifyNoOtherCalls();

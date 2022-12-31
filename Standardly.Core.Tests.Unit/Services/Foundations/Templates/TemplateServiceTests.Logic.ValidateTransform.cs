@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
@@ -13,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public void ShouldValidateTransform()
+        public async Task ShouldValidateTransform()
         {
             try
             {
@@ -25,9 +26,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 
                 // when then
                 string transformedTemplate =
-                    this.templateService.TransformString(inputStringTemplate, inputReplacementDictionary);
+                    await this.templateService.TransformStringAsync(inputStringTemplate, inputReplacementDictionary);
 
-                this.templateService.ValidateTransformation(transformedTemplate);
+                this.templateService.ValidateTransformationAsync(transformedTemplate);
                 Assert.True(true);
             }
             catch (Exception ex)

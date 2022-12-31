@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Standardly.Core.Brokers.Executions;
 using Standardly.Core.Models.Foundations.Executions;
 
@@ -19,8 +20,8 @@ namespace Standardly.Core.Services.Foundations.Executions
             this.executionBroker = executionBroker;
         }
 
-        public string Run(List<Execution> executions, string executionFolder) =>
-            TryCatch(() =>
+        public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
+            TryCatch(async () =>
             {
                 ValidateRunArguments(executions, executionFolder);
 
@@ -31,7 +32,7 @@ namespace Standardly.Core.Services.Foundations.Executions
 
                 executionList.AddRange(executions);
 
-                return this.executionBroker.Run(executions, executionFolder);
+                return await this.executionBroker.RunAsync(executions, executionFolder);
             });
     }
 }

@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public void ShouldRetrieveListOfFiles()
+        public async Task ShouldRetrieveListOfFiles()
         {
             // given
             string randomFilePath = GetRandomString();
@@ -26,18 +27,18 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             List<string> expectedResult = randomResult;
 
             this.fileBrokerMock.Setup(broker =>
-                broker.GetListOfFiles(inputFilePath, inputSearchPattern))
-                    .Returns(outputResult);
+                broker.GetListOfFilesAsync(inputFilePath, inputSearchPattern))
+                    .ReturnsAsync(outputResult);
 
             // when
             List<string> actualResult =
-                this.fileService.RetrieveListOfFiles(inputFilePath, inputSearchPattern);
+                await this.fileService.RetrieveListOfFilesAsync(inputFilePath, inputSearchPattern);
 
             // then
             actualResult.Should().BeEquivalentTo(expectedResult);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.GetListOfFiles(inputFilePath, inputSearchPattern),
+                broker.GetListOfFilesAsync(inputFilePath, inputSearchPattern),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

@@ -4,8 +4,8 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Templates;
@@ -24,7 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
     public partial class TemplateGenerationOrchestrationServiceTests
     {
         [Fact]
-        public void ShouldThrowValidationExceptionWhenIfTemplateIsNullAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionWhenIfTemplateIsNullAndLogItAsync()
         {
             // given
             TemplateGenerationInfo nullTemplateGenerationInfo = null;
@@ -33,14 +33,16 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 new NullTemplateGenerationOrchestrationException();
 
             var expectedTemplateGenerationOrchestrationValidationException =
-                new TemplateGenerationOrchestrationValidationException(nullTemplateGenerationOrchestrationException);
+                new TemplateGenerationOrchestrationValidationException(
+                    nullTemplateGenerationOrchestrationException);
 
             // when
-            Action generateCodeAction = () =>
-               templateGenerationOrchestrationService.GenerateCode(nullTemplateGenerationInfo);
+            ValueTask generateCodeTask =
+               templateGenerationOrchestrationService.GenerateCodeAsync(nullTemplateGenerationInfo);
 
             TemplateGenerationOrchestrationValidationException actualException =
-                Assert.Throws<TemplateGenerationOrchestrationValidationException>(generateCodeAction);
+                await Assert.ThrowsAsync<TemplateGenerationOrchestrationValidationException>(
+                    generateCodeTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationValidationException);
@@ -51,7 +53,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public void ShouldThrowValidationExceptionIfArgumentsIsNull()
+        public async Task ShouldThrowValidationExceptionIfArgumentsIsNull()
         {
             // given
             List<Template> nullTemplateList = null;
@@ -86,11 +88,12 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                     invalidArgumentTemplateGenerationOrchestrationException);
 
             // when
-            Action generateCodeAction = () =>
-               templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
+            ValueTask generateCodeTask =
+               templateGenerationOrchestrationService.GenerateCodeAsync(templateGenerationInfo);
 
             TemplateGenerationOrchestrationValidationException actualException =
-                Assert.Throws<TemplateGenerationOrchestrationValidationException>(generateCodeAction);
+                await Assert.ThrowsAsync<TemplateGenerationOrchestrationValidationException>(
+                    generateCodeTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationValidationException);
@@ -101,7 +104,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public void ShouldRemoveTemplatesOnGenerateCodeIfNotRequired()
+        public async Task ShouldRemoveTemplatesOnGenerateCodeIfNotRequired()
         {
             // given
             int randomNumber = GetRandomNumber();
@@ -129,10 +132,10 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary))
-                                .Returns(outputTemplates[i]);
+                                .ReturnsAsync(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
@@ -141,29 +144,29 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExists(file.Target))
-                                    .Returns(true);
+                                fileProcessingService.CheckIfFileExistsAsync(file.Target))
+                                    .ReturnsAsync(true);
 
                             targets.Add(file.Target);
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
-                            executionProcessingService.Run(action.Executions, action.ExecutionFolder))
-                                .Returns(randomExecutionOutcome);
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
+                                .ReturnsAsync(randomExecutionOutcome);
                     });
                 });
             }
 
             // when
-            templateGenerationOrchestrationService
-                .GenerateCode(templateGenerationInfo);
+            await templateGenerationOrchestrationService
+                .GenerateCodeAsync(templateGenerationInfo);
 
             // then
             for (int i = 0; i < templateGenerationInfo.Templates.Count; i++)
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary),
                                 Times.Once);
@@ -172,7 +175,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             targets.ForEach(target =>
             {
                 this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                    fileProcessingService.CheckIfFileExists(target),
+                    fileProcessingService.CheckIfFileExistsAsync(target),
                         Times.Once);
             });
 
@@ -182,7 +185,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public void ShouldThrowValidationExceptionIfAllTagsNotReplacedWithinAppend()
+        public async Task ShouldThrowValidationExceptionIfAllTagsNotReplacedWithinAppend()
         {
             // given
             var invalidReplacementException = new InvalidReplacementTemplateException();
@@ -221,70 +224,71 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             {
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary))
-                                .Returns(outputTemplates[i]);
+                                .ReturnsAsync(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
                 {
                     this.templateProcessingServiceMock.Setup(templateProcessingService =>
                         templateProcessingService
-                            .TransformString(task.BranchName, templateGenerationInfo.ReplacementDictionary));
+                            .TransformStringAsync(task.BranchName, templateGenerationInfo.ReplacementDictionary));
 
                     task.Actions.ForEach(action =>
                     {
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExists(file.Target))
-                                    .Returns(true);
+                                fileProcessingService.CheckIfFileExistsAsync(file.Target))
+                                    .ReturnsAsync(true);
 
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.ReadFromFile(file.Template))
-                                    .Returns(randomTemplateString);
+                                fileProcessingService.ReadFromFileAsync(file.Template))
+                                    .ReturnsAsync(randomTemplateString);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomTemplateString, It.IsAny<Dictionary<string, string>>()))
-                                        .Returns(randomTransformedTemplateString);
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()))
+                                        .ReturnsAsync(randomTransformedTemplateString);
                         });
 
                         action.Appends.ForEach(append =>
                         {
                             this.fileProcessingServiceMock.Setup(fileProcessingService =>
-                                fileProcessingService.ReadFromFile(append.Target))
-                                    .Returns(randomFileContent);
+                                fileProcessingService.ReadFromFileAsync(append.Target))
+                                    .ReturnsAsync(randomFileContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
-                                templateProcessingService.AppendContent(
+                                templateProcessingService.AppendContentAsync(
                                     randomFileContent,
                                     append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
                                     append.ContentToAppend,
                                     append.AppendToBeginning,
                                     append.AppendEvenIfContentAlreadyExist))
-                                        .Returns(randomAppendedContent);
+                                        .ReturnsAsync(randomAppendedContent);
 
                             this.templateProcessingServiceMock.Setup(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomAppendedContent, randomReplacementDictionary))
-                                        .Throws(templateProcessingDependencyValidationException);
+                                    .TransformStringAsync(randomAppendedContent, randomReplacementDictionary))
+                                        .ThrowsAsync(templateProcessingDependencyValidationException);
                         });
 
                         this.executionProcessingServiceMock.Setup(executionProcessingService =>
-                            executionProcessingService.Run(action.Executions, action.ExecutionFolder))
-                                .Returns(randomExecutionOutcome);
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder))
+                                .ReturnsAsync(randomExecutionOutcome);
                     });
                 });
             }
 
             // when
-            Action GenerateCodeAction = () =>
-                templateGenerationOrchestrationService.GenerateCode(templateGenerationInfo);
+            ValueTask GenerateCodeAction =
+                templateGenerationOrchestrationService.GenerateCodeAsync(templateGenerationInfo);
 
             TemplateGenerationOrchestrationDependencyValidationException actualException =
-                Assert.Throws<TemplateGenerationOrchestrationDependencyValidationException>(GenerateCodeAction);
+                await Assert.ThrowsAsync<TemplateGenerationOrchestrationDependencyValidationException>(
+                    GenerateCodeAction.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedException);
@@ -293,7 +297,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             {
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
-                        .TransformTemplate(
+                        .TransformTemplateAsync(
                             templateGenerationInfo.Templates[i],
                             templateGenerationInfo.ReplacementDictionary),
                                 Times.Exactly(2));
@@ -302,7 +306,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 {
                     this.templateProcessingServiceMock.Verify(templateProcessingService =>
                         templateProcessingService
-                            .TransformString(
+                            .TransformStringAsync(
                                 task.BranchName,
                                 templateGenerationInfo.ReplacementDictionary),
                                     Times.AtLeastOnce);
@@ -312,31 +316,31 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                         action.Files.ForEach(file =>
                         {
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.CheckIfFileExists(file.Target),
+                                fileProcessingService.CheckIfFileExistsAsync(file.Target),
                                     Times.Exactly(2));
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.ReadFromFile(file.Template),
+                                fileProcessingService.ReadFromFileAsync(file.Template),
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
+                                    .TransformStringAsync(randomTemplateString, It.IsAny<Dictionary<string, string>>()),
                                         Times.AtLeastOnce);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.WriteToFile(file.Target, randomTransformedTemplateString),
+                                fileProcessingService.WriteToFileAsync(file.Target, randomTransformedTemplateString),
                                     Times.Once);
                         });
 
                         action.Appends.ForEach(append =>
                         {
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
-                                fileProcessingService.ReadFromFile(append.Target),
+                                fileProcessingService.ReadFromFileAsync(append.Target),
                                     Times.Once);
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
-                                templateProcessingService.AppendContent(
+                                templateProcessingService.AppendContentAsync(
                                     randomFileContent,
                                     append.DoesNotContainContent,
                                     append.RegexToMatchForAppend,
@@ -347,17 +351,17 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
                             this.templateProcessingServiceMock.Verify(templateProcessingService =>
                                 templateProcessingService
-                                    .TransformString(randomAppendedContent, randomReplacementDictionary),
+                                    .TransformStringAsync(randomAppendedContent, randomReplacementDictionary),
                                         Times.Once);
 
                             this.fileProcessingServiceMock.Verify(fileProcessingService =>
                                 fileProcessingService
-                                    .WriteToFile(append.Target, randomAppendedContent),
+                                    .WriteToFileAsync(append.Target, randomAppendedContent),
                                         Times.Never);
                         });
 
                         this.executionProcessingServiceMock.Verify(executionProcessingService =>
-                            executionProcessingService.Run(action.Executions, action.ExecutionFolder),
+                            executionProcessingService.RunAsync(action.Executions, action.ExecutionFolder),
                                 Times.Never);
                     });
                 });

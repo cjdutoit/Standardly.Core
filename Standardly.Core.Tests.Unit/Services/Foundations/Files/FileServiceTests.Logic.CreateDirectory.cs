@@ -19,11 +19,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             string inputFilePath = randomFilePath;
 
             // when
-            this.fileService.CreateDirectory(inputFilePath);
+            this.fileService.CreateDirectoryAsync(inputFilePath);
 
             // then
             this.fileBrokerMock.Verify(broker =>
-                broker.CreateDirectory(inputFilePath),
+                broker.CreateDirectoryAsync(inputFilePath),
                     Times.Once);
 
             this.fileBrokerMock.VerifyNoOtherCalls();

@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -17,13 +18,13 @@ namespace Standardly.Core.Services.Orchestrations.TemplatesGenerations
 {
     public partial class TemplateGenerationOrchestrationService
     {
-        private delegate void ReturningNothingFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
-        private void TryCatch(ReturningNothingFunction returningNothingFunction)
+        private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
             try
             {
-                returningNothingFunction();
+                await returningNothingFunction();
             }
             catch (NullTemplateGenerationOrchestrationException nullTemplateGenerationOrchestrationException)
             {

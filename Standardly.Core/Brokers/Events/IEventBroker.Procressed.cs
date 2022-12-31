@@ -4,14 +4,15 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Executions;
+using Standardly.Core.Models.Events;
 
-namespace Standardly.Core.Brokers.Executions
+namespace Standardly.Core.Brokers.Events
 {
-    public interface IExecutionBroker
+    public partial interface IEventBroker
     {
-        ValueTask<string> RunAsync(List<Execution> executions, string executionFolder);
+        void ListenToProcessedEvent(Func<Processed, ValueTask<Processed>> processedEventHandler);
+        ValueTask PublishProcessedEventAsync(Processed processed);
     }
 }

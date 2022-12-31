@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Foundations.Files.Exceptions;
@@ -17,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalid(string invalidPath)
+        public async Task ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalid(string invalidPath)
         {
             // given
             var invalidArgumentFileException =
@@ -31,17 +32,17 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
                 new FileValidationException(invalidArgumentFileException);
 
             // when
-            System.Action readFromFileTask = () =>
-                this.fileService.ReadFromFile(invalidPath);
+            ValueTask<string> readFromFileTask =
+                this.fileService.ReadFromFileAsync(invalidPath);
 
             FileValidationException actualException =
-                Assert.Throws<FileValidationException>(readFromFileTask);
+                await Assert.ThrowsAsync<FileValidationException>(readFromFileTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedFileValidationException);
 
             this.fileBrokerMock.Verify(broker =>
-                broker.ReadFile(invalidPath),
+                broker.ReadFileAsync(invalidPath),
                     Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
