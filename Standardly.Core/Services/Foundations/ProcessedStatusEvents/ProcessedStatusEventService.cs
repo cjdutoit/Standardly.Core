@@ -7,7 +7,6 @@
 using System;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Events;
-using Standardly.Core.Models.Events;
 using Standardly.Core.Models.Events.ProcessedStatuses;
 
 namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
@@ -21,7 +20,11 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
 
         public void ListenToProcessedStatusEvent(
             Func<ProcessedStatus, ValueTask<ProcessedStatus>> processedEventHandler) =>
-                this.eventBroker.ListenToProcessedEvent(processedEventHandler);
+                TryCatch(() =>
+                {
+                    ValidateProcessedEventHandler(processedEventHandler);
+                    this.eventBroker.ListenToProcessedEvent(processedEventHandler);
+                });
 
         public ValueTask<ProcessedStatus> PublishProcessedStatusAsync(ProcessedStatus status) =>
             throw new NotImplementedException();
