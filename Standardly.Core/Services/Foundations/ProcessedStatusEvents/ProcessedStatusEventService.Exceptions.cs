@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using Standardly.Core.Models.Events.ProcessedStatuses.Exceptions;
 using Xeptions;
 
@@ -23,6 +24,13 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
             {
                 throw CreateAndLogValidationException(nullProcessedStatusEventHandler);
             }
+            catch (Exception exception)
+            {
+                var failedProcessedStatusEventServiceException =
+                    new FailedProcessedStatusEventServiceException(exception);
+
+                throw CreateAndLogServiceException(failedProcessedStatusEventServiceException);
+            }
         }
 
         private ProcessedStatusEventValidationException CreateAndLogValidationException(Xeption exception)
@@ -31,6 +39,14 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
                 new ProcessedStatusEventValidationException(exception);
 
             return processedStatusEventValidationException;
+        }
+
+        private ProcessedStatusEventServiceException CreateAndLogServiceException(
+            Xeption exception)
+        {
+            var processedStatusEventServiceException = new ProcessedStatusEventServiceException(exception);
+
+            return processedStatusEventServiceException;
         }
     }
 }
