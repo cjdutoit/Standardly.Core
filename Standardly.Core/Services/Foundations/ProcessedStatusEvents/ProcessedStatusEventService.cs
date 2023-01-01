@@ -26,7 +26,11 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
                     this.eventBroker.ListenToProcessedEvent(processedEventHandler);
                 });
 
-        public async ValueTask PublishProcessedStatusAsync(ProcessedStatus status) =>
-            await this.eventBroker.PublishProcessedEventAsync(status);
+        public ValueTask PublishProcessedStatusAsync(ProcessedStatus processedStatus) =>
+            TryCatch(async () =>
+            {
+                ValidateProcessedStatusOnPublish(processedStatus);
+                await this.eventBroker.PublishProcessedEventAsync(processedStatus);
+            });
     }
 }

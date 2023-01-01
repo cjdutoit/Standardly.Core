@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Events.ProcessedStatuses.Exceptions;
 using Xeptions;
 
@@ -13,6 +14,7 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
     public partial class ProcessedStatusEventService
     {
         private delegate void ReturningNothingFunction();
+        private delegate ValueTask ReturningValueTaskFunction();
 
         private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
@@ -30,6 +32,18 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
                     new FailedProcessedStatusEventServiceException(exception);
 
                 throw CreateAndLogServiceException(failedProcessedStatusEventServiceException);
+            }
+        }
+
+        private async ValueTask TryCatch(ReturningValueTaskFunction returningValueTaskFunction)
+        {
+            try
+            {
+                await returningValueTaskFunction();
+            }
+            catch (NullProcessedStatusException nullProcessedStatusException)
+            {
+                throw CreateAndLogValidationException(nullProcessedStatusException);
             }
         }
 

@@ -19,12 +19,25 @@ namespace Standardly.Core.Services.Foundations.ProcessedStatusEvents
             ValidateProcessedEventHandlerIsNotNull(processedEventHandler);
         }
 
+        private void ValidateProcessedStatusOnPublish(ProcessedStatus processedStatus)
+        {
+            ValidateProcessedStatusIsNotNull(processedStatus);
+        }
+
         private static void ValidateProcessedEventHandlerIsNotNull(
             Func<ProcessedStatus, ValueTask<ProcessedStatus>> processedEventHandler)
         {
             if (processedEventHandler is null)
             {
                 throw new NullProcessedStatusEventHandler();
+            }
+        }
+
+        private static void ValidateProcessedStatusIsNotNull(ProcessedStatus processedStatus)
+        {
+            if (processedStatus is null)
+            {
+                throw new NullProcessedStatusException();
             }
         }
     }
