@@ -45,6 +45,13 @@ namespace Standardly.Core.Services.Foundations.ProcessedEvents
             {
                 throw CreateAndLogValidationException(nullProcessedEventException);
             }
+            catch (Exception exception)
+            {
+                var failedProcessedEventServiceException =
+                    new FailedProcessedEventServiceException(exception);
+
+                throw CreateAndLogServiceException(failedProcessedEventServiceException);
+            }
         }
 
         private ProcessedEventValidationException CreateAndLogValidationException(Xeption exception)
