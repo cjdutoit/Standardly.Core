@@ -19,6 +19,6 @@ namespace Standardly.Core.Services.Foundations.ProcessedEvents
             this.eventBroker = eventBroker;
 
         public void ListenToProcessedEvent(Func<Processed, ValueTask<Processed>> processedEventHandler) =>
-            throw new NotImplementedException();
+            this.eventBroker.ListenToProcessedEvent(processedEventHandler);
     }
 }
