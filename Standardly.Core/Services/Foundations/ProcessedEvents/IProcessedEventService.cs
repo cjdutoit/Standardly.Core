@@ -13,5 +13,6 @@ namespace Standardly.Core.Services.Foundations.ProcessedEvents
     public interface IProcessedEventService
     {
         void ListenToProcessedEvent(Func<Processed, ValueTask<Processed>> processedEventHandler);
+        ValueTask PublishProcessedAsync(Processed processed);
     }
 }
