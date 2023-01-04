@@ -11,14 +11,19 @@ using Standardly.Core.Models.Foundations.ProcessedEvents;
 
 namespace Standardly.Core.Services.Foundations.ProcessedEvents
 {
-    public class ProcessedEventService : IProcessedEventService
+    public partial class ProcessedEventService : IProcessedEventService
     {
         private readonly IEventBroker eventBroker;
 
         public ProcessedEventService(IEventBroker eventBroker) =>
             this.eventBroker = eventBroker;
 
-        public void ListenToProcessedEvent(Func<Processed, ValueTask<Processed>> processedEventHandler) =>
-            this.eventBroker.ListenToProcessedEvent(processedEventHandler);
+        public void ListenToProcessedEvent(
+            Func<Processed, ValueTask<Processed>> processedEventHandler) =>
+                TryCatch(() =>
+                {
+                    ValidateProcessedEventHandler(processedEventHandler);
+                    this.eventBroker.ListenToProcessedEvent(processedEventHandler);
+                });
     }
 }

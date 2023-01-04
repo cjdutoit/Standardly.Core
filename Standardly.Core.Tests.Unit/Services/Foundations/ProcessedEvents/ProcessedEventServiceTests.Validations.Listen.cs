@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
     public partial class ProcessedEventServiceTests
     {
         [Fact]
-        public async void ShouldThrowValidationExceptionOnListenToProcessedEventIfEventHandlerIsNull()
+        public void ShouldThrowValidationExceptionOnListenToProcessedEventIfEventHandlerIsNull()
         {
             // given
             Func<Processed, ValueTask<Processed>> processedEventHandlerMock = null;
