@@ -7,7 +7,7 @@
 using System;
 using Moq;
 using Standardly.Core.Brokers.Events;
-using Standardly.Core.Models.Events;
+using Standardly.Core.Models.Foundations.ProcessedEvents;
 using Standardly.Core.Services.Foundations.ProcessedEvents;
 using Tynamix.ObjectFiller;
 

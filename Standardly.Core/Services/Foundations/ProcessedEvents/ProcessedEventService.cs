@@ -7,7 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Standardly.Core.Brokers.Events;
-using Standardly.Core.Models.Events;
+using Standardly.Core.Models.Foundations.ProcessedEvents;
 
 namespace Standardly.Core.Services.Foundations.ProcessedEvents
 {

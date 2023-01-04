@@ -4,14 +4,14 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
-using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
+using Xeptions;
 
-namespace Standardly.Core.Services.Foundations.ProcessedEvents
+namespace Standardly.Core.Models.Foundations.ProcessedEvents.Exceptions
 {
-    public interface IProcessedEventService
+    public class NullProcessedEventHandler : Xeption
     {
-        void ListenToProcessedEvent(Func<Processed, ValueTask<Processed>> processedEventHandler);
+        public NullProcessedEventHandler()
+            : base(message: "Processed event handler is null.")
+        { }
     }
 }

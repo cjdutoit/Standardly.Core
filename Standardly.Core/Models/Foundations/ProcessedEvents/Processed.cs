@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Standardly.Core.Models.Events
+namespace Standardly.Core.Models.Foundations.ProcessedEvents
 {
     public class Processed
     {
