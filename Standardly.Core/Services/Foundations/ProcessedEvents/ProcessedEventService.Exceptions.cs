@@ -20,7 +20,7 @@ namespace Standardly.Core.Services.Foundations.ProcessedEvents
             {
                 returningNothingFunction();
             }
-            catch (NullProcessedEventHandler nullProcessedEventHandler)
+            catch (NullProcessedEventHandlerException nullProcessedEventHandler)
             {
                 throw CreateAndLogValidationException(nullProcessedEventHandler);
             }
