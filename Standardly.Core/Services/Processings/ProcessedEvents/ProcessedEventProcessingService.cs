@@ -27,8 +27,8 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
                     this.processedEventService.ListenToProcessedEvent(processedEventProcessingHandler);
                 });
 
-        public ValueTask PublishProcessedAsync(Processed processed) =>
-            throw new NotImplementedException();
+        public async ValueTask PublishProcessedAsync(Processed processed) =>
+            await this.processedEventService.PublishProcessedAsync(processed);
 
     }
 }
