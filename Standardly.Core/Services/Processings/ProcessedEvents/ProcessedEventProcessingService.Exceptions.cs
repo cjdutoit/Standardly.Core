@@ -28,6 +28,10 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             {
                 throw CreateAndLogDependencyValidationException(processedEventValidationException);
             }
+            catch (ProcessedEventServiceException processedEventServiceException)
+            {
+                throw CreateAndLogDependencyException(processedEventServiceException);
+            }
         }
 
         private ProcessedEventProcessingValidationException CreateAndLogValidationException(Xeption exception)
@@ -38,13 +42,23 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             return processedEventProcessingValidationException;
         }
 
-        private ProcessedEventProcessingDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        private ProcessedEventProcessingDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
         {
             var processedEventProcessingDependencyValidationException =
                 new ProcessedEventProcessingDependencyValidationException(
                     exception.InnerException as Xeption);
 
             return processedEventProcessingDependencyValidationException;
+        }
+
+        private ProcessedEventProcessingDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var processedEventProcessingDependencyException =
+                new ProcessedEventProcessingDependencyException(
+                    exception.InnerException as Xeption);
+
+            return processedEventProcessingDependencyException;
         }
     }
 }
