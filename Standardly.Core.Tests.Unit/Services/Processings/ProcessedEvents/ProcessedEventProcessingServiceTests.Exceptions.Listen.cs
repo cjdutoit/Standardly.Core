@@ -94,5 +94,43 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowServiceExceptionOnListenToProcessedEventIfServiceErrorOccurs()
+        {
+            // given
+            var processedEventHandlerMock =
+                new Mock<Func<Processed, ValueTask<Processed>>>();
+
+            var serviceException = new Exception();
+
+            var failedProcessedEventProcessingServiceException =
+                new FailedProcessedEventProcessingServiceException(serviceException);
+
+            var expectedProcessedEventProcessingServiceException =
+                new ProcessedEventProcessingServiceException(failedProcessedEventProcessingServiceException);
+
+            this.processedEventServiceMock.Setup(service =>
+                service.ListenToProcessedEvent(processedEventHandlerMock.Object))
+                    .Throws(serviceException);
+
+            Action listenToProcessedEventAction = () => this.processedEventProcessingService
+                .ListenToProcessedEvent(processedEventHandlerMock.Object);
+
+            ProcessedEventProcessingServiceException actualProcessedEventProcessingServiceException =
+                Assert.Throws<ProcessedEventProcessingServiceException>(listenToProcessedEventAction);
+
+            // when
+            actualProcessedEventProcessingServiceException.Should()
+                .BeEquivalentTo(expectedProcessedEventProcessingServiceException);
+
+            // then
+            this.processedEventServiceMock.Verify(service =>
+                service.ListenToProcessedEvent(
+                    processedEventHandlerMock.Object),
+                        Times.Once);
+
+            this.processedEventServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
