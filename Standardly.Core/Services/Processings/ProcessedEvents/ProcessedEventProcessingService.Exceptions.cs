@@ -55,6 +55,10 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             {
                 throw CreateAndLogValidationException(nullProcessedEventProcessingException);
             }
+            catch (ProcessedEventValidationException processedEventValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(processedEventValidationException);
+            }
         }
 
         private ProcessedEventProcessingValidationException CreateAndLogValidationException(Xeption exception)
