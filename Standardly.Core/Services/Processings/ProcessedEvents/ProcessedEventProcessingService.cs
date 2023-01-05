@@ -19,7 +19,7 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             this.processedEventService = processedEventService;
 
         public void ListenToProcessedEvent(
-            Func<Processed, ValueTask<Processed>> processedProcessingEventHandler) =>
-                throw new NotImplementedException();
+            Func<Processed, ValueTask<Processed>> processedEventProcessingHandler) =>
+                this.processedEventService.ListenToProcessedEvent(processedEventProcessingHandler);
     }
 }
