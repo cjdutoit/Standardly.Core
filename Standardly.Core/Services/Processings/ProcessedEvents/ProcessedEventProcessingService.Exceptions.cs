@@ -24,7 +24,7 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             {
                 returningNothingFunction();
             }
-            catch (NullProcessedEventProcessingHandler nullProcessedEventProcessingHandler)
+            catch (NullProcessedEventProcessingHandlerException nullProcessedEventProcessingHandler)
             {
                 throw CreateAndLogValidationException(nullProcessedEventProcessingHandler);
             }

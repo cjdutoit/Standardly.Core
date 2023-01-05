@@ -27,8 +27,8 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
             // then
             this.processedEventServiceMock.Verify(service =>
-                service.ListenToProcessedEvent(
-                    processedEventProcessingHandlerMock.Object), Times.Once);
+                service.ListenToProcessedEvent(processedEventProcessingHandlerMock.Object),
+                    Times.Once);
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }

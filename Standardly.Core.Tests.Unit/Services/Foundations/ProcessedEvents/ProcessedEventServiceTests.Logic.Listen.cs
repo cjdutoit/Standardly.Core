@@ -27,8 +27,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
 
             // then
             this.eventBrokerMock.Verify(broker =>
-                broker.ListenToProcessedEvent(
-                    processedEventHandlerMock.Object), Times.Once);
+                broker.ListenToProcessedEvent(processedEventHandlerMock.Object),
+                    Times.Once);
 
             this.eventBrokerMock.VerifyNoOtherCalls();
         }

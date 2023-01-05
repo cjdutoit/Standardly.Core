@@ -17,13 +17,13 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
     public partial class ProcessedEventProcessingServiceTests
     {
         [Fact]
-        public async void ShouldThrowValidationExceptionOnListenToProcessedEventIfEventHandlerIsNull()
+        public void ShouldThrowValidationExceptionOnListenToProcessedEventIfEventHandlerIsNull()
         {
             // given
             Func<Processed, ValueTask<Processed>> processedProcessingEventHandlerMock = null;
 
             var nullProcessedEventProcessingHandler =
-                new NullProcessedEventProcessingHandler();
+                new NullProcessedEventProcessingHandlerException();
 
             var expectedProcessedEventProcessingValidationException =
                 new ProcessedEventProcessingValidationException(nullProcessedEventProcessingHandler);
@@ -40,8 +40,8 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
             // then
             this.processedEventServiceMock.Verify(service =>
-                service.ListenToProcessedEvent(
-                    processedProcessingEventHandlerMock), Times.Never);
+                service.ListenToProcessedEvent(processedProcessingEventHandlerMock),
+                    Times.Never);
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }
