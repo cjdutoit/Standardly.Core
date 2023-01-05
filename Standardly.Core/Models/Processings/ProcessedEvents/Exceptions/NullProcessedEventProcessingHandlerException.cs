@@ -8,9 +8,9 @@ using Xeptions;
 
 namespace Standardly.Core.Models.Processings.ProcessedEvents.Exceptions
 {
-    public class NullProcessedEventProcessingHandler : Xeption
+    public class NullProcessedEventProcessingHandlerException : Xeption
     {
-        public NullProcessedEventProcessingHandler()
+        public NullProcessedEventProcessingHandlerException()
             : base(message: "Processed event processing handler is null.")
         { }
     }

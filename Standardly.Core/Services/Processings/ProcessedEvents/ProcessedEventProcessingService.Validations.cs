@@ -18,7 +18,7 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
         {
             if (processedEventProcessingHandler is null)
             {
-                throw new NullProcessedEventProcessingHandler();
+                throw new NullProcessedEventProcessingHandlerException();
             }
         }
     }

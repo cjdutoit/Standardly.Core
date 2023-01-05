@@ -23,7 +23,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
             Func<Processed, ValueTask<Processed>> processedProcessingEventHandlerMock = null;
 
             var nullProcessedEventProcessingHandler =
-                new NullProcessedEventProcessingHandler();
+                new NullProcessedEventProcessingHandlerException();
 
             var expectedProcessedEventProcessingValidationException =
                 new ProcessedEventProcessingValidationException(nullProcessedEventProcessingHandler);
