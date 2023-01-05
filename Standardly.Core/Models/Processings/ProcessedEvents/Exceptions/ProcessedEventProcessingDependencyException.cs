@@ -8,11 +8,11 @@ using Xeptions;
 
 namespace Standardly.Core.Models.Processings.ProcessedEvents.Exceptions
 {
-    public class ProcessedEventProcessingDependencyValidationException : Xeption
+    public class ProcessedEventProcessingDependencyException : Xeption
     {
-        public ProcessedEventProcessingDependencyValidationException(Xeption innerException)
+        public ProcessedEventProcessingDependencyException(Xeption innerException)
             : base(
-                  message: "Processed event dependency validation error occurred, please try again.",
+                  message: "Processed event processing dependency error occurred, please contact support.",
                   innerException)
         { }
     }

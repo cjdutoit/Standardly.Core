@@ -55,5 +55,44 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyOnListenToProcessedEventIfDependencyErrorOccurs(
+           Xeption dependencyException)
+        {
+            // given
+            var processedEventHandlerMock =
+                new Mock<Func<Processed, ValueTask<Processed>>>();
+
+            var serviceException = new Exception();
+
+            var expectedProcessedEventProcessingDependencyException =
+                new ProcessedEventProcessingDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.processedEventServiceMock.Setup(service =>
+                service.ListenToProcessedEvent(processedEventHandlerMock.Object))
+                    .Throws(dependencyException);
+
+            Action listenToProcessedEventAction = () => this.processedEventProcessingService
+                .ListenToProcessedEvent(processedEventHandlerMock.Object);
+
+            ProcessedEventProcessingDependencyException
+                actualProcessedEventProcessingDependencyException =
+                    Assert.Throws<ProcessedEventProcessingDependencyException>(listenToProcessedEventAction);
+
+            // when
+            actualProcessedEventProcessingDependencyException.Should()
+                .BeEquivalentTo(expectedProcessedEventProcessingDependencyException);
+
+            // then
+            this.processedEventServiceMock.Verify(service =>
+                service.ListenToProcessedEvent(
+                    processedEventHandlerMock.Object),
+                        Times.Once);
+
+            this.processedEventServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
