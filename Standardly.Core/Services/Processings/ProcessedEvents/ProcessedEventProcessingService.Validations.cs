@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.ProcessedEvents.Exceptions;
 
 namespace Standardly.Core.Services.Processings.ProcessedEvents
@@ -19,6 +20,14 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             if (processedEventProcessingHandler is null)
             {
                 throw new NullProcessedEventProcessingHandler();
+            }
+        }
+
+        private void ValidateProcessedOnPublish(Processed processed)
+        {
+            if (processed is null)
+            {
+                throw new NullProcessedEventProcessingException();
             }
         }
     }
