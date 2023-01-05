@@ -63,6 +63,13 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             {
                 throw CreateAndLogDependencyException(processedEventServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedProcessedStatusProcessingServiceException =
+                    new FailedProcessedEventProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedProcessedStatusProcessingServiceException);
+            }
         }
 
         private ProcessedEventProcessingValidationException CreateAndLogValidationException(Xeption exception)
