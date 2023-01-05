@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnListenToProcessedEventIfDependencyValidationErrorOccurs(
+        public void ShouldThrowDependencyValidationOnListenToProcessedEventIfDependencyValidationErrorOccurs(
             Xeption dependencyValidationException)
         {
             // given
@@ -49,16 +49,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
             // then
             this.processedEventServiceMock.Verify(service =>
-                service.ListenToProcessedEvent(
-                    processedEventHandlerMock.Object),
-                        Times.Once);
+                service.ListenToProcessedEvent(processedEventHandlerMock.Object),
+                    Times.Once);
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnListenToProcessedEventIfDependencyErrorOccurs(
+        public void ShouldThrowDependencyOnListenToProcessedEventIfDependencyErrorOccurs(
            Xeption dependencyException)
         {
             // given
@@ -88,15 +87,14 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
             // then
             this.processedEventServiceMock.Verify(service =>
-                service.ListenToProcessedEvent(
-                    processedEventHandlerMock.Object),
-                        Times.Once);
+                service.ListenToProcessedEvent(processedEventHandlerMock.Object),
+                    Times.Once);
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async void ShouldThrowServiceExceptionOnListenToProcessedEventIfServiceErrorOccurs()
+        public void ShouldThrowServiceExceptionOnListenToProcessedEventIfServiceErrorOccurs()
         {
             // given
             var processedEventHandlerMock =
@@ -126,9 +124,8 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
             // then
             this.processedEventServiceMock.Verify(service =>
-                service.ListenToProcessedEvent(
-                    processedEventHandlerMock.Object),
-                        Times.Once);
+                service.ListenToProcessedEvent(processedEventHandlerMock.Object),
+                    Times.Once);
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }
