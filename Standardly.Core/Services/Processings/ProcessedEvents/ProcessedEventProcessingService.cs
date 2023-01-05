@@ -20,6 +20,12 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
 
         public void ListenToProcessedEvent(
             Func<Processed, ValueTask<Processed>> processedEventProcessingHandler) =>
-                this.processedEventService.ListenToProcessedEvent(processedEventProcessingHandler);
+                TryCatch(() =>
+                {
+                    ValidateProcessedEventProcessingHandler(processedEventProcessingHandler);
+
+                    this.processedEventService.ListenToProcessedEvent(processedEventProcessingHandler);
+                });
+
     }
 }
