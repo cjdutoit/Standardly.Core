@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
     public partial class ProcessedEventServiceTests
     {
         [Fact]
-        public async void ShouldThrowServiceExceptionOnListenToProcessedEventIfServiceErrorOccurs()
+        public void ShouldThrowServiceExceptionOnListenToProcessedEventIfServiceErrorOccurs()
         {
             // given
             var processedEventHandlerMock =
