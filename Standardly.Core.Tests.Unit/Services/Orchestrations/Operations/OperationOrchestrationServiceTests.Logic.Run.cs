@@ -16,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
     public partial class OperationOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldRunExecution()
+        public async Task ShouldRunExecutionAsync()
         {
             // given
             string randomExecutionFolder = GetRandomString();

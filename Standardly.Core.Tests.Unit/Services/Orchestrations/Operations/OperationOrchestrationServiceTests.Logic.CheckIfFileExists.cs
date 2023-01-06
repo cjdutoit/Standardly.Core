@@ -14,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
     public partial class OperationOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldCheckIfFileExists()
+        public async Task ShouldCheckIfFileExistsAsync()
         {
             // given
             string randomPath = GetRandomString();
