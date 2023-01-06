@@ -6,6 +6,7 @@
 
 using System.Threading.Tasks;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
+using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.Operations
@@ -24,6 +25,14 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             {
                 throw CreateAndLogValidationException(invalidArgumentOperationOrchestrationException);
             }
+            catch (ExecutionProcessingValidationException executionProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(executionProcessingValidationException);
+            }
+            catch (ExecutionProcessingDependencyValidationException executionProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(executionProcessingDependencyValidationException);
+            }
         }
 
         private OperationOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
@@ -32,6 +41,15 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 new OperationOrchestrationValidationException(exception);
 
             return operationOrchestrationValidationException;
+        }
+
+        private OperationOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var operationOrchestrationDependencyValidationException =
+                new OperationOrchestrationDependencyValidationException(
+                    exception.InnerException as Xeption);
+
+            return operationOrchestrationDependencyValidationException;
         }
     }
 }
