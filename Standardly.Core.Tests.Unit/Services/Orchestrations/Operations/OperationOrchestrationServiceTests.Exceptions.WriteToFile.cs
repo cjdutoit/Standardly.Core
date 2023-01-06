@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
@@ -81,6 +82,50 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             this.fileProcessingServiceMock.Verify(service =>
                 service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
                     Times.Once);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.WriteToFileAsync(inputPath, inputContent),
+                    Times.Never);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnWriteToFileAsyncIfServiceErrorOccursAsync()
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+            string inputContent = randomPath;
+
+            var serviceException = new Exception();
+
+            var failedOperationOrchestrationServiceException =
+                new FailedOperationOrchestrationServiceException(serviceException);
+
+            var expectedOperationOrchestrationServiveException =
+                new OperationOrchestrationServiceException(
+                    failedOperationOrchestrationServiceException);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
+                    .ThrowsAsync(serviceException);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.WriteToFileAsync(It.IsAny<string>(), inputContent))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<bool> writeToFileTask =
+                this.operationOrchestrationService.WriteToFileAsync(inputPath, inputContent);
+
+            // then
+            OperationOrchestrationServiceException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationServiceException>(writeToFileTask.AsTask);
+
+            this.fileProcessingServiceMock.Verify(service =>
+            service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
+                Times.Once);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.WriteToFileAsync(inputPath, inputContent),
