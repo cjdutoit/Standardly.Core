@@ -4,12 +4,15 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 
 namespace Standardly.Core.Services.Orchestrations.Operations
 {
-    public partial class OperationOrchestrationService
+    public partial class OperationOrchestrationService : IOperationOrchestrationService
     {
         private readonly IExecutionProcessingService executionProcessingService;
         private readonly IFileProcessingService fileProcessingService;
@@ -21,5 +24,8 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             this.executionProcessingService = executionProcessingService;
             this.fileProcessingService = fileProcessingService;
         }
+
+        public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
+            throw new System.NotImplementedException();
     }
 }

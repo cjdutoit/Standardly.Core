@@ -10,7 +10,7 @@ using Standardly.Core.Models.Foundations.Executions;
 
 namespace Standardly.Core.Services.Orchestrations.Operations
 {
-    internal interface IOperationOrchestrationService
+    public interface IOperationOrchestrationService
     {
         ValueTask<string> RunAsync(List<Execution> executions, string executionFolder);
     }
