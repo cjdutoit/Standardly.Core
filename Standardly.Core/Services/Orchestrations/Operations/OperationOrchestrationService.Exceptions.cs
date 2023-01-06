@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -41,6 +42,13 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             {
                 throw CreateAndLogDependencyException(executionServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedOperationOrchestrationServiceException =
+                    new FailedOperationOrchestrationServiceException(exception);
+
+                throw CreateAndLogServiceException(failedOperationOrchestrationServiceException);
+            }
         }
 
         private OperationOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
@@ -69,5 +77,12 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             return operationOrchestrationDependencyException;
         }
 
+        private OperationOrchestrationServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var operationOrchestrationServiceException = new
+                OperationOrchestrationServiceException(exception);
+
+            return operationOrchestrationServiceException;
+        }
     }
 }
