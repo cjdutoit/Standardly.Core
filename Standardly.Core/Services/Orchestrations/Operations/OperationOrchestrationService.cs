@@ -25,7 +25,12 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             this.fileProcessingService = fileProcessingService;
         }
 
-        public async ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
-            await this.executionProcessingService.RunAsync(executions, executionFolder);
+        public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
+            TryCatch(async () =>
+            {
+                ValidateRunArguments(executions, executionFolder);
+
+                return await this.executionProcessingService.RunAsync(executions, executionFolder);
+            });
     }
 }
