@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.Operations
@@ -61,6 +62,14 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             catch (InvalidArgumentOperationOrchestrationException invalidArgumentOperationOrchestrationException)
             {
                 throw CreateAndLogValidationException(invalidArgumentOperationOrchestrationException);
+            }
+            catch (FileProcessingValidationException fileProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingValidationException);
+            }
+            catch (FileProcessingDependencyValidationException fileProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingDependencyValidationException);
             }
         }
 
