@@ -55,7 +55,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogIt(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogItAsync(
+            string invalidValue)
         {
             // given
             List<Execution> nullExecutions = GetRandomExecutions();
