@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
     public partial class OperationOrchestrationServiceTests
     {
         [Theory]
-        [MemberData(nameof(DependencyValidationExceptions))]
+        [MemberData(nameof(ExecutionDependencyValidationExceptions))]
         public async Task ShouldThrowDependencyValidationOnRunIfDependencyValidationErrorOccursAndLogIt(
             Xeption dependencyValidationException)
         {
@@ -52,7 +52,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         }
 
         [Theory]
-        [MemberData(nameof(DependencyExceptions))]
+        [MemberData(nameof(ExecutionDependencyExceptions))]
         public async Task ShouldThrowDependencyOnRunIfDependencyErrorOccursAndLogIt(
             Xeption dependencyException)
         {
