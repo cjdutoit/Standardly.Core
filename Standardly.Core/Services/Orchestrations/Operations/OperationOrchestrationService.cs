@@ -34,8 +34,13 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 return await this.executionProcessingService.RunAsync(executions, executionFolder);
             });
 
-        public async ValueTask<bool> CheckIfFileExistsAsync(string path) =>
-            await this.fileProcessingService.CheckIfFileExistsAsync(path);
+        public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
+            TryCatch(async () =>
+            {
+                ValidateCheckIfFileExists(path);
+
+                return await this.fileProcessingService.CheckIfFileExistsAsync(path);
+            });
 
         public ValueTask<bool> WriteToFileAsync(string path, string content) =>
             throw new NotImplementedException();

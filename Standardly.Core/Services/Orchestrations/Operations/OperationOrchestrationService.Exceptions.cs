@@ -15,6 +15,7 @@ namespace Standardly.Core.Services.Orchestrations.Operations
     public partial class OperationOrchestrationService : IOperationOrchestrationService
     {
         private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<bool> ReturningBooleanFunction();
 
         private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
         {
@@ -48,6 +49,18 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                     new FailedOperationOrchestrationServiceException(exception);
 
                 throw CreateAndLogServiceException(failedOperationOrchestrationServiceException);
+            }
+        }
+
+        private async ValueTask<bool> TryCatch(ReturningBooleanFunction returningBooleanFunction)
+        {
+            try
+            {
+                return await returningBooleanFunction();
+            }
+            catch (InvalidArgumentOperationOrchestrationException invalidArgumentOperationOrchestrationException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentOperationOrchestrationException);
             }
         }
 
