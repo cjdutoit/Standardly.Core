@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
     public partial class ProcessedEventServiceTests
     {
         [Fact]
-        public async void ShouldThrowServiceExceptionOnPublishProcessedEventIfServiceErrorOccursAsync()
+        public async Task ShouldThrowServiceExceptionOnPublishProcessedEventIfServiceErrorOccursAsync()
         {
             // given
             Processed randomProcessed = CreateRandomProcessed();

@@ -22,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task ShouldThrowValidationExceptionOnFindIfArgumentsIsInvalidAndLogItAsync(string invalidText)
+        public async Task ShouldThrowValidationExceptionOnFindIfArgumentsIsInvalidAsync(string invalidText)
         {
             // given
             string templateFolderPath = invalidText;
@@ -61,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         }
 
         [Fact]
-        public async Task ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTests()
+        public async Task ShouldExcludeTemplatesThatDoesNotLoadCorrectlyTestsAsync()
         {
             // given
             string templateFolderPath = GetRandomString();

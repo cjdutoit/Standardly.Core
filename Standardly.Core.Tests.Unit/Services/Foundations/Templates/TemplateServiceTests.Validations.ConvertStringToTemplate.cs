@@ -22,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfContentIsNullOrEmpty(
+        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfContentIsNullOrEmptyAsync(
             string invalidString)
         {
             // given
@@ -53,7 +53,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfTemplateIsInvalid(
+        public async Task ShouldThrowValidationExceptionOnConvertStringToTemplateIfTemplateIsInvalidAsync(
             string invalidString)
         {
             // given
@@ -121,7 +121,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTasksIsInvalid(string invalidString)
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTasksIsInvalidAsync(string invalidString)
         {
             // given
             Template someTemplate = new Template()
@@ -179,7 +179,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionsIsInvalid(
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionsIsInvalidAsync(
             string invalidString)
         {
             // given
@@ -239,7 +239,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemsIsInvalid(
+        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionFileItemsIsInvalidAsync(
             string invalidString)
         {
             // given
@@ -318,7 +318,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionAppendItemsIsInvalid(
+        public async Task ShouldThrowValidationExceptionWhenTemplateTaskActionAppendItemsIsInvalidAsync(
             string invalidString)
         {
             // given
@@ -409,7 +409,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionExecutionsIsInvalid(
+        public async Task ShouldThrowValidationExceptionOnConvertIfTemplateTaskActionExecutionsIsInvalidAsync(
             string invalidString)
         {
             // given

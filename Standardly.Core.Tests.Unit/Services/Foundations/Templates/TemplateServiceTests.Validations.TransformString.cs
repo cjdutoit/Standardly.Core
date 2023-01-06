@@ -19,7 +19,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnTransformStringIfContentIsNullOrEmpty(string invalidString)
+        public async Task ShouldThrowValidationExceptionOnTransformStringIfContentIsNullOrEmptyAsync(
+            string invalidString)
         {
             // given
             string content = invalidString;
@@ -48,7 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnTransformStringIfDictionaryIsNull()
+        public async Task ShouldThrowValidationExceptionOnTransformStringIfDictionaryIsNullAsync()
         {
             // given
             string randomString = GetRandomString();

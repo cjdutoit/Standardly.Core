@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAsync(
             string invalidInput)
         {
             // given

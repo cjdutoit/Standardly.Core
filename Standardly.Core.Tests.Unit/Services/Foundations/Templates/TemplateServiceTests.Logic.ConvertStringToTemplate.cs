@@ -15,7 +15,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public async Task ShouldConvertStringToTemplate()
+        public async Task ShouldConvertStringToTemplateAsync()
         {
             // given
             Template randomTemplate = CreateRandomTemplate();

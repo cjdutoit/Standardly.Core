@@ -14,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public async Task ShouldReadFromFile()
+        public async Task ShouldReadFromFileAsync()
         {
             // given
             string randomFilePath = GetRandomString();

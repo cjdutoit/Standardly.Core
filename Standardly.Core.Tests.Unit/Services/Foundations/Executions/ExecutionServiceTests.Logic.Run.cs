@@ -16,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
     public partial class ExecutionServiceTests
     {
         [Fact]
-        public async Task ShouldRunExecutions()
+        public async Task ShouldRunExecutionsAsync()
         {
             // given
             List<Execution> randomExecutions = GetRandomExecutions();

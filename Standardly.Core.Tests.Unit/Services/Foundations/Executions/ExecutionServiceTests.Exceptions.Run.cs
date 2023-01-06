@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
     public partial class ExecutionServiceTests
     {
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnRunIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnRunIfServiceErrorOccursAsync()
         {
             // given
             string somePath = GetRandomString();

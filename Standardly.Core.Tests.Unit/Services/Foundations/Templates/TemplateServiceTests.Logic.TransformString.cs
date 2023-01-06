@@ -14,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public async Task ShouldTransformString()
+        public async Task ShouldTransformStringAsync()
         {
             // given
             Dictionary<string, string> randomReplacementDictionary = CreateReplacementDictionary();

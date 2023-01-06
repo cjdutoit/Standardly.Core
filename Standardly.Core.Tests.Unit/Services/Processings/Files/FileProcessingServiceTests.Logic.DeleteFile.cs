@@ -13,7 +13,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldDeleteFile()
+        public async Task ShouldDeleteFileAsync()
         {
             // given
             string randomPath = GetRandomString();

@@ -17,8 +17,9 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnReadFromFileAsyncIfDependencyValidationErrorOccursAndLogIt(
-            Xeption dependencyValidationException)
+        public async Task
+            ShouldThrowDependencyValidationOnReadFromFileAsyncIfDependencyValidationErrorOccursAsync(
+                Xeption dependencyValidationException)
         {
             // given
             string randomPath = GetRandomString();
@@ -49,7 +50,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnReadFromFileAsyncIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnReadFromFileAsyncIfDependencyErrorOccursAsync(
             Xeption dependencyException)
         {
             // given
@@ -80,7 +81,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnReadFromFileAsyncIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnReadFromFileAsyncIfServiceErrorOccursAsync()
         {
             // given
             string randomPath = GetRandomString();

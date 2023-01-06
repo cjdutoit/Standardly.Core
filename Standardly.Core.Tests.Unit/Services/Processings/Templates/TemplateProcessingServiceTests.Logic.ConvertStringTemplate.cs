@@ -15,7 +15,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldConvertStringToTemplateExecution()
+        public async Task ShouldConvertStringToTemplateExecutionAsync()
         {
             // given
             string randomString = GetRandomString();

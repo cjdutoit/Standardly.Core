@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnDeleteFileIfArgumantsIsInvalid(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnDeleteFileIfArgumentsIsInvalidAsync(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;

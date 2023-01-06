@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnWriteToFileIfArgumantsIsInvalid(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnWriteToFileIfArgumentsIsInvalidAsync(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;

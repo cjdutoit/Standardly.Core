@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnPublishIfDependencyValidationErrorOccurs(
+        public async Task ShouldThrowDependencyValidationOnPublishIfDependencyValidationErrorOccursAsync(
                     Xeption dependencyValidationException)
         {
             // given
@@ -58,7 +58,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnPublishIfDependencyErrorOccurs(
+        public async Task ShouldThrowDependencyOnPublishIfDependencyErrorOccursAsync(
            Xeption dependencyException)
         {
             // given
@@ -96,7 +96,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
         }
 
         [Fact]
-        public async void ShouldThrowServiceExceptionOnPublishIfServiceErrorOccurs()
+        public async Task ShouldThrowServiceExceptionOnPublishIfServiceErrorOccursAsync()
         {
             // given
             Processed randomProcessed = CreateRandomProcessed();

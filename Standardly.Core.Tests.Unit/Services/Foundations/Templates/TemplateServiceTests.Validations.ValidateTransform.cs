@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("  ")]
-        public async Task ShouldThrowValidationExceptionOnValidateTransformIfStringArgumentsInvalid(
+        public async Task ShouldThrowValidationExceptionOnValidateTransformIfStringArgumentsInvalidAsync(
             string invalidString)
         {
             // given
@@ -46,7 +46,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnValidateTransformIfAllTagsNotReplaced()
+        public async Task ShouldThrowValidationExceptionOnValidateTransformIfAllTagsNotReplacedAsync()
         {
             // given
             string notReplacedTag = "$notReplaced$";

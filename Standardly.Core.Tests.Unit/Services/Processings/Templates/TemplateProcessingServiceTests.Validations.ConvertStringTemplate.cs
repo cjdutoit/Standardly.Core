@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionIfTemplateContentIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionIfTemplateContentIsInvalidAsync(
             string invalidTemplateContent)
         {
             // given

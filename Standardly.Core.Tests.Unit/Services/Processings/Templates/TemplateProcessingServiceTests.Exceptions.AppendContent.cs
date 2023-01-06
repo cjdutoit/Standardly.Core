@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnAppendContentIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationOnAppendContentIfDependencyValidationErrorOccursAsync(
             Xeption dependencyValidationException)
         {
             // given
@@ -72,7 +72,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnAppendContentIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnAppendContentIfDependencyErrorOccursAsync(
             Xeption dependencyException)
         {
             // given
@@ -134,7 +134,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnAppendContentIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnAppendContentIfServiceErrorOccursAsync()
         {
             // given
             string sourceContent = GetRandomString();

@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async void ShouldThrowValidationExceptionOnTransformStringIfArgumentsIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnTransformStringIfArgumentsIsInvalidAsync(
             string invalidInput)
         {
             // given

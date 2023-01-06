@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfPathIsInvalid(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfPathIsInvalidAsync(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;

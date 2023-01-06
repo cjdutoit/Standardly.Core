@@ -14,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public async Task ShouldCheckIfDirectoryExists()
+        public async Task ShouldCheckIfDirectoryExistsAsync()
         {
             // given
             string randomFilePath = GetRandomString();

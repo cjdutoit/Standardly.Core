@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
     public partial class ExecutionProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNullAndLogIt()
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNullAsync()
         {
             // given
             List<Execution> nullExecutions = null;
@@ -56,7 +56,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogIt(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAsync(string invalidValue)
         {
             // given
             List<Execution> nullExecutions = GetRandomExecutions();

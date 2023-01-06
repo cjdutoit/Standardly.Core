@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         [Theory]
         [MemberData(nameof(FileDependencyValidationExceptions))]
         public async Task
-            ShouldThrowDependencyValidationOnCheckIfFileExistsIfDependencyValidationErrorOccursAndLogItAsync(
+            ShouldThrowDependencyValidationOnCheckIfFileExistsIfDependencyValidationErrorOccursAsync(
                 Xeption dependencyValidationException)
         {
             // given
@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 
         [Theory]
         [MemberData(nameof(FileDependencyExceptions))]
-        public async Task ShouldThrowDependencyOnCheckIfFileExistsIfDependencyErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyOnCheckIfFileExistsIfDependencyErrorOccursAsync(
             Xeption dependencyException)
         {
             // given
@@ -82,7 +82,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnCheckIfFileExistsIfServiceErrorOccursAsync()
         {
             // given
             string randomPath = GetRandomString();

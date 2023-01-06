@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
     {
         [Theory]
         [MemberData(nameof(ExecutionDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnRunIfDependencyValidationErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyValidationOnRunIfDependencyValidationErrorOccursAsync(
             Xeption dependencyValidationException)
         {
             // given
@@ -53,7 +53,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 
         [Theory]
         [MemberData(nameof(ExecutionDependencyExceptions))]
-        public async Task ShouldThrowDependencyOnRunIfDependencyErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyOnRunIfDependencyErrorOccursAsync(
             Xeption dependencyException)
         {
             // given
@@ -86,7 +86,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRunIfServiceErrorOccursAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnRunIfServiceErrorOccursAsync()
         {
             // given
             string randomExecutionFolder = GetRandomString();
