@@ -60,8 +60,13 @@ namespace Standardly.Core.Services.Orchestrations.Operations
              return await this.fileProcessingService.WriteToFileAsync(path, content);
          });
 
-        public async ValueTask<string> ReadFromFileAsync(string path) =>
-            await this.fileProcessingService.ReadFromFileAsync(path);
+        public ValueTask<string> ReadFromFileAsync(string path) =>
+            TryCatch(async () =>
+            {
+                ValidateReadFromFile(path);
+
+                return await this.fileProcessingService.ReadFromFileAsync(path);
+            });
 
         public ValueTask<bool> DeleteFileAsync(string path) =>
             throw new NotImplementedException();
