@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Executions;
@@ -32,5 +33,29 @@ namespace Standardly.Core.Services.Orchestrations.Operations
 
                 return await this.executionProcessingService.RunAsync(executions, executionFolder);
             });
+
+        public ValueTask<bool> CheckIfFileExistsAsync(string path) =>
+            throw new NotImplementedException();
+
+        public ValueTask<bool> WriteToFileAsync(string path, string content) =>
+            throw new NotImplementedException();
+
+        public ValueTask<string> ReadFromFileAsync(string path) =>
+            throw new NotImplementedException();
+
+        public ValueTask<bool> DeleteFileAsync(string path) =>
+            throw new NotImplementedException();
+
+        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            throw new NotImplementedException();
+
+        public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
+            throw new NotImplementedException();
+
+        public ValueTask<bool> CreateDirectoryAsync(string path) =>
+            throw new NotImplementedException();
+
+        public ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
+            throw new NotImplementedException();
     }
 }
