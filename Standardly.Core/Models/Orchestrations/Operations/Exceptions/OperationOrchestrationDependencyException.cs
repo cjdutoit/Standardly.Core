@@ -8,11 +8,11 @@ using Xeptions;
 
 namespace Standardly.Core.Models.Orchestrations.Operations.Exceptions
 {
-    public class OperationOrchestrationValidationException : Xeption
+    public class OperationOrchestrationDependencyException : Xeption
     {
-        public OperationOrchestrationValidationException(Xeption innerException)
+        public OperationOrchestrationDependencyException(Xeption innerException)
             : base(
-                  message: "Operation orchestration validation error occurred, please try again.",
+                  message: "Operation orchestration dependency error occurred, please contact support.",
                   innerException)
         { }
     }

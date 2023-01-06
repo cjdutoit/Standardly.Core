@@ -49,5 +49,39 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyOnRunIfDependencyErrorOccursAndLogIt(
+            Xeption dependencyException)
+        {
+            // given
+            string randomExecutionFolder = GetRandomString();
+            string inputExecutionFolder = randomExecutionFolder;
+            List<Execution> randomExecutions = GetRandomExecutions();
+            List<Execution> inputExecutions = randomExecutions;
+
+            var expectedOperationOrchestrationDependencyException =
+                new OperationOrchestrationDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.executionProcessingServiceMock.Setup(service =>
+                service.RunAsync(inputExecutions, inputExecutionFolder))
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<string> runTask =
+                this.operationOrchestrationService.RunAsync(randomExecutions, inputExecutionFolder);
+
+            // then
+            OperationOrchestrationDependencyException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(runTask.AsTask);
+
+            this.executionProcessingServiceMock.Verify(service =>
+                service.RunAsync(inputExecutions, inputExecutionFolder),
+                    Times.Once);
+
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
