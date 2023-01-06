@@ -7,10 +7,13 @@
 using System.Collections.Generic;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
+using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Services.Orchestrations.Operations;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
 using Tynamix.ObjectFiller;
+using Xeptions;
+using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 {
@@ -28,6 +31,19 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             this.operationOrchestrationService = new OperationOrchestrationService(
                 executionProcessingService: this.executionProcessingServiceMock.Object,
                 fileProcessingService: this.fileProcessingServiceMock.Object);
+        }
+
+        public static TheoryData DependencyValidationExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new ExecutionProcessingValidationException(innerException),
+                new ExecutionProcessingDependencyValidationException(innerException)
+            };
         }
 
         private static string GetRandomString() =>
