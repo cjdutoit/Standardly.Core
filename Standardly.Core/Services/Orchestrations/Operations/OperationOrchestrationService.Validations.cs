@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
@@ -15,8 +16,15 @@ namespace Standardly.Core.Services.Orchestrations.Operations
         private void ValidateRunArguments(List<Execution> executions, string executionFolder)
         {
             Validate(
-                (Rule: IsInvalid(executions), Parameter: nameof(executions)));
+                (Rule: IsInvalid(executions), Parameter: nameof(executions)),
+                (Rule: IsInvalid(executionFolder), Parameter: nameof(executionFolder)));
         }
+
+        private static dynamic IsInvalid(string text) => new
+        {
+            Condition = String.IsNullOrWhiteSpace(text),
+            Message = "Text is required"
+        };
 
         private static dynamic IsInvalid(List<Execution> executions) => new
         {
