@@ -33,6 +33,14 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             {
                 throw CreateAndLogDependencyValidationException(executionProcessingDependencyValidationException);
             }
+            catch (ExecutionProcessingDependencyException executionDependencyException)
+            {
+                throw CreateAndLogDependencyException(executionDependencyException);
+            }
+            catch (ExecutionProcessingServiceException executionServiceException)
+            {
+                throw CreateAndLogDependencyException(executionServiceException);
+            }
         }
 
         private OperationOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
@@ -51,5 +59,15 @@ namespace Standardly.Core.Services.Orchestrations.Operations
 
             return operationOrchestrationDependencyValidationException;
         }
+
+        private OperationOrchestrationDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var operationOrchestrationDependencyException =
+                new OperationOrchestrationDependencyException(
+                    exception.InnerException as Xeption);
+
+            return operationOrchestrationDependencyException;
+        }
+
     }
 }
