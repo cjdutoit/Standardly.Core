@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
@@ -76,6 +77,43 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(runTask.AsTask);
+
+            this.executionProcessingServiceMock.Verify(service =>
+                service.RunAsync(inputExecutions, inputExecutionFolder),
+                    Times.Once);
+
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRunIfServiceErrorOccursAndLogIt()
+        {
+            // given
+            string randomExecutionFolder = GetRandomString();
+            string inputExecutionFolder = randomExecutionFolder;
+            List<Execution> randomExecutions = GetRandomExecutions();
+            List<Execution> inputExecutions = randomExecutions;
+
+            var serviceException = new Exception();
+
+            var failedOperationOrchestrationServiceException =
+                new FailedOperationOrchestrationServiceException(serviceException);
+
+            var expectedOperationOrchestrationServiveException =
+                new OperationOrchestrationServiceException(
+                    failedOperationOrchestrationServiceException);
+
+            this.executionProcessingServiceMock.Setup(service =>
+                service.RunAsync(inputExecutions, inputExecutionFolder))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<string> runTask =
+                this.operationOrchestrationService.RunAsync(randomExecutions, inputExecutionFolder);
+
+            // then
+            OperationOrchestrationServiceException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationServiceException>(runTask.AsTask);
 
             this.executionProcessingServiceMock.Verify(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder),

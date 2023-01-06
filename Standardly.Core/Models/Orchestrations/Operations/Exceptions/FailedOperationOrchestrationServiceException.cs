@@ -4,15 +4,15 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using Xeptions;
 
 namespace Standardly.Core.Models.Orchestrations.Operations.Exceptions
 {
-    public class OperationOrchestrationDependencyValidationException : Xeption
+    public class FailedOperationOrchestrationServiceException : Xeption
     {
-        public OperationOrchestrationDependencyValidationException(Xeption innerException)
-            : base(message: "Operation orchestration dependency validation error occurred, please try again.",
-                  innerException)
+        public FailedOperationOrchestrationServiceException(Exception innerException)
+            : base(message: "Failed operation orchestration service occurred, please contact support", innerException)
         { }
     }
 }
