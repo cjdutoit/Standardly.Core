@@ -43,20 +43,22 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 return await this.fileProcessingService.CheckIfFileExistsAsync(path);
             });
 
-        public async ValueTask<bool> WriteToFileAsync(string path, string content)
-        {
-            FileInfo fileName = new FileInfo(path);
-            string directoryPath = fileName.DirectoryName;
+        public ValueTask<bool> WriteToFileAsync(string path, string content) =>
+         TryCatch(async () =>
+         {
+             ValidateWriteToFile(path, content);
+             FileInfo fileName = new FileInfo(path);
+             string directoryPath = fileName.DirectoryName;
 
-            bool directoryExists = await this.fileProcessingService.CheckIfDirectoryExistsAsync(directoryPath);
+             bool directoryExists = await this.fileProcessingService.CheckIfDirectoryExistsAsync(directoryPath);
 
-            if (!directoryExists)
-            {
-                await this.fileProcessingService.CreateDirectoryAsync(directoryPath);
-            }
+             if (!directoryExists)
+             {
+                 await this.fileProcessingService.CreateDirectoryAsync(directoryPath);
+             }
 
-            return await this.fileProcessingService.WriteToFileAsync(path, content);
-        }
+             return await this.fileProcessingService.WriteToFileAsync(path, content);
+         });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
             throw new NotImplementedException();
