@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
             // then
             this.processedEventServiceMock.Verify(service =>
                 service.PublishProcessedAsync(inputProcessed),
-                        Times.Once);
+                    Times.Once);
 
             this.processedEventServiceMock.VerifyNoOtherCalls();
         }

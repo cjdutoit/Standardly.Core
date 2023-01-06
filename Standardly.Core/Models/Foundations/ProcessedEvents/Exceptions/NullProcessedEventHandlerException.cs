@@ -6,12 +6,12 @@
 
 using Xeptions;
 
-namespace Standardly.Core.Models.Processings.ProcessedEvents.Exceptions
+namespace Standardly.Core.Models.Foundations.ProcessedEvents.Exceptions
 {
-    public class NullProcessedEventProcessingHandler : Xeption
+    public class NullProcessedEventHandlerException : Xeption
     {
-        public NullProcessedEventProcessingHandler()
-            : base(message: "Processed event processing handler is null.")
+        public NullProcessedEventHandlerException()
+            : base(message: "Processed event handler is null.")
         { }
     }
 }

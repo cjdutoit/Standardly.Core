@@ -29,7 +29,7 @@ namespace Standardly.Core.Services.Foundations.ProcessedEvents
         {
             if (processedEventHandler is null)
             {
-                throw new NullProcessedEventHandler();
+                throw new NullProcessedEventHandlerException();
             }
         }
 

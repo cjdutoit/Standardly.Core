@@ -23,7 +23,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
             Func<Processed, ValueTask<Processed>> processedEventHandlerMock = null;
 
             var nullProcessedEventHandler =
-                new NullProcessedEventHandler();
+                new NullProcessedEventHandlerException();
 
             var expectedProcessedEventValidationException =
                 new ProcessedEventValidationException(nullProcessedEventHandler);
@@ -40,8 +40,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
 
             // then
             this.eventBrokerMock.Verify(broker =>
-                broker.ListenToProcessedEvent(
-                    processedEventHandlerMock), Times.Never);
+                broker.ListenToProcessedEvent(processedEventHandlerMock),
+                    Times.Never);
 
             this.eventBrokerMock.VerifyNoOtherCalls();
         }
