@@ -24,6 +24,10 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         {
             this.fileProcessingServiceMock = new Mock<IFileProcessingService>();
             this.executionProcessingServiceMock = new Mock<IExecutionProcessingService>();
+
+            this.operationOrchestrationService = new OperationOrchestrationService(
+                executionProcessingService: this.executionProcessingServiceMock.Object,
+                fileProcessingService: this.fileProcessingServiceMock.Object);
         }
 
         private static string GetRandomString() =>

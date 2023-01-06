@@ -25,7 +25,7 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             this.fileProcessingService = fileProcessingService;
         }
 
-        public ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
-            throw new System.NotImplementedException();
+        public async ValueTask<string> RunAsync(List<Execution> executions, string executionFolder) =>
+            await this.executionProcessingService.RunAsync(executions, executionFolder);
     }
 }
