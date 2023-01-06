@@ -50,5 +50,43 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogIt(string invalidValue)
+        {
+            // given
+            List<Execution> nullExecutions = GetRandomExecutions();
+            string executionFolder = invalidValue;
+
+            var invalidArgumentOperationOrchestrationException =
+                new InvalidArgumentOperationOrchestrationException();
+
+            invalidArgumentOperationOrchestrationException.AddData(
+                key: "executionFolder",
+                values: "Text is required");
+
+            var expectedOperationOrchestrationValidationException =
+                new OperationOrchestrationValidationException(invalidArgumentOperationOrchestrationException);
+
+            // when
+            ValueTask<string> runTask =
+                this.operationOrchestrationService.RunAsync(nullExecutions, executionFolder);
+
+            OperationOrchestrationValidationException actualOperationOrchestrationValidationException =
+                await Assert.ThrowsAsync<OperationOrchestrationValidationException>(runTask.AsTask);
+
+            // then
+            actualOperationOrchestrationValidationException.Should()
+                .BeEquivalentTo(expectedOperationOrchestrationValidationException);
+
+            this.executionProcessingServiceMock.Verify(service =>
+                service.RunAsync(nullExecutions, executionFolder),
+                    Times.Never);
+
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
