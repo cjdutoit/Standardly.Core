@@ -46,5 +46,37 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(FileDependencyExceptions))]
+        public async Task ShouldThrowDependencyOnDeleteFileAsyncIfDependencyErrorOccursAsync(
+            Xeption dependencyException)
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+
+            var expectedOperationOrchestrationDependencyException =
+                new OperationOrchestrationDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.DeleteFileAsync(inputPath))
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<bool> deleteFileTask =
+                this.operationOrchestrationService.DeleteFileAsync(inputPath);
+
+            // then
+            OperationOrchestrationDependencyException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(deleteFileTask.AsTask);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.DeleteFileAsync(inputPath),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
