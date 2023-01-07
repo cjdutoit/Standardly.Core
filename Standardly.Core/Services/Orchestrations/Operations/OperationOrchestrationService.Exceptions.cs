@@ -132,6 +132,13 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             {
                 throw CreateAndLogDependencyException(fileServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedOperationOrchestrationServiceException =
+                    new FailedOperationOrchestrationServiceException(exception);
+
+                throw CreateAndLogServiceException(failedOperationOrchestrationServiceException);
+            }
         }
 
         private OperationOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
