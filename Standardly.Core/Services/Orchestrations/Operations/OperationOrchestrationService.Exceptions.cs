@@ -36,6 +36,14 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             {
                 throw CreateAndLogDependencyValidationException(executionProcessingDependencyValidationException);
             }
+            catch (FileProcessingValidationException fileProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingValidationException);
+            }
+            catch (FileProcessingDependencyValidationException fileProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingDependencyValidationException);
+            }
             catch (ExecutionProcessingDependencyException executionDependencyException)
             {
                 throw CreateAndLogDependencyException(executionDependencyException);
