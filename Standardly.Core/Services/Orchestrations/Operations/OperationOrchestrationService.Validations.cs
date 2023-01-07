@@ -32,6 +32,11 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
         }
 
+        private static void ValidateDeleteFile(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static void ValidateCheckIfFileExists(string path)
         {
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
