@@ -31,7 +31,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
                 key: "path",
                 values: "Text is required");
 
-            var expectedFilesProcessingValidationException =
+            var expectedOperationOrchestrationValidationException =
                 new OperationOrchestrationValidationException(invalidArgumentOperationOrchestrationException);
 
             // when
@@ -42,7 +42,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
                 await Assert.ThrowsAsync<OperationOrchestrationValidationException>(deleteFileTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationValidationException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.DeleteFileAsync(invalidPath),

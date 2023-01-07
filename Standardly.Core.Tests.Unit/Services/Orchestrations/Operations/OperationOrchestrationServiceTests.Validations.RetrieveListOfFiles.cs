@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -18,10 +19,13 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalidAsync(
-            string invalidFilePath)
+        public async Task ShouldThrowValidationExceptionOnRetrieveListOfFilesIfInputsIsInvalidAsync(
+            string invalidInput)
         {
             // given
+            string invalidPath = invalidInput;
+            string invalidSearchPattern = invalidInput;
+
             var invalidArgumentOperationOrchestrationException =
                 new InvalidArgumentOperationOrchestrationException();
 
@@ -29,21 +33,26 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
                 key: "path",
                 values: "Text is required");
 
+            invalidArgumentOperationOrchestrationException.AddData(
+                key: "searchPattern",
+                values: "Text is required");
+
             var expectedOperationOrchestrationValidationException =
                 new OperationOrchestrationValidationException(invalidArgumentOperationOrchestrationException);
 
             // when
-            ValueTask<string> ReadFromFileTask =
-                this.operationOrchestrationService.ReadFromFileAsync(invalidFilePath);
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.operationOrchestrationService
+                    .RetrieveListOfFilesAsync(path: invalidPath, searchPattern: invalidSearchPattern);
 
             OperationOrchestrationValidationException actualException =
-                await Assert.ThrowsAsync<OperationOrchestrationValidationException>(ReadFromFileTask.AsTask);
+                await Assert.ThrowsAsync<OperationOrchestrationValidationException>(retrieveListOfFilesTask.AsTask);
 
             // then
             actualException.Should().BeEquivalentTo(expectedOperationOrchestrationValidationException);
 
             this.fileProcessingServiceMock.Verify(service =>
-                service.ReadFromFileAsync(invalidFilePath),
+                service.RetrieveListOfFilesAsync(invalidPath, invalidSearchPattern),
                     Times.Never);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
