@@ -59,6 +59,11 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
         }
 
+        private static void ValidateDeleteDirectory(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

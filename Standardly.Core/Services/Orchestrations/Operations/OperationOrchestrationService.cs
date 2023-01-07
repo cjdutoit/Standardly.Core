@@ -98,7 +98,11 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 return await this.fileProcessingService.CreateDirectoryAsync(path);
             });
 
-        public async ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
-            await this.fileProcessingService.DeleteDirectoryAsync(path, recursive);
+        public ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
+            TryCatch(async () =>
+            {
+                ValidateDeleteDirectory(path);
+                return await this.fileProcessingService.DeleteDirectoryAsync(path, recursive);
+            });
     }
 }
