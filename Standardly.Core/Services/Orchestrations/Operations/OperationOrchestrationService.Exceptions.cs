@@ -116,6 +116,14 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             {
                 throw CreateAndLogValidationException(invalidArgumentOperationOrchestrationException);
             }
+            catch (FileProcessingValidationException fileProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingValidationException);
+            }
+            catch (FileProcessingDependencyValidationException fileProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingDependencyValidationException);
+            }
         }
 
         private OperationOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
