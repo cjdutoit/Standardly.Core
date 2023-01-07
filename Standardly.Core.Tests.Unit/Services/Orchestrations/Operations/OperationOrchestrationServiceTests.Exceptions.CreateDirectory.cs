@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
@@ -71,6 +72,42 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(createDirectoryTask.AsTask);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.CreateDirectoryAsync(inputPath),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnCreateDirectoryIfServiceErrorOccursAsync()
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+            string inputContent = randomPath;
+
+            var serviceException = new Exception();
+
+            var failedOperationOrchestrationServiceException =
+                new FailedOperationOrchestrationServiceException(serviceException);
+
+            var expectedOperationOrchestrationServiveException =
+                new OperationOrchestrationServiceException(
+                    failedOperationOrchestrationServiceException);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.CreateDirectoryAsync(inputPath))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<bool> createDirectoryTask =
+                this.operationOrchestrationService.CreateDirectoryAsync(inputPath);
+
+            // then
+            OperationOrchestrationServiceException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationServiceException>(createDirectoryTask.AsTask);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.CreateDirectoryAsync(inputPath),
