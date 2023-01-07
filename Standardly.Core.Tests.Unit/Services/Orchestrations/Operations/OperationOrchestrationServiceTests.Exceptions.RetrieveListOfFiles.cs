@@ -48,5 +48,38 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(FileDependencyExceptions))]
+        public async Task ShouldThrowDependencyOnRetrieveListOfFilesAsyncIfDependencyErrorOccursAsync(
+            Xeption dependencyException)
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+            string inputContent = randomPath;
+
+            var expectedOperationOrchestrationDependencyException =
+                new OperationOrchestrationDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.RetrieveListOfFilesAsync(inputPath, inputContent))
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.operationOrchestrationService.RetrieveListOfFilesAsync(inputPath, inputContent);
+
+            // then
+            OperationOrchestrationDependencyException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(retrieveListOfFilesTask.AsTask);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.RetrieveListOfFilesAsync(inputPath, inputContent),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
