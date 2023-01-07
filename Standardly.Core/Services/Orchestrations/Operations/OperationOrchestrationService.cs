@@ -4,7 +4,6 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -99,7 +98,7 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 return await this.fileProcessingService.CreateDirectoryAsync(path);
             });
 
-        public ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
-            throw new NotImplementedException();
+        public async ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
+            await this.fileProcessingService.DeleteDirectoryAsync(path, recursive);
     }
 }
