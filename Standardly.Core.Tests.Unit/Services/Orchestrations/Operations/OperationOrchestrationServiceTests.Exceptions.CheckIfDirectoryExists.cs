@@ -47,5 +47,37 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(FileDependencyExceptions))]
+        public async Task ShouldThrowDependencyOnCheckIfDirectoryExistsIfDependencyErrorOccursAsync(
+            Xeption dependencyException)
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+
+            var expectedOperationOrchestrationDependencyException =
+                new OperationOrchestrationDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.CheckIfDirectoryExistsAsync(inputPath))
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<bool> checkIfDirectoryExistsTask =
+                this.operationOrchestrationService.CheckIfDirectoryExistsAsync(inputPath);
+
+            // then
+            OperationOrchestrationDependencyException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(checkIfDirectoryExistsTask.AsTask);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.CheckIfDirectoryExistsAsync(inputPath),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
