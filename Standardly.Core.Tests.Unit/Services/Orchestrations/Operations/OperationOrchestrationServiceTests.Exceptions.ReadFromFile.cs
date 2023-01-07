@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using Moq;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
@@ -71,6 +72,41 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(ReadFromFileTask.AsTask);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.ReadFromFileAsync(inputPath),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnReadFromFileAsyncIfServiceErrorOccursAsync()
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+
+            var serviceException = new Exception();
+
+            var failedOperationOrchestrationServiceException =
+                new FailedOperationOrchestrationServiceException(serviceException);
+
+            var expectedOperationOrchestrationServiveException =
+                new OperationOrchestrationServiceException(
+                    failedOperationOrchestrationServiceException);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.ReadFromFileAsync(inputPath))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<string> ReadFromFileTask =
+                this.operationOrchestrationService.ReadFromFileAsync(inputPath);
+
+            // then
+            OperationOrchestrationServiceException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationServiceException>(ReadFromFileTask.AsTask);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.ReadFromFileAsync(inputPath),
