@@ -76,8 +76,13 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 return await this.fileProcessingService.DeleteFileAsync(path);
             });
 
-        public async ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            await this.fileProcessingService.RetrieveListOfFilesAsync(path, searchPattern);
+        public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
+            TryCatch(async () =>
+            {
+                ValidateRetrieveListOfFiles(path, searchPattern);
+
+                return await this.fileProcessingService.RetrieveListOfFilesAsync(path, searchPattern);
+            });
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
             throw new NotImplementedException();
