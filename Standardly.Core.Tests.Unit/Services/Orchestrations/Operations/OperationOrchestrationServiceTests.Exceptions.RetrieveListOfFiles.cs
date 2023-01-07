@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
@@ -74,6 +75,42 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(retrieveListOfFilesTask.AsTask);
+
+            this.fileProcessingServiceMock.Verify(service =>
+                service.RetrieveListOfFilesAsync(inputPath, inputContent),
+                    Times.Once);
+
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveListOfFilesAsyncIfServiceErrorOccursAsync()
+        {
+            // given
+            string randomPath = GetRandomString();
+            string inputPath = randomPath;
+            string inputContent = randomPath;
+
+            var serviceException = new Exception();
+
+            var failedOperationOrchestrationServiceException =
+                new FailedOperationOrchestrationServiceException(serviceException);
+
+            var expectedOperationOrchestrationServiveException =
+                new OperationOrchestrationServiceException(
+                    failedOperationOrchestrationServiceException);
+
+            this.fileProcessingServiceMock.Setup(service =>
+                service.RetrieveListOfFilesAsync(inputPath, inputContent))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<List<string>> retrieveListOfFilesTask =
+                this.operationOrchestrationService.RetrieveListOfFilesAsync(inputPath, inputContent);
+
+            // then
+            OperationOrchestrationServiceException actualException =
+                await Assert.ThrowsAsync<OperationOrchestrationServiceException>(retrieveListOfFilesTask.AsTask);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent),
