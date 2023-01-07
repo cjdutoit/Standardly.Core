@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -13,32 +14,26 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
     public partial class OperationOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldWriteToFileAsync()
+        public async Task ShouldCheckIfDirectoryExistsAsync()
         {
             // given
             string randomPath = GetRandomString();
             string inputFilePath = randomPath;
-            string randomContent = GetRandomString();
-            string inputContent = randomContent;
+            bool expectedResult = true;
 
             this.fileProcessingServiceMock.Setup(service =>
-                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()))
-                    .ReturnsAsync(false);
+                service.CheckIfDirectoryExistsAsync(randomPath))
+                    .ReturnsAsync(expectedResult);
 
             // when
-            await this.operationOrchestrationService.WriteToFileAsync(inputFilePath, inputContent);
+            bool actualResult = await this.operationOrchestrationService
+                .CheckIfDirectoryExistsAsync(inputFilePath);
 
             // then
-            this.fileProcessingServiceMock.Verify(service =>
-                service.CheckIfDirectoryExistsAsync(It.IsAny<string>()),
-                    Times.Once);
+            actualResult.Should().Be(expectedResult);
 
             this.fileProcessingServiceMock.Verify(service =>
-                service.CreateDirectoryAsync(It.IsAny<string>()),
-                    Times.Once);
-
-            this.fileProcessingServiceMock.Verify(service =>
-                service.WriteToFileAsync(inputFilePath, inputContent),
+                service.CheckIfDirectoryExistsAsync(inputFilePath),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
