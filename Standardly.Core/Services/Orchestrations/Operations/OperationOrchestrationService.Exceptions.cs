@@ -52,6 +52,14 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             {
                 throw CreateAndLogDependencyException(executionServiceException);
             }
+            catch (FileProcessingDependencyException fileDependencyException)
+            {
+                throw CreateAndLogDependencyException(fileDependencyException);
+            }
+            catch (FileProcessingServiceException fileServiceException)
+            {
+                throw CreateAndLogDependencyException(fileServiceException);
+            }
             catch (Exception exception)
             {
                 var failedOperationOrchestrationServiceException =
