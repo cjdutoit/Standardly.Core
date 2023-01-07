@@ -26,19 +26,19 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             string invalidPath = invalidInput;
             string invalidSearchPattern = invalidInput;
 
-            var invalidFilesProcessingException =
+            var invalidFileProcessingException =
                 new InvalidFileProcessingException();
 
-            invalidFilesProcessingException.AddData(
+            invalidFileProcessingException.AddData(
                 key: "path",
                 values: "Text is required");
 
-            invalidFilesProcessingException.AddData(
+            invalidFileProcessingException.AddData(
                 key: "searchPattern",
                 values: "Text is required");
 
-            var expectedFilesProcessingValidationException =
-                new FileProcessingValidationException(invalidFilesProcessingException);
+            var expectedFileProcessingValidationException =
+                new FileProcessingValidationException(invalidFileProcessingException);
 
             // when
             ValueTask<List<string>> retrieveListOfFilesTask =
@@ -49,7 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 await Assert.ThrowsAsync<FileProcessingValidationException>(retrieveListOfFilesTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
+            actualException.Should().BeEquivalentTo(expectedFileProcessingValidationException);
 
             this.fileServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(invalidPath, invalidSearchPattern),

@@ -22,15 +22,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             string invalidFilePath)
         {
             // given
-            var invalidFilesProcessingException =
+            var invalidFileProcessingException =
                 new InvalidFileProcessingException();
 
-            invalidFilesProcessingException.AddData(
+            invalidFileProcessingException.AddData(
                 key: "path",
                 values: "Text is required");
 
-            var expectedFilesProcessingValidationException =
-                new FileProcessingValidationException(invalidFilesProcessingException);
+            var expectedFileProcessingValidationException =
+                new FileProcessingValidationException(invalidFileProcessingException);
 
             // when
             ValueTask<string> ReadFromFileTask =
@@ -40,7 +40,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 await Assert.ThrowsAsync<FileProcessingValidationException>(ReadFromFileTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
+            actualException.Should().BeEquivalentTo(expectedFileProcessingValidationException);
 
             this.fileServiceMock.Verify(service =>
                 service.ReadFromFileAsync(invalidFilePath),
