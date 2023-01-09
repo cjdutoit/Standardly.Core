@@ -77,7 +77,12 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             });
 
         public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
-            throw new NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateRetrieveListOfFiles(path, searchPattern);
+
+                return await this.fileProcessingService.RetrieveListOfFilesAsync(path, searchPattern);
+            });
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
             throw new NotImplementedException();

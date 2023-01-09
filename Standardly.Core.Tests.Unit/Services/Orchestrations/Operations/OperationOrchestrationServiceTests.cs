@@ -89,6 +89,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
+        private static List<string> GetRandomStringList()
+        {
+            List<string> stringList = new List<string>();
+
+            for (int i = 0; i < GetRandomNumber(); i++)
+            {
+                stringList.Add(GetRandomString());
+            }
+
+            return stringList;
+        }
+
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 5).GetValue();
 

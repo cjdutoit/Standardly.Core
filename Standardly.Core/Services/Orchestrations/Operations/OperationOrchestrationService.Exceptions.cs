@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
@@ -17,6 +18,7 @@ namespace Standardly.Core.Services.Orchestrations.Operations
     {
         private delegate ValueTask<string> ReturningStringFunction();
         private delegate ValueTask<bool> ReturningBooleanFunction();
+        private delegate ValueTask<List<string>> ReturningStringListFunction();
 
         private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
         {
@@ -74,6 +76,41 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             try
             {
                 return await returningBooleanFunction();
+            }
+            catch (InvalidArgumentOperationOrchestrationException invalidArgumentOperationOrchestrationException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentOperationOrchestrationException);
+            }
+            catch (FileProcessingValidationException fileProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingValidationException);
+            }
+            catch (FileProcessingDependencyValidationException fileProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingDependencyValidationException);
+            }
+            catch (FileProcessingDependencyException fileDependencyException)
+            {
+                throw CreateAndLogDependencyException(fileDependencyException);
+            }
+            catch (FileProcessingServiceException fileServiceException)
+            {
+                throw CreateAndLogDependencyException(fileServiceException);
+            }
+            catch (Exception exception)
+            {
+                var failedOperationOrchestrationServiceException =
+                    new FailedOperationOrchestrationServiceException(exception);
+
+                throw CreateAndLogServiceException(failedOperationOrchestrationServiceException);
+            }
+        }
+
+        private async ValueTask<List<string>> TryCatch(ReturningStringListFunction returningStringListFunction)
+        {
+            try
+            {
+                return await returningStringListFunction();
             }
             catch (InvalidArgumentOperationOrchestrationException invalidArgumentOperationOrchestrationException)
             {
