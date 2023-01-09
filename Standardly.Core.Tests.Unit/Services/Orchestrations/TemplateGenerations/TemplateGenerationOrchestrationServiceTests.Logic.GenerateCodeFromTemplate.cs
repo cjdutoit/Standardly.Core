@@ -47,8 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
                         .TransformTemplateAsync(
-                            templateGenerationInfo.Templates[i],
-                            templateGenerationInfo.ReplacementDictionary))
+                            templateGenerationInfo.Templates[i]))
                                 .ReturnsAsync(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
@@ -115,8 +114,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
                         .TransformTemplateAsync(
-                            templateGenerationInfo.Templates[i],
-                            templateGenerationInfo.ReplacementDictionary),
+                            templateGenerationInfo.Templates[i]),
                                 Times.Exactly(2));
 
                 outputTemplates[i].Tasks.ForEach(task =>
@@ -222,8 +220,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 this.templateProcessingServiceMock.Setup(templateProcessingService =>
                     templateProcessingService
                         .TransformTemplateAsync(
-                            templateGenerationInfo.Templates[i],
-                            templateGenerationInfo.ReplacementDictionary))
+                            templateGenerationInfo.Templates[i]))
                                 .ReturnsAsync(outputTemplates[i]);
 
                 outputTemplates[i].Tasks.ForEach(task =>
@@ -292,8 +289,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 this.templateProcessingServiceMock.Verify(templateProcessingService =>
                     templateProcessingService
                         .TransformTemplateAsync(
-                            templateGenerationInfo.Templates[i],
-                            templateGenerationInfo.ReplacementDictionary),
+                            templateGenerationInfo.Templates[i]),
                                 Times.Exactly(2));
 
                 outputTemplates[i].Tasks.ForEach(task =>

@@ -91,5 +91,10 @@ namespace Standardly.Core.Models.Foundations.Templates
         /// A list of any manual tasks not currently handled by the template generation process.
         /// </summary>
         public List<string> CleanupTasks { get; set; } = new List<string>();
+
+        /// <summary>
+        /// A dictionary containing replacement values for template variables
+        /// </summary>
+        public Dictionary<string, string> ReplacementDictionary { get; set; } = new Dictionary<string, string>();
     }
 }

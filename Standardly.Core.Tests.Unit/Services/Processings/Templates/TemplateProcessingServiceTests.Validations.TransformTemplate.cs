@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnTransformTemplateIfArgumentsIsInvalidAsync()
+        public async Task ShouldThrowValidationExceptionOnTransformTemplateIfTemplateIsNullAsync()
         {
             // given
             Template nullTemplate = null;
@@ -40,7 +40,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             // when
             ValueTask<Template> transformTemplateTask =
                 this.templateProcessingService
-                    .TransformTemplateAsync(nullTemplate, nullDictionary);
+                    .TransformTemplateAsync(nullTemplate);
 
             TemplateProcessingValidationException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingValidationException>(transformTemplateTask.AsTask);
@@ -49,7 +49,52 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
 
             this.templateServiceMock.Verify(service =>
-                service.TransformStringAsync(It.IsAny<string>(), nullDictionary),
+                service.TransformStringAsync(It.IsAny<string>(), It.IsAny<Dictionary<string, string>>()),
+                    Times.Never);
+
+            this.templateServiceMock.Verify(service =>
+                service.ValidateTransformationAsync(It.IsAny<string>()),
+                    Times.Never());
+
+            this.templateServiceMock.Verify(service =>
+                service.ConvertStringToTemplateAsync(It.IsAny<string>()),
+                    Times.Never());
+
+            this.templateServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnTransformTemplateIfDictionaryIsNullAsync()
+        {
+            // given
+            Template randomTemplate = CreateRandomTemplate();
+            Dictionary<string, string> nullDictionary = null;
+            Template inputTemplate = randomTemplate;
+            inputTemplate.ReplacementDictionary = nullDictionary;
+
+            var invalidArgumentTemplateProcessingException =
+                new InvalidArgumentTemplateProcessingException();
+
+            invalidArgumentTemplateProcessingException.AddData(
+                key: "replacementDictionary",
+                values: "Dictionary values is required");
+
+            var expectedTemplateProcessingValidationException =
+                new TemplateProcessingValidationException(invalidArgumentTemplateProcessingException);
+
+            // when
+            ValueTask<Template> transformTemplateTask =
+                this.templateProcessingService
+                    .TransformTemplateAsync(inputTemplate);
+
+            TemplateProcessingValidationException actualException =
+                await Assert.ThrowsAsync<TemplateProcessingValidationException>(transformTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingValidationException);
+
+            this.templateServiceMock.Verify(service =>
+                service.TransformStringAsync(It.IsAny<string>(), inputTemplate.ReplacementDictionary),
                     Times.Never);
 
             this.templateServiceMock.Verify(service =>

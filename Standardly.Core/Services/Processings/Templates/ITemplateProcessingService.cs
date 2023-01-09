@@ -14,9 +14,7 @@ namespace Standardly.Core.Services.Processings.Templates
     {
         ValueTask<Template> ConvertStringToTemplateAsync(string content);
 
-        ValueTask<Template> TransformTemplateAsync(
-            Template template,
-            Dictionary<string, string> replacementDictionary);
+        ValueTask<Template> TransformTemplateAsync(Template template);
 
         ValueTask<string> TransformStringAsync(
             string content,

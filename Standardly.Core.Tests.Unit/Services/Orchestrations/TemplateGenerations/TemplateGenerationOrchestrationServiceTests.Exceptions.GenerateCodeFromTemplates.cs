@@ -47,8 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             this.templateProcessingServiceMock.Setup(service =>
                 service.TransformTemplateAsync(
-                    It.IsAny<Template>(),
-                    inputDictionary))
+                    It.IsAny<Template>()))
                         .ThrowsAsync(dependencyValidationException);
 
             // when
@@ -63,7 +62,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             actualException.Should().BeEquivalentTo(expectedDependencyValidationException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplateAsync(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
+                broker.TransformTemplateAsync(It.IsAny<Template>()),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -97,8 +96,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             this.templateProcessingServiceMock.Setup(service =>
                 service.TransformTemplateAsync(
-                    It.IsAny<Template>(),
-                    inputDictionary))
+                    It.IsAny<Template>()))
                         .ThrowsAsync(dependencyException);
 
             // when
@@ -112,7 +110,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             actualException.Should().BeEquivalentTo(expectedTemplateOrchestrationDependencyException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplateAsync(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
+                broker.TransformTemplateAsync(It.IsAny<Template>()),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
@@ -149,8 +147,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             this.templateProcessingServiceMock.Setup(service =>
                 service.TransformTemplateAsync(
-                    It.IsAny<Template>(),
-                    inputDictionary))
+                    It.IsAny<Template>()))
                         .ThrowsAsync(serviceException);
 
             // when
@@ -164,7 +161,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             actualException.Should().BeEquivalentTo(expectedTemplateGenerationOrchestrationServiceException);
 
             this.templateProcessingServiceMock.Verify(broker =>
-                broker.TransformTemplateAsync(It.IsAny<Template>(), templateGenerationInfo.ReplacementDictionary),
+                broker.TransformTemplateAsync(It.IsAny<Template>()),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
