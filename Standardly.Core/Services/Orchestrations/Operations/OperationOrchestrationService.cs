@@ -69,7 +69,12 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             });
 
         public ValueTask<bool> DeleteFileAsync(string path) =>
-            throw new NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateDeleteFile(path);
+
+                return await this.fileProcessingService.DeleteFileAsync(path);
+            });
 
         public ValueTask<List<string>> RetrieveListOfFilesAsync(string path, string searchPattern = "*") =>
             throw new NotImplementedException();
