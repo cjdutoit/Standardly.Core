@@ -14,5 +14,7 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
     {
         void ListenToProcessedEvent(
             Func<Processed, ValueTask<Processed>> processedEventProcessingHandler);
+
+        ValueTask PublishProcessedAsync(Processed processed);
     }
 }

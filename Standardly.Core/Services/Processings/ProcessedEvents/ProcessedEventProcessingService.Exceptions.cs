@@ -5,7 +5,9 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.ProcessedEvents.Exceptions;
+using Standardly.Core.Models.Processings.Executions.Exceptions;
 using Standardly.Core.Models.Processings.ProcessedEvents.Exceptions;
 using Xeptions;
 
@@ -14,6 +16,7 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
     public partial class ProcessedEventProcessingService : IProcessedEventProcessingService
     {
         private delegate void ReturningNothingFunction();
+        private delegate ValueTask ReturningValueTaskFunction();
 
         private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
@@ -24,6 +27,33 @@ namespace Standardly.Core.Services.Processings.ProcessedEvents
             catch (NullProcessedEventProcessingHandlerException nullProcessedEventProcessingHandler)
             {
                 throw CreateAndLogValidationException(nullProcessedEventProcessingHandler);
+            }
+            catch (ProcessedEventValidationException processedEventValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(processedEventValidationException);
+            }
+            catch (ProcessedEventServiceException processedEventServiceException)
+            {
+                throw CreateAndLogDependencyException(processedEventServiceException);
+            }
+            catch (Exception exception)
+            {
+                var failedProcessedStatusProcessingServiceException =
+                    new FailedProcessedEventProcessingServiceException(exception);
+
+                throw CreateAndLogServiceException(failedProcessedStatusProcessingServiceException);
+            }
+        }
+
+        private async ValueTask TryCatch(ReturningValueTaskFunction returningValueTaskFunction)
+        {
+            try
+            {
+                await returningValueTaskFunction();
+            }
+            catch (NullProcessedEventProcessingException nullProcessedEventProcessingException)
+            {
+                throw CreateAndLogValidationException(nullProcessedEventProcessingException);
             }
             catch (ProcessedEventValidationException processedEventValidationException)
             {
