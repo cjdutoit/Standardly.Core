@@ -6,9 +6,8 @@
 
 using System;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Foundations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Foundations.Templates

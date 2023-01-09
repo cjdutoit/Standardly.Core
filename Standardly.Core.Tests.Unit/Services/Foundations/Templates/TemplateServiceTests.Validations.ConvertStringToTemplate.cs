@@ -7,12 +7,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Standardly.Core.Models.Foundations.Executions;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Foundations.Templates.Exceptions;
-using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
+using Standardly.Core.Models.Services.Foundations.Executions;
+using Standardly.Core.Models.Services.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates.Tasks.Actions;
+using Standardly.Core.Models.Services.Foundations.Templates.Tasks.Actions.Appends;
+using Standardly.Core.Models.Services.Foundations.Templates.Tasks.Actions.Files;
 using Xunit;
+using Task = System.Threading.Tasks.Task;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
 {
@@ -136,11 +138,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
-            {
-                Name = invalidString,
-                BranchName = invalidString,
-            };
+            Core.Models.Services.Foundations.Templates.Tasks.Task someTask =
+                new Core.Models.Services.Foundations.Templates.Tasks.Task()
+                {
+                    Name = invalidString,
+                    BranchName = invalidString,
+                };
 
             someTemplate.Tasks.Add(someTask);
             string someStringTemplate = SerializeTemplate(someTemplate);
@@ -195,20 +198,21 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
-            {
-                Name = GetRandomString(),
-                BranchName = GetRandomString(),
-                Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
+            Core.Models.Services.Foundations.Templates.Tasks.Task someTask =
+                new Core.Models.Services.Foundations.Templates.Tasks.Task()
                 {
-                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
+                    Name = GetRandomString(),
+                    BranchName = GetRandomString(),
+                    Actions = new List<Action>()
+                {
+                    new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = invalidString,
                         Files = new List<File>(),
                         Executions = new List<Execution>(),
                     }
                 }
-            };
+                };
 
             someTemplate.Tasks.Add(someTask);
             string someStringTemplate = SerializeTemplate(someTemplate);
@@ -255,19 +259,19 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Core.Models.Foundations.Templates.Tasks.Task someTask =
-                new Core.Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Services.Foundations.Templates.Tasks.Task someTask =
+                new Core.Models.Services.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(),
                     BranchName = GetRandomString(),
-                    Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
+                    Actions = new List<Action>()
                 {
-                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
+                    new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
                         Files = new List<File>()
                         {
-                            new Core.Models.Foundations.Templates.Tasks.Actions.Files.File()
+                            new Core.Models.Services.Foundations.Templates.Tasks.Actions.Files.File()
                             {
                                 Template = invalidString,
                                 Target = invalidString
@@ -334,13 +338,13 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Services.Foundations.Templates.Tasks.Task someTask = new Core.Models.Services.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
                 BranchName = GetRandomString(),
-                Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
+                Actions = new List<Action>()
                 {
-                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
+                    new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
                         Files = new List<File>()
@@ -351,9 +355,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                                 Target = GetRandomString()
                             },
                         },
-                        Appends = new List<Core.Models.Foundations.Templates.Tasks.Actions.Appends.Append>()
+                        Appends = new List<Append>()
                         {
-                            new Core.Models.Foundations.Templates.Tasks.Actions.Appends.Append()
+                            new Core.Models.Services.Foundations.Templates.Tasks.Actions.Appends.Append()
                             {
                                 Target = invalidString,
                                 RegexToMatchForAppend = invalidString,
@@ -425,18 +429,18 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Core.Models.Foundations.Templates.Tasks.Task someTask = new Core.Models.Foundations.Templates.Tasks.Task()
+            Core.Models.Services.Foundations.Templates.Tasks.Task someTask = new Core.Models.Services.Foundations.Templates.Tasks.Task()
             {
                 Name = GetRandomString(),
                 BranchName = GetRandomString(),
-                Actions = new List<Core.Models.Foundations.Templates.Tasks.Actions.Action>()
+                Actions = new List<Action>()
                 {
-                    new Core.Models.Foundations.Templates.Tasks.Actions.Action()
+                    new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
                         Name = GetRandomString(),
                         Files = new List<File>()
                         {
-                            new Core.Models.Foundations.Templates.Tasks.Actions.Files.File()
+                            new Core.Models.Services.Foundations.Templates.Tasks.Actions.Files.File()
                             {
                                 Template = GetRandomString(),
                                 Target = GetRandomString()

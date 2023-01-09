@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Standardly.Core.Clients;
 using Standardly.Core.Models.Events;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Foundations.Templates.EntityModels;
-using Standardly.Core.Models.Orchestrations;
+using Standardly.Core.Models.Services.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates.EntityModels;
+using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
 using Standardly.Core.Tests.Acceptance.Models;
 using Xunit;
 

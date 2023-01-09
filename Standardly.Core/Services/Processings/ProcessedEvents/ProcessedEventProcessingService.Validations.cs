@@ -6,9 +6,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
-using Standardly.Core.Models.Processings.Executions.Exceptions;
-using Standardly.Core.Models.Processings.ProcessedEvents.Exceptions;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Services.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 
 namespace Standardly.Core.Services.Processings.ProcessedEvents
 {

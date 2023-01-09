@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Standardly.Commands;
-using Standardly.Core.Models.Foundations.Executions;
+using Standardly.Core.Models.Services.Foundations.Executions;
 
 namespace Standardly.Core.Brokers.Executions
 {

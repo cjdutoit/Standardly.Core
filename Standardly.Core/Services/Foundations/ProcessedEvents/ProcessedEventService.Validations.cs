@@ -6,8 +6,8 @@
 
 using System;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
-using Standardly.Core.Models.Foundations.ProcessedEvents.Exceptions;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents.Exceptions;
 
 namespace Standardly.Core.Services.Foundations.ProcessedEvents
 {

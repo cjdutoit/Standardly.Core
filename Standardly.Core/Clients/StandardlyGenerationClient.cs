@@ -12,9 +12,9 @@ using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
 using Standardly.Core.Models.Events;
-using Standardly.Core.Models.Orchestrations;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
-using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Coordinations.TemplateGenerations.Exceptions;
+using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
+using Standardly.Core.Services.Coordinations.TemplatesGenerations;
 using Standardly.Core.Services.Foundations.Executions;
 using Standardly.Core.Services.Foundations.Files;
 using Standardly.Core.Services.Foundations.Templates;
@@ -29,7 +29,7 @@ namespace Standardly.Core.Clients
     public class StandardlyGenerationClient : IStandardlyGenerationClient
     {
         public event EventHandler<ProcessedEventArgs> Processed;
-        private readonly ITemplateGenerationOrchestrationService templateGenerationOrchestrationService;
+        private readonly ITemplateGenerationCoordinationService templateGenerationOrchestrationService;
 
         public StandardlyGenerationClient()
         {
@@ -45,24 +45,24 @@ namespace Standardly.Core.Clients
             {
                 await this.templateGenerationOrchestrationService.GenerateCodeAsync(templateGenerationInfo);
             }
-            catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
+            catch (TemplateGenerationCoordinationValidationException templateOrchestrationValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationValidationException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationDependencyValidationException
+            catch (TemplateGenerationCoordinationDependencyValidationException
                 templateOrchestrationDependencyValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationDependencyValidationException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationDependencyException
+            catch (TemplateGenerationCoordinationDependencyException
                 templateOrchestrationDependencyException)
             {
                 throw new StandardlyClientDependencyException(
                     templateOrchestrationDependencyException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationServiceException
+            catch (TemplateGenerationCoordinationServiceException
                 templateOrchestrationServiceException)
             {
                 throw new StandardlyClientServiceException(
@@ -75,7 +75,7 @@ namespace Standardly.Core.Clients
             this.templateGenerationOrchestrationService.Processed += ItemProcessed;
         }
 
-        private ITemplateGenerationOrchestrationService InitialiseClient()
+        private ITemplateGenerationCoordinationService InitialiseClient()
         {
             var fileProcessingService = new FileProcessingService(
                 fileService: new FileService(
@@ -91,7 +91,7 @@ namespace Standardly.Core.Clients
                     fileBroker: new FileBroker(),
                     regularExpressionBroker: new RegularExpressionBroker()));
 
-            return new TemplateGenerationOrchestrationService(
+            return new TemplateGenerationCoordinationService(
                 fileProcessingService,
                 executionProcessingService,
                 templateProcessingService);

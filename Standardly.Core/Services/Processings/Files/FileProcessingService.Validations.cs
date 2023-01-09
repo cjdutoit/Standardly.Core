@@ -5,7 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
-using Standardly.Core.Models.Processings.Files.Exceptions;
+using Standardly.Core.Models.Services.Processings.Files.Exceptions;
 
 namespace Standardly.Core.Services.Processings.Files
 {

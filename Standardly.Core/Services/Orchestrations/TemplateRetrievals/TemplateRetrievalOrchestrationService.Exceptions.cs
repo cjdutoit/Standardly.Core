@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
-using Standardly.Core.Models.Processings.Executions.Exceptions;
-using Standardly.Core.Models.Processings.Files.Exceptions;
-using Standardly.Core.Models.Processings.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates;
+using Standardly.Core.Models.Services.Orchestrations.TemplateRetrievals.Exceptions;
+using Standardly.Core.Models.Services.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Services.Processings.Files.Exceptions;
+using Standardly.Core.Models.Services.Processings.Templates.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals

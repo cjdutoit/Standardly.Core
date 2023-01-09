@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Brokers.RegularExpressions;
-using Standardly.Core.Models.Foundations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates.Exceptions;
 using Standardly.Core.Services.Foundations.Templates;
 using Xunit;
 

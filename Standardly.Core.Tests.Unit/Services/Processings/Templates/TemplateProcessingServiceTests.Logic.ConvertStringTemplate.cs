@@ -7,7 +7,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Processings.Templates

@@ -8,8 +8,8 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
-using Standardly.Core.Models.Processings.ProcessedEvents.Exceptions;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 using Xeptions;
 using Xunit;
 

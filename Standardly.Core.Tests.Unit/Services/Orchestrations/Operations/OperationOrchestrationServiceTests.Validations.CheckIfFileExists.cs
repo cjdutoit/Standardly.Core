@@ -7,7 +7,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
+using Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations

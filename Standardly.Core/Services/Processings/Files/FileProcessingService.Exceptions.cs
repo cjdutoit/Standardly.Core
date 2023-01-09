@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
-using Standardly.Core.Models.Processings.Files.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Files.Exceptions;
+using Standardly.Core.Models.Services.Processings.Files.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Processings.Files

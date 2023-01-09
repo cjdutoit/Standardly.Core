@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Orchestrations\TemplateProcessings\Exceptions\" />
+    <Folder Include="Models\Services\Orchestrations\TemplateProcessings\Exceptions\" />
   </ItemGroup>
 
 </Project>
