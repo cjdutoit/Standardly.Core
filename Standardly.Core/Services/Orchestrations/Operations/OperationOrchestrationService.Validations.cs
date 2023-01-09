@@ -27,6 +27,11 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 (Rule: IsInvalid(content), Parameter: nameof(content)));
         }
 
+        private static void ValidateReadFromFile(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static void ValidateCheckIfFileExists(string path)
         {
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
