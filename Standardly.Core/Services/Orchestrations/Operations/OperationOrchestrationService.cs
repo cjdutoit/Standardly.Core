@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Services.Processings.Executions;
@@ -43,7 +44,21 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             });
 
         public ValueTask<bool> WriteToFileAsync(string path, string content) =>
-            throw new NotImplementedException();
+         TryCatch(async () =>
+         {
+             ValidateWriteToFile(path, content);
+             FileInfo fileName = new FileInfo(path);
+             string directoryPath = fileName.DirectoryName;
+
+             bool directoryExists = await this.fileProcessingService.CheckIfDirectoryExistsAsync(directoryPath);
+
+             if (!directoryExists)
+             {
+                 await this.fileProcessingService.CreateDirectoryAsync(directoryPath);
+             }
+
+             return await this.fileProcessingService.WriteToFileAsync(path, content);
+         });
 
         public ValueTask<string> ReadFromFileAsync(string path) =>
             throw new NotImplementedException();

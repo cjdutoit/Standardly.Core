@@ -20,6 +20,13 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 (Rule: IsInvalid(executionFolder), Parameter: nameof(executionFolder)));
         }
 
+        private static void ValidateWriteToFile(string path, string content)
+        {
+            Validate(
+                (Rule: IsInvalid(path), Parameter: nameof(path)),
+                (Rule: IsInvalid(content), Parameter: nameof(content)));
+        }
+
         private static void ValidateCheckIfFileExists(string path)
         {
             Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
