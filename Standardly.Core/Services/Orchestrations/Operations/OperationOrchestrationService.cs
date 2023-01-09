@@ -93,7 +93,11 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             });
 
         public ValueTask<bool> CreateDirectoryAsync(string path) =>
-            throw new NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateCreateDirectory(path);
+                return await this.fileProcessingService.CreateDirectoryAsync(path);
+            });
 
         public ValueTask<bool> DeleteDirectoryAsync(string path, bool recursive = false) =>
             throw new NotImplementedException();

@@ -24,15 +24,15 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             // given
             string invalidPath = invalidInput;
 
-            var invalidFilesProcessingException =
+            var invalidFileProcessingException =
                 new InvalidFileProcessingException();
 
-            invalidFilesProcessingException.AddData(
+            invalidFileProcessingException.AddData(
                 key: "path",
                 values: "Text is required");
 
-            var expectedFilesProcessingValidationException =
-                new FileProcessingValidationException(invalidFilesProcessingException);
+            var expectedFileProcessingValidationException =
+                new FileProcessingValidationException(invalidFileProcessingException);
 
             // when
             ValueTask<bool> createDirectoryTask =
@@ -42,7 +42,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
                 await Assert.ThrowsAsync<FileProcessingValidationException>(createDirectoryTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedFilesProcessingValidationException);
+            actualException.Should().BeEquivalentTo(expectedFileProcessingValidationException);
 
             this.fileServiceMock.Verify(service =>
                 service.CreateDirectoryAsync(invalidPath),
