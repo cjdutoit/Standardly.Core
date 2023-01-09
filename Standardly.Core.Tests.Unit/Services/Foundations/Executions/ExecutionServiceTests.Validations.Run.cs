@@ -20,7 +20,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalid(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAsync(string invalidValue)
         {
             // given
             string inputExecutionFolder = invalidValue;
@@ -55,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions
 
         [Theory]
         [MemberData(nameof(InvalidExecutions))]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNull(List<Execution> invalidExecutions)
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNullAsync(List<Execution> invalidExecutions)
         {
             // given
             string randomExecutionFolder = GetRandomString();

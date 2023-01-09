@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
@@ -12,14 +13,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public void ShouldCreateDirectory()
+        public async Task ShouldCreateDirectoryAsync()
         {
             // given
             string randomFilePath = GetRandomString();
             string inputFilePath = randomFilePath;
 
             // when
-            this.fileService.CreateDirectoryAsync(inputFilePath);
+            await this.fileService.CreateDirectoryAsync(inputFilePath);
 
             // then
             this.fileBrokerMock.Verify(broker =>

@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     {
         [Theory]
         [MemberData(nameof(AppendContentDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnAppendContentIfErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationExceptionOnAppendContentIfErrorOccursAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -78,7 +78,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnAppendContentIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnAppendContentIfServiceErrorOccursAsync()
         {
             // given
             string sourceContent = GetRandomString();

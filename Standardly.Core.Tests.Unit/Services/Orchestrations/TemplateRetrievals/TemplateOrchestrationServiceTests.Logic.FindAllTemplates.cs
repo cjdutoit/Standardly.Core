@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
     {
 
         [Fact]
-        public async Task ShouldFindAllTemplates()
+        public async Task ShouldFindAllTemplatesAsync()
         {
             // given
             string templateFolderPath = GetRandomString();

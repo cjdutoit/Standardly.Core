@@ -16,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
     public partial class ExecutionProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldRunExecution()
+        public async Task ShouldRunExecutionAsync()
         {
             // given
             string randomExecutionFolder = GetRandomString();

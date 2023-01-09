@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnAppendContentIfArgsInvalidAndLog(string invalidString)
+        public async Task ShouldThrowValidationExceptionOnAppendContentIfArgsInvalidAsync(string invalidString)
         {
             // given
             string sourceContent = invalidString;
@@ -64,7 +64,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnAppendContentIfWithNoMatchFoundAndLog()
+        public async Task ShouldThrowValidationExceptionOnAppendContentIfWithNoMatchFoundAsync()
         {
             // given
             string sourceContent = GetRandomString();

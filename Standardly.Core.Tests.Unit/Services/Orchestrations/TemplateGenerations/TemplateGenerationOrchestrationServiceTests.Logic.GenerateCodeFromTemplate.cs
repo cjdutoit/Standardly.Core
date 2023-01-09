@@ -16,7 +16,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
     public partial class TemplateGenerationOrchestrationServiceTests
     {
         [Fact]
-        public void ShouldGenerateCodeIncludingScriptExecution()
+        public void ShouldGenerateCodeIncludingScriptExecutionAsync()
         {
             // given
             int randomNumber = 1; // GetRandomNumber();
@@ -191,7 +191,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public void ShouldGenerateCodeWithOutScriptExecution()
+        public void ShouldGenerateCodeWithOutScriptExecutionAsync()
         {
             // given
             int randomNumber = 1; // GetRandomNumber();

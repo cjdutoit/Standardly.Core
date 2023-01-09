@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     public partial class TemplateProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnTransformTemplateIfArgumentsIsInvalidAndLogIt()
+        public async Task ShouldThrowValidationExceptionOnTransformTemplateIfArgumentsIsInvalidAsync()
         {
             // given
             Template nullTemplate = null;

@@ -17,8 +17,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnDeleteDirectoryIfDependencyValidationErrorOccursAndLogIt(
-            Exception dependencyValidationException)
+        public async Task
+            ShouldThrowDependencyValidationExceptionOnDeleteDirectoryIfDependencyValidationErrorOccursAsync(
+                Exception dependencyValidationException)
         {
             // given
             string somePath = GetRandomString();
@@ -54,7 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAsync(
             Exception dependencyException)
         {
             // given
@@ -93,49 +94,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             this.fileBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Theory]
-        [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnDeleteDirectoryIfDependencyErrorOccursAndLogItCritical(
-            Exception dependencyException)
-        {
-            // given
-            string somePath = GetRandomString();
-            bool recursive = true;
-
-            var invalidFileServiceDependencyException =
-                new InvalidFileServiceDependencyException(
-                    dependencyException);
-
-            var failedFileDependencyException =
-                new FailedFileDependencyException(
-                    invalidFileServiceDependencyException);
-
-            var expectedFileDependencyException =
-                new FileDependencyException(failedFileDependencyException);
-
-            this.fileBrokerMock.Setup(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive))
-                    .ThrowsAsync(dependencyException);
-
-            // when
-            ValueTask<bool> writeToFileTask =
-                this.fileService.DeleteDirectoryAsync(somePath, recursive);
-
-            FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(writeToFileTask.AsTask);
-
-            // then
-            actualException.Should().BeEquivalentTo(expectedFileDependencyException);
-
-            this.fileBrokerMock.Verify(broker =>
-                broker.DeleteDirectoryAsync(somePath, recursive),
-                    Times.Once);
-
-            this.fileBrokerMock.VerifyNoOtherCalls();
-        }
-
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnDeleteDirectoryIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnDeleteDirectoryIfServiceErrorOccursAsync()
         {
             // given
             string somePath = GetRandomString();

@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
     public partial class OperationOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNullAndLogIt()
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionsIsNullAsync()
         {
             // given
             List<Execution> nullExecutions = null;
@@ -55,7 +55,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAndLogIt(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnRunIfExecutionFolderIsInvalidAsync(
+            string invalidValue)
         {
             // given
             List<Execution> nullExecutions = GetRandomExecutions();

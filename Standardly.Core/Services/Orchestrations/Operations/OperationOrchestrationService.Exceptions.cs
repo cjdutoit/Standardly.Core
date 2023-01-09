@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Processings.Files.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.Operations
@@ -15,6 +16,7 @@ namespace Standardly.Core.Services.Orchestrations.Operations
     public partial class OperationOrchestrationService : IOperationOrchestrationService
     {
         private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<bool> ReturningBooleanFunction();
 
         private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
         {
@@ -41,6 +43,41 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             catch (ExecutionProcessingServiceException executionServiceException)
             {
                 throw CreateAndLogDependencyException(executionServiceException);
+            }
+            catch (Exception exception)
+            {
+                var failedOperationOrchestrationServiceException =
+                    new FailedOperationOrchestrationServiceException(exception);
+
+                throw CreateAndLogServiceException(failedOperationOrchestrationServiceException);
+            }
+        }
+
+        private async ValueTask<bool> TryCatch(ReturningBooleanFunction returningBooleanFunction)
+        {
+            try
+            {
+                return await returningBooleanFunction();
+            }
+            catch (InvalidArgumentOperationOrchestrationException invalidArgumentOperationOrchestrationException)
+            {
+                throw CreateAndLogValidationException(invalidArgumentOperationOrchestrationException);
+            }
+            catch (FileProcessingValidationException fileProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingValidationException);
+            }
+            catch (FileProcessingDependencyValidationException fileProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(fileProcessingDependencyValidationException);
+            }
+            catch (FileProcessingDependencyException fileDependencyException)
+            {
+                throw CreateAndLogDependencyException(fileDependencyException);
+            }
+            catch (FileProcessingServiceException fileServiceException)
+            {
+                throw CreateAndLogDependencyException(fileServiceException);
             }
             catch (Exception exception)
             {

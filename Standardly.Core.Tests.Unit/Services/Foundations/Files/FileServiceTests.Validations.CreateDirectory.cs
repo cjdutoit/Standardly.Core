@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnCreateDirectoryIfArgumantsIsInvalid(string invalidValue)
+        public async Task ShouldThrowValidationExceptionOnCreateDirectoryIfArgumentsIsInvalidAsync(string invalidValue)
         {
             // given
             string invalidPath = invalidValue;

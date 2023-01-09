@@ -56,13 +56,6 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             {
                 new SerializationException(),
                 new IOException(),
-            };
-        }
-
-        public static TheoryData CriticalFileDependencyExceptions()
-        {
-            return new TheoryData<Exception>()
-            {
                 new OutOfMemoryException(),
                 new UnauthorizedAccessException()
             };

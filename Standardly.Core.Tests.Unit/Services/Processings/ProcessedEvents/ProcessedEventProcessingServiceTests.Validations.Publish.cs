@@ -17,7 +17,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
     public partial class ProcessedEventProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnPublishIfProcessedIsNull()
+        public async Task ShouldThrowValidationExceptionOnPublishIfProcessedIsNullAsync()
         {
             // given
             Processed nullProcessed = null;

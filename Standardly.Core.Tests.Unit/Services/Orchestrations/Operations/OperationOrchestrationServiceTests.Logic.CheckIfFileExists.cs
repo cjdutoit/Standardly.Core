@@ -9,9 +9,9 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace Standardly.Core.Tests.Unit.Services.Processings.Files
+namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
 {
-    public partial class FileProcessingServiceTests
+    public partial class OperationOrchestrationServiceTests
     {
         [Fact]
         public async Task ShouldCheckIfFileExistsAsync()
@@ -22,22 +22,22 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             bool fileCheckResult = true;
             bool expectedResult = fileCheckResult;
 
-            this.fileServiceMock.Setup(service =>
+            this.fileProcessingServiceMock.Setup(service =>
                 service.CheckIfFileExistsAsync(randomPath))
                     .ReturnsAsync(fileCheckResult);
 
             // when
-            bool actualResult = await this.fileProcessingService
+            bool actualResult = await this.operationOrchestrationService
                 .CheckIfFileExistsAsync(inputFilePath);
 
             // then
             actualResult.Should().Be(expectedResult);
 
-            this.fileServiceMock.Verify(service =>
+            this.fileProcessingServiceMock.Verify(service =>
                 service.CheckIfFileExistsAsync(inputFilePath),
                     Times.Once);
 
-            this.fileServiceMock.VerifyNoOtherCalls();
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }

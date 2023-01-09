@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnConvertStringTemplateIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationOnConvertStringTemplateIfDependencyValidationErrorOccursAsync(
             Xeption dependencyValidationException)
         {
             // given
@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnConvertStringTemplateIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnConvertStringTemplateIfDependencyErrorOccursAsync(
             Xeption dependencyException)
         {
             // given
@@ -82,7 +82,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnConvertStringTemplateIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnConvertStringTemplateIfServiceErrorOccursAsync()
         {
             // given
             string randomString = GetRandomString();

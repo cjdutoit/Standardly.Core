@@ -20,6 +20,11 @@ namespace Standardly.Core.Services.Orchestrations.Operations
                 (Rule: IsInvalid(executionFolder), Parameter: nameof(executionFolder)));
         }
 
+        private static void ValidateCheckIfFileExists(string path)
+        {
+            Validate((Rule: IsInvalid(path), Parameter: nameof(path)));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

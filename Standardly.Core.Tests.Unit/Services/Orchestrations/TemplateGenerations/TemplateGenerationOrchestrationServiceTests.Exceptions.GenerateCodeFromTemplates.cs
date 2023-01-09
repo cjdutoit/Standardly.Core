@@ -22,7 +22,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnGenerateCodeFromTemplateAndLogIt(
+        public async Task ShouldThrowDependencyValidationExceptionOnGenerateCodeFromTemplateAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -73,7 +73,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnGenerateCodeFromTemplateAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnGenerateCodeFromTemplateAsync(
             Exception dependencyException)
         {
             // given
@@ -121,7 +121,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnGenerateCodeFromTemplateAndLogIt()
+        public async Task ShoudThrowServiceExceptionOnGenerateCodeFromTemplateAsync()
         {
             // given
             int randomNumber = GetRandomNumber();

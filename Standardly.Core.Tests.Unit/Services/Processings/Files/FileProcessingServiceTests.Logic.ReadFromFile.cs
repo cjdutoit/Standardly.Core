@@ -14,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
     public partial class FileProcessingServiceTests
     {
         [Fact]
-        public async Task ShouldReadFromFile()
+        public async Task ShouldReadFromFileAsync()
         {
             // given
             string randomPath = GetRandomString();

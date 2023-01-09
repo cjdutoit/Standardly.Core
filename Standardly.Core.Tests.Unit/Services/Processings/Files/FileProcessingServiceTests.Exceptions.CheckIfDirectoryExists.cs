@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
         public async Task
-            ShouldThrowDependencyValidationOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAndLogIt(
+            ShouldThrowDependencyValidationOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAsync(
                 Xeption dependencyValidationException)
         {
             // given
@@ -51,7 +51,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnCheckIfDirectoryExistsIfDependencyErrorOccursAsync(
             Xeption dependencyException)
         {
             // given
@@ -82,7 +82,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccursAsync()
         {
             // given
             string randomPath = GetRandomString();

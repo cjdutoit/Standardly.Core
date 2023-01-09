@@ -17,8 +17,9 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     {
         [Theory]
         [MemberData(nameof(FileServiceDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAndLogIt(
-            Exception dependencyValidationException)
+        public async Task
+            ShouldThrowDependencyValidationExceptionOnCheckIfDirectoryExistsIfDependencyValidationErrorOccursAsync(
+                Exception dependencyValidationException)
         {
             // given
             string somePath = GetRandomString();
@@ -53,7 +54,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
 
         [Theory]
         [MemberData(nameof(FileServiceDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAsync(
             Exception dependencyException)
         {
             // given
@@ -91,48 +92,8 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
             this.fileBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Theory]
-        [MemberData(nameof(CriticalFileDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCheckIfDirectoryExistsIfDependencyErrorOccursAndLogItCritical(
-            Exception dependencyException)
-        {
-            // given
-            string somePath = GetRandomString();
-
-            var invalidFileServiceDependencyException =
-                new InvalidFileServiceDependencyException(
-                    dependencyException);
-
-            var failedFileDependencyException =
-                new FailedFileDependencyException(
-                    invalidFileServiceDependencyException);
-
-            var expectedFileDependencyException =
-                new FileDependencyException(failedFileDependencyException);
-
-            this.fileBrokerMock.Setup(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath))
-                    .ThrowsAsync(dependencyException);
-
-            // when
-            ValueTask<bool> checkIfFileExistsTask =
-                this.fileService.CheckIfDirectoryExistsAsync(somePath);
-
-            FileDependencyException actualException =
-                await Assert.ThrowsAsync<FileDependencyException>(checkIfFileExistsTask.AsTask);
-
-            // then
-            actualException.Should().BeEquivalentTo(expectedFileDependencyException);
-
-            this.fileBrokerMock.Verify(broker =>
-                broker.CheckIfDirectoryExistsAsync(somePath),
-                    Times.Once);
-
-            this.fileBrokerMock.VerifyNoOtherCalls();
-        }
-
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnCheckIfDirectoryExistsIfServiceErrorOccursAsync()
         {
             // given
             string somePath = GetRandomString();

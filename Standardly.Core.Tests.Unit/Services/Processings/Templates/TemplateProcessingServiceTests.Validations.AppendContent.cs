@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnAppendContentIfArgumentsIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnAppendContentIfArgumentsIsInvalidAsync(
             string invalidInput)
         {
             // given

@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnDeleteDirectoryIfInputsIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnDeleteDirectoryIfInputsIsInvalidAsync(
             string invalidInput)
         {
             // given

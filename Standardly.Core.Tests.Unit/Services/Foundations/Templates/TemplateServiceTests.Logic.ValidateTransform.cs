@@ -14,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public async Task ShouldValidateTransform()
+        public async Task ShouldValidateTransformAsync()
         {
             try
             {
@@ -28,7 +28,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 string transformedTemplate =
                     await this.templateService.TransformStringAsync(inputStringTemplate, inputReplacementDictionary);
 
-                this.templateService.ValidateTransformationAsync(transformedTemplate);
+                await this.templateService.ValidateTransformationAsync(transformedTemplate);
                 Assert.True(true);
             }
             catch (Exception ex)

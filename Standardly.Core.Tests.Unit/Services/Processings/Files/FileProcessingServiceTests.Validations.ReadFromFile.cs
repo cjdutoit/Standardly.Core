@@ -18,7 +18,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalidAndLogIt(
+        public async Task ShouldThrowValidationExceptionOnReadFromFileIfPathIsInvalidAsync(
             string invalidFilePath)
         {
             // given

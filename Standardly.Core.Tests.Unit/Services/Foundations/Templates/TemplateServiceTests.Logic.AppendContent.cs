@@ -14,7 +14,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
     public partial class TemplateServiceTests
     {
         [Fact]
-        public async Task ShouldAppendContent()
+        public async Task ShouldAppendContentAsync()
         {
             // given
             string sourceContent = GetRandomString();
@@ -63,7 +63,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldNotAppendContent()
+        public async Task ShouldNotAppendContentAsync()
         {
             // given
             string sourceContent = GetRandomString();
@@ -112,7 +112,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldAppendIfTheDoesNotContainContentIsNotPresent()
+        public async Task ShouldAppendIfTheDoesNotContainContentIsNotPresentAsync()
         {
             // given
             string innerContent = GetRandomString();
@@ -162,7 +162,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
         }
 
         [Fact]
-        public async Task ShouldNotAppendIfTheDoesNotContainContentIsPresent()
+        public async Task ShouldNotAppendIfTheDoesNotContainContentIsPresentAsync()
         {
             // given
             string innerContent = GetRandomString();

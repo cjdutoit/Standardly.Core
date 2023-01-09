@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Moq;
 using Standardly.Core.Models.Foundations.Executions;
 using Standardly.Core.Models.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Processings.Files.Exceptions;
 using Standardly.Core.Services.Orchestrations.Operations;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
@@ -33,7 +34,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
                 fileProcessingService: this.fileProcessingServiceMock.Object);
         }
 
-        public static TheoryData DependencyValidationExceptions()
+        public static TheoryData ExecutionDependencyValidationExceptions()
         {
             string randomMessage = GetRandomString();
             string exceptionMessage = randomMessage;
@@ -46,7 +47,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             };
         }
 
-        public static TheoryData DependencyExceptions()
+        public static TheoryData ExecutionDependencyExceptions()
         {
             string randomMessage = GetRandomString();
             string exceptionMessage = randomMessage;
@@ -56,6 +57,32 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             {
                 new ExecutionProcessingDependencyException(innerException),
                 new ExecutionProcessingServiceException(innerException)
+            };
+        }
+
+        public static TheoryData FileDependencyValidationExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new FileProcessingValidationException(innerException),
+                new FileProcessingDependencyValidationException(innerException)
+            };
+        }
+
+        public static TheoryData FileDependencyExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new FileProcessingDependencyException(innerException),
+                new FileProcessingServiceException(innerException)
             };
         }
 

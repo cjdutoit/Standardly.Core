@@ -15,7 +15,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
     public partial class FileServiceTests
     {
         [Fact]
-        public async Task ShouldRetrieveListOfFiles()
+        public async Task ShouldRetrieveListOfFilesAsync()
         {
             // given
             string randomFilePath = GetRandomString();

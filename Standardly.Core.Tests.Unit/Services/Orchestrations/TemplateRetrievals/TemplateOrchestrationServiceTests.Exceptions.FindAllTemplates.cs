@@ -20,7 +20,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
     {
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -61,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
         [Theory]
         [MemberData(nameof(TemplateOrchestrationDependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyExceptionOnFindAllTemplatesIfDependencyErrorOccursAsync(
             Exception dependencyException)
         {
             // given
@@ -99,7 +99,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         }
 
         [Fact]
-        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccurs()
+        public async Task ShoudThrowServiceExceptionOnFindAllTemplatesIfServiceErrorOccursAsync()
         {
             // given
             string templateFolderPath = GetRandomString();

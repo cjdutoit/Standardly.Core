@@ -19,7 +19,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationOnTransformTemplateIfDependencyValidationErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyValidationOnTransformTemplateIfDependencyValidationErrorOccursAsync(
             Xeption dependencyValidationException)
         {
             // given
@@ -62,7 +62,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyOnTransformTemplateIfDependencyErrorOccursAndLogIt(
+        public async Task ShouldThrowDependencyOnTransformTemplateIfDependencyErrorOccursAsync(
             Xeption dependencyException)
         {
             // given
@@ -104,7 +104,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnTransformTemplateIfServiceErrorOccursAndLogIt()
+        public async Task ShouldThrowServiceExceptionOnTransformTemplateIfServiceErrorOccursAsync()
         {
             // given
             Template randomInputTemplate = CreateRandomTemplate();

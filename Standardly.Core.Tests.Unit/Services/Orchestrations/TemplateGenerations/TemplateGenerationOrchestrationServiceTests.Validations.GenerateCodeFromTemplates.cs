@@ -24,7 +24,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
     public partial class TemplateGenerationOrchestrationServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionWhenIfTemplateIsNullAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionWhenIfTemplateIsNullAsync()
         {
             // given
             TemplateGenerationInfo nullTemplateGenerationInfo = null;
@@ -53,7 +53,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionIfArgumentsIsNull()
+        public async Task ShouldThrowValidationExceptionIfArgumentsIsNullAsync()
         {
             // given
             List<Template> nullTemplateList = null;
@@ -104,7 +104,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public async Task ShouldRemoveTemplatesOnGenerateCodeIfNotRequired()
+        public async Task ShouldRemoveTemplatesOnGenerateCodeIfNotRequiredAsync()
         {
             // given
             int randomNumber = GetRandomNumber();
@@ -185,7 +185,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionIfAllTagsNotReplacedWithinAppend()
+        public async Task ShouldThrowValidationExceptionIfAllTagsNotReplacedWithinAppendAsync()
         {
             // given
             var invalidReplacementException = new InvalidReplacementTemplateException();
