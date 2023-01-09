@@ -7,7 +7,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
-using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates

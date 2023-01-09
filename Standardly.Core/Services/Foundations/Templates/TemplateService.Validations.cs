@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Standardly.Core.Models.Foundations.Executions;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Foundations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Executions;
+using Standardly.Core.Models.Services.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates.Tasks;
 using Xeptions;
 
 namespace Standardly.Core.Services.Foundations.Templates
@@ -102,7 +102,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         }
 
         private List<(dynamic Rule, string Parameter)> GetActionValidationRules(
-            Models.Foundations.Templates.Tasks.Task task, int taskIndex)
+            Task task, int taskIndex)
         {
             var actionRules = new List<(dynamic Rule, string Parameter)>();
 
@@ -131,7 +131,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         }
 
         private List<(dynamic Rule, string Parameter)> GetFileValidationRules(
-            Models.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
+            Models.Services.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
         {
             var fileItemRules = new List<(dynamic Rule, string Parameter)>();
 
@@ -155,7 +155,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         }
 
         private List<(dynamic Rule, string Parameter)> GetAppendValidationRules(
-            Models.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
+            Models.Services.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
         {
             var appendRules = new List<(dynamic Rule, string Parameter)>();
 
@@ -183,7 +183,7 @@ namespace Standardly.Core.Services.Foundations.Templates
         }
 
         private List<(dynamic Rule, string Parameter)> GetExecutionValidationRules(
-            Models.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
+            Models.Services.Foundations.Templates.Tasks.Actions.Action action, int actionIndex)
         {
             var executionRules = new List<(dynamic Rule, string Parameter)>();
 
@@ -224,13 +224,13 @@ namespace Standardly.Core.Services.Foundations.Templates
             Message = "Dictionary is required"
         };
 
-        private static dynamic IsInvalid(List<Models.Foundations.Templates.Tasks.Task> tasks) => new
+        private static dynamic IsInvalid(List<Task> tasks) => new
         {
             Condition = tasks.Count == 0,
             Message = "Tasks is required"
         };
 
-        private static dynamic IsInvalid(List<Models.Foundations.Templates.Tasks.Actions.Action> actions) => new
+        private static dynamic IsInvalid(List<Models.Services.Foundations.Templates.Tasks.Actions.Action> actions) => new
         {
             Condition = actions.Count == 0,
             Message = "Actions is required"

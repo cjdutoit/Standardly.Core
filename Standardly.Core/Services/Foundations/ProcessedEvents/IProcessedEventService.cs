@@ -6,7 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
 
 namespace Standardly.Core.Services.Foundations.ProcessedEvents
 {

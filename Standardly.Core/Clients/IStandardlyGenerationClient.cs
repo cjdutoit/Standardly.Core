@@ -7,7 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Standardly.Core.Models.Events;
-using Standardly.Core.Models.Orchestrations;
+using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
 
 namespace Standardly.Core.Clients
 {

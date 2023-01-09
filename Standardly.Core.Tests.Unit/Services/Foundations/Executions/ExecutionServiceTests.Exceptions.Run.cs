@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Executions;
-using Standardly.Core.Models.Foundations.Executions.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Executions;
+using Standardly.Core.Models.Services.Foundations.Executions.Exceptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Executions

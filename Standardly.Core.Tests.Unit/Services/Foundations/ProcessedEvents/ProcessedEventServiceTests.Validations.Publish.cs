@@ -7,8 +7,8 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
-using Standardly.Core.Models.Foundations.ProcessedEvents.Exceptions;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents.Exceptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents

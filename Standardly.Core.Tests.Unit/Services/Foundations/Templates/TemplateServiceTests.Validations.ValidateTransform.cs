@@ -6,8 +6,7 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
-using Standardly.Core.Models.Foundations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates.Exceptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates

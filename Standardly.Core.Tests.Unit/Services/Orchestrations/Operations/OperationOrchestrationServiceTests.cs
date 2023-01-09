@@ -6,9 +6,9 @@
 
 using System.Collections.Generic;
 using Moq;
-using Standardly.Core.Models.Foundations.Executions;
-using Standardly.Core.Models.Processings.Executions.Exceptions;
-using Standardly.Core.Models.Processings.Files.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Executions;
+using Standardly.Core.Models.Services.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Services.Processings.Files.Exceptions;
 using Standardly.Core.Services.Orchestrations.Operations;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;

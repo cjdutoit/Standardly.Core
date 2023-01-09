@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates;
 using Standardly.Core.Services.Foundations.Templates;
 
 namespace Standardly.Core.Services.Processings.Templates
@@ -28,15 +28,15 @@ namespace Standardly.Core.Services.Processings.Templates
                 return await this.templateService.ConvertStringToTemplateAsync(content);
             });
 
-        public ValueTask<Template> TransformTemplateAsync(
-            Template template,
-            Dictionary<string, string> replacementDictionary) =>
+        public ValueTask<Template> TransformTemplateAsync(Template template) =>
                 TryCatch(async () =>
                 {
-                    ValidateTransformTemplate(template, replacementDictionary);
+                    ValidateTransformTemplate(template, replacementDictionary: template?.ReplacementDictionary);
 
                     var transformedStringTemplate = await this.templateService
-                        .TransformStringAsync(template.RawTemplate, replacementDictionary);
+                        .TransformStringAsync(
+                            content: template.RawTemplate,
+                            replacementDictionary: template.ReplacementDictionary);
 
                     await this.templateService.ValidateTransformationAsync(transformedStringTemplate);
 

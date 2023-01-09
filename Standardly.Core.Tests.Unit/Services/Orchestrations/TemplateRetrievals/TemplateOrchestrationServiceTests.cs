@@ -9,13 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Moq;
-using Standardly.Core.Models.Foundations.Executions;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Appends;
-using Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Files;
-using Standardly.Core.Models.Processings.Executions.Exceptions;
-using Standardly.Core.Models.Processings.Files.Exceptions;
-using Standardly.Core.Models.Processings.Templates.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Executions;
+using Standardly.Core.Models.Services.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates.Tasks;
+using Standardly.Core.Models.Services.Foundations.Templates.Tasks.Actions.Appends;
+using Standardly.Core.Models.Services.Foundations.Templates.Tasks.Actions.Files;
+using Standardly.Core.Models.Services.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Services.Processings.Files.Exceptions;
+using Standardly.Core.Models.Services.Processings.Templates.Exceptions;
 using Standardly.Core.Services.Orchestrations.TemplateRetrievals;
 using Standardly.Core.Services.Processings.Executions;
 using Standardly.Core.Services.Processings.Files;
@@ -133,7 +134,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
 
             for (int i = 0; i < itemsToGenerate; i++)
             {
-                executions.Add(new Standardly.Core.Models.Foundations.Executions.Execution()
+                executions.Add(new Standardly.Core.Models.Services.Foundations.Executions.Execution()
                 {
                     Name = GetRandomString(),
                     Instruction = GetRandomString()
@@ -143,15 +144,15 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             return executions;
         }
 
-        private static List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action> CreateActions(
+        private static List<Core.Models.Services.Foundations.Templates.Tasks.Actions.Action> CreateActions(
             int itemsToGenerate,
             bool replaceFiles)
         {
-            var actions = new List<Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action>();
+            var actions = new List<Core.Models.Services.Foundations.Templates.Tasks.Actions.Action>();
 
             for (int i = 0; i < itemsToGenerate; i++)
             {
-                actions.Add(new Standardly.Core.Models.Foundations.Templates.Tasks.Actions.Action()
+                actions.Add(new Standardly.Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                 {
                     Name = GetRandomString(),
                     ExecutionFolder = GetRandomString(),
@@ -164,13 +165,13 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
             return actions;
         }
 
-        private static List<Core.Models.Foundations.Templates.Tasks.Task> CreateTasks(int itemsToGenerate, bool replaceFiles)
+        private static List<Task> CreateTasks(int itemsToGenerate, bool replaceFiles)
         {
-            var tasks = new List<Core.Models.Foundations.Templates.Tasks.Task>();
+            var tasks = new List<Task>();
 
             for (int i = 0; i < itemsToGenerate; i++)
             {
-                tasks.Add(new Core.Models.Foundations.Templates.Tasks.Task()
+                tasks.Add(new Core.Models.Services.Foundations.Templates.Tasks.Task()
                 {
                     Name = GetRandomString(),
                     Actions = CreateActions(itemsToGenerate, replaceFiles)
@@ -241,7 +242,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateRetrievals
         {
             var filler = new Filler<Template>();
             filler.Setup()
-                .OnType<List<Core.Models.Foundations.Templates.Tasks.Task>>().Use(CreateTasks(itemsToGenerate, replaceFiles))
+                .OnType<List<Task>>().Use(CreateTasks(itemsToGenerate, replaceFiles))
                 .OnType<Dictionary<string, string>>().Use(CreateDictionary);
 
             return filler;

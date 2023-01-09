@@ -6,7 +6,7 @@
 
 using System.Threading.Tasks;
 using Moq;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents

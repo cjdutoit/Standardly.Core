@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.RegularExpressions;
-using Standardly.Core.Models.Foundations.Templates;
+using Standardly.Core.Models.Services.Foundations.Templates;
 
 namespace Standardly.Core.Services.Foundations.Templates
 {

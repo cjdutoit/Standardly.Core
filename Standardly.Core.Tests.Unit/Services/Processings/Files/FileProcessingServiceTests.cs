@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Moq;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Files.Exceptions;
 using Standardly.Core.Services.Foundations.Files;
 using Standardly.Core.Services.Processings.Files;
 using Tynamix.ObjectFiller;

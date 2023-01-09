@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates;
+using Standardly.Core.Models.Services.Orchestrations.TemplateRetrievals.Exceptions;
 using Xeptions;
 using Xunit;
 

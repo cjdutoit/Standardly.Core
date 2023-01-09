@@ -7,7 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Moq;
-using Standardly.Core.Models.Orchestrations.Operations.Exceptions;
+using Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions;
 using Xeptions;
 using Xunit;
 

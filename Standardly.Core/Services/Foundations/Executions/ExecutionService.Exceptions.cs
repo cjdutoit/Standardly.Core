@@ -6,7 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Standardly.Core.Models.Foundations.Executions.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Executions.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Foundations.Executions

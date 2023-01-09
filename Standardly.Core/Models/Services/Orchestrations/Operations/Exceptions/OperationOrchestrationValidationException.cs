@@ -1,0 +1,19 @@
+﻿// ---------------------------------------------------------------
+// Copyright (c) Christo du Toit. All rights reserved.
+// Licensed under the MIT License.
+// See License.txt in the project root for license information.
+// ---------------------------------------------------------------
+
+using Xeptions;
+
+namespace Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions
+{
+    public class OperationOrchestrationValidationException : Xeption
+    {
+        public OperationOrchestrationValidationException(Xeption innerException)
+            : base(
+                  message: "Operation orchestration validation error occurred, please try again.",
+                  innerException)
+        { }
+    }
+}

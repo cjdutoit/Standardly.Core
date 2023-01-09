@@ -6,8 +6,8 @@
 
 using System;
 using Moq;
-using Standardly.Core.Models.Foundations.ProcessedEvents;
-using Standardly.Core.Models.Foundations.ProcessedEvents.Exceptions;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents.Exceptions;
 using Standardly.Core.Services.Foundations.ProcessedEvents;
 using Standardly.Core.Services.Processings.ProcessedEvents;
 using Tynamix.ObjectFiller;

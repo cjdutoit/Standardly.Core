@@ -5,7 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
-using Standardly.Core.Models.Orchestrations.TemplateRetrievals.Exceptions;
+using Standardly.Core.Models.Services.Orchestrations.TemplateRetrievals.Exceptions;
 
 namespace Standardly.Core.Services.Orchestrations.TemplateRetrievals
 {

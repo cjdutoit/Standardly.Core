@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
-using Standardly.Core.Models.Foundations.Executions;
-using Standardly.Core.Models.Processings.Executions.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Executions;
+using Standardly.Core.Models.Services.Processings.Executions.Exceptions;
 using Xeptions;
 using Xunit;
 

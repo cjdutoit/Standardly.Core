@@ -13,9 +13,8 @@ using Standardly.Core.Brokers.Files;
 using Standardly.Core.Brokers.RegularExpressions;
 using Standardly.Core.Models.Clients.Exceptions;
 using Standardly.Core.Models.Configurations.Retries;
-using Standardly.Core.Models.Foundations.Templates;
-using Standardly.Core.Models.Orchestrations.TemplateGenerations.Exceptions;
-using Standardly.Core.Models.Orchestrations.Templates.Exceptions;
+using Standardly.Core.Models.Services.Coordinations.TemplateGenerations.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Templates;
 using Standardly.Core.Services.Foundations.Executions;
 using Standardly.Core.Services.Foundations.Files;
 using Standardly.Core.Services.Foundations.Templates;
@@ -48,24 +47,24 @@ namespace Standardly.Core.Clients
                 return await this.templateRetrievalOrchestrationService
                     .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFileName);
             }
-            catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
+            catch (TemplateGenerationCoordinationValidationException templateOrchestrationValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationValidationException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationDependencyValidationException
+            catch (TemplateGenerationCoordinationDependencyValidationException
                 templateOrchestrationDependencyValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationDependencyValidationException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationDependencyException
+            catch (TemplateGenerationCoordinationDependencyException
                 templateOrchestrationDependencyException)
             {
                 throw new StandardlyClientDependencyException(
                     templateOrchestrationDependencyException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationServiceException
+            catch (TemplateGenerationCoordinationServiceException
                 templateOrchestrationServiceException)
             {
                 throw new StandardlyClientServiceException(
@@ -80,24 +79,24 @@ namespace Standardly.Core.Clients
                 return await this.templateRetrievalOrchestrationService
                     .FindAllTemplatesAsync(templateFolderPath, templateDefinitionFileName);
             }
-            catch (TemplateGenerationOrchestrationValidationException templateOrchestrationValidationException)
+            catch (TemplateGenerationCoordinationValidationException templateOrchestrationValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationValidationException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationDependencyValidationException
+            catch (TemplateGenerationCoordinationDependencyValidationException
                 templateOrchestrationDependencyValidationException)
             {
                 throw new StandardlyClientValidationException(
                     templateOrchestrationDependencyValidationException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationDependencyException
+            catch (TemplateGenerationCoordinationDependencyException
                 templateOrchestrationDependencyException)
             {
                 throw new StandardlyClientDependencyException(
                     templateOrchestrationDependencyException.InnerException as Xeption);
             }
-            catch (TemplateGenerationOrchestrationServiceException
+            catch (TemplateGenerationCoordinationServiceException
                 templateOrchestrationServiceException)
             {
                 throw new StandardlyClientServiceException(

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Standardly.Core.Models.Foundations.Files.Exceptions;
+using Standardly.Core.Models.Services.Foundations.Files.Exceptions;
 using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Foundations.Files
