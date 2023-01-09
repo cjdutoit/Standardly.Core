@@ -85,7 +85,12 @@ namespace Standardly.Core.Services.Orchestrations.Operations
             });
 
         public ValueTask<bool> CheckIfDirectoryExistsAsync(string path) =>
-            throw new NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateCheckIfDirectoryExists(path);
+
+                return await this.fileProcessingService.CheckIfDirectoryExistsAsync(path);
+            });
 
         public ValueTask<bool> CreateDirectoryAsync(string path) =>
             throw new NotImplementedException();
