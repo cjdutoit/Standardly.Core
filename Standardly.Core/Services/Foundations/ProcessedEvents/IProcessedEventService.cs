@@ -5,15 +5,13 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
+using Standardly.Core.Models.Foundations.ProcessedEvents;
 
-namespace Standardly.Core.Models.Events
+namespace Standardly.Core.Services.Foundations.ProcessedEvents
 {
-    public class Processed
+    public interface IProcessedEventService
     {
-        public DateTimeOffset TimeStamp { get; set; }
-        public string Message { get; set; }
-        public string Status { get; set; }
-        public int ProcessedItems { get; set; }
-        public int TotalItems { get; set; }
+        void ListenToProcessedEvent(Func<Processed, ValueTask<Processed>> processedEventHandler);
     }
 }
