@@ -14,7 +14,7 @@ using Standardly.Core.Services.Processings.Templates;
 
 namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
 {
-    public class TemplateGenerationOrchestrationService : ITemplateGenerationOrchestrationService
+    public partial class TemplateGenerationOrchestrationService : ITemplateGenerationOrchestrationService
     {
         private readonly IProcessedEventProcessingService processedEventProcessingService;
         private readonly ITemplateProcessingService templateProcessingService;
@@ -28,16 +28,19 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
         }
 
         public void ListenToProcessedEvent(
-            Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>> processedEventOrchestrationHandler)
-        {
-            this.processedEventProcessingService.ListenToProcessedEvent(async (processed) =>
-                {
-                    TemplateGenerationInfo templateGenerationInfo = MapToTemplateGenerationInfo(processed);
-                    await processedEventOrchestrationHandler(templateGenerationInfo);
+            Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>> processedEventOrchestrationHandler) =>
+            TryCatch(() =>
+            {
+                ValidateProcessedEventOrchestrationHandler(processedEventOrchestrationHandler);
 
-                    return await Task.FromResult(processed);
-                });
-        }
+                this.processedEventProcessingService.ListenToProcessedEvent(async (processed) =>
+                    {
+                        TemplateGenerationInfo templateGenerationInfo = MapToTemplateGenerationInfo(processed);
+                        await processedEventOrchestrationHandler(templateGenerationInfo);
+
+                        return await Task.FromResult(processed);
+                    });
+            });
 
         public ValueTask PublishProcessedAsync(TemplateGenerationInfo processed) =>
             throw new NotImplementedException();

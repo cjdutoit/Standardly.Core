@@ -21,8 +21,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         public void ShouldThrowValidationExceptionOnListenToProcessedEventIfEventHandlerIsNull()
         {
             // given
-            var processedOrchestrationEventHandlerMock =
-                new Mock<Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>>>();
+            Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>> processedOrchestrationEventHandler = null;
 
             var nullProcessedEventOrchestrationHandler =
                 new NullProcessedEventOrchestrationHandlerException();
@@ -30,17 +29,17 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             var expectedProcessedEventOrchestrationValidationException =
                 new ProcessedEventOrchestrationValidationException(nullProcessedEventOrchestrationHandler);
 
+            // when
             Action listenToProcessedEventAction = () => this.templateGenerationOrchestrationService
-                .ListenToProcessedEvent(processedOrchestrationEventHandlerMock.Object);
+                .ListenToProcessedEvent(processedOrchestrationEventHandler);
 
             ProcessedEventOrchestrationValidationException actualProcessedEventOrchestrationValidationException =
                 Assert.Throws<ProcessedEventOrchestrationValidationException>(listenToProcessedEventAction);
 
-            // when
+            // then
             actualProcessedEventOrchestrationValidationException.Should()
                 .BeEquivalentTo(expectedProcessedEventOrchestrationValidationException);
 
-            // then
             this.processedEventProcessingServiceMock.Verify(service =>
                 service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()),
                     Times.Never);
