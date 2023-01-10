@@ -28,8 +28,16 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
         }
 
         public void ListenToProcessedEvent(
-            Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>> processedEventOrchestrationHandler) =>
-                throw new NotImplementedException();
+            Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>> processedEventOrchestrationHandler)
+        {
+            this.processedEventProcessingService.ListenToProcessedEvent(async (processed) =>
+                {
+                    TemplateGenerationInfo templateGenerationInfo = MapToTemplateGenerationInfo(processed);
+                    await processedEventOrchestrationHandler(templateGenerationInfo);
+
+                    return await Task.FromResult(processed);
+                });
+        }
 
         public ValueTask PublishProcessedAsync(TemplateGenerationInfo processed) =>
             throw new NotImplementedException();
