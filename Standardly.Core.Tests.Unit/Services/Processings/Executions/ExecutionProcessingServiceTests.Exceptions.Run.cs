@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Foundations.Executions;
 using Standardly.Core.Models.Services.Processings.Executions.Exceptions;
@@ -40,9 +41,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             ValueTask<string> runTask =
                 this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
 
-            // then
             ExecutionProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<ExecutionProcessingDependencyValidationException>(runTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedExecutionProcessingDependencyValidationException);
 
             this.executionServiceMock.Verify(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder),
@@ -74,9 +77,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             ValueTask<string> runTask =
                 this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
 
-            // then
             ExecutionProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<ExecutionProcessingDependencyException>(runTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedExecutionProcessingDependencyException);
 
             this.executionServiceMock.Verify(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder),
@@ -111,9 +116,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Executions
             ValueTask<string> runTask =
                 this.executionProcessingService.RunAsync(randomExecutions, inputExecutionFolder);
 
-            // then
             ExecutionProcessingServiceException actualException =
                 await Assert.ThrowsAsync<ExecutionProcessingServiceException>(runTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedExecutionProcessingServiveException);
 
             this.executionServiceMock.Verify(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder),

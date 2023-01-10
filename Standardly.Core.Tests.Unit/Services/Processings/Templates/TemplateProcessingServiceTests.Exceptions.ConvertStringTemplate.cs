@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Foundations.Templates;
 using Standardly.Core.Models.Services.Processings.Templates.Exceptions;
@@ -37,10 +38,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             ValueTask<Template> convertStringToTemplateTask =
                 this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
 
-            // then
             TemplateProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingDependencyValidationException>(
                     convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingDependencyValidationException);
 
             this.templateServiceMock.Verify(service =>
                 service.ConvertStringToTemplateAsync(inputContent),
@@ -70,9 +73,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             ValueTask<Template> convertStringToTemplateTask =
                 this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
 
-            // then
             TemplateProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingDependencyException>(convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingDependencyException);
 
             this.templateServiceMock.Verify(service =>
                 service.ConvertStringToTemplateAsync(inputContent),
@@ -105,9 +110,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
             ValueTask<Template> convertStringToTemplateTask =
                 this.templateProcessingService.ConvertStringToTemplateAsync(inputContent);
 
-            // then
             TemplateProcessingServiceException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingServiceException>(convertStringToTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingServiveException);
 
             this.templateServiceMock.Verify(service =>
                 service.ConvertStringToTemplateAsync(inputContent),

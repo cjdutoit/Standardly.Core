@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Processings.Files.Exceptions;
 using Xeptions;
@@ -39,9 +40,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<List<string>> retrieveListOfFilesTask =
                 this.fileProcessingService.RetrieveListOfFilesAsync(inputPath, inputContent);
 
-            // then
             FileProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(retrieveListOfFilesTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyValidationException);
 
             this.fileServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent),
@@ -72,9 +75,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<List<string>> retrieveListOfFilesTask =
                 this.fileProcessingService.RetrieveListOfFilesAsync(inputPath, inputContent);
 
-            // then
             FileProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyException>(retrieveListOfFilesTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyException);
 
             this.fileServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent),
@@ -108,9 +113,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<List<string>> retrieveListOfFilesTask =
                 this.fileProcessingService.RetrieveListOfFilesAsync(inputPath, inputContent);
 
-            // then
             FileProcessingServiceException actualException =
                 await Assert.ThrowsAsync<FileProcessingServiceException>(retrieveListOfFilesTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingServiveException);
 
             this.fileServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent),

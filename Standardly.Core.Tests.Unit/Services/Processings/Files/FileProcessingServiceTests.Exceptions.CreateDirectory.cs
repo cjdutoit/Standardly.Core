@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Processings.Files.Exceptions;
 using Xeptions;
@@ -37,9 +38,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> createDirectoryTask =
                 this.fileProcessingService.CreateDirectoryAsync(inputPath);
 
-            // then
             FileProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(createDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyValidationException);
 
             this.fileServiceMock.Verify(service =>
                 service.CreateDirectoryAsync(inputPath),
@@ -69,9 +72,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> createDirectoryTask =
                 this.fileProcessingService.CreateDirectoryAsync(inputPath);
 
-            // then
             FileProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyException>(createDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyException);
 
             this.fileServiceMock.Verify(service =>
                 service.CreateDirectoryAsync(inputPath),
@@ -105,9 +110,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> createDirectoryTask =
                 this.fileProcessingService.CreateDirectoryAsync(inputPath);
 
-            // then
             FileProcessingServiceException actualException =
                 await Assert.ThrowsAsync<FileProcessingServiceException>(createDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingServiveException);
 
             this.fileServiceMock.Verify(service =>
                 service.CreateDirectoryAsync(inputPath),

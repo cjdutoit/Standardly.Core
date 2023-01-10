@@ -27,17 +27,17 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
             var expectedProcessedEventProcessingValidationException =
                 new ProcessedEventProcessingValidationException(nullProcessedEventProcessingException);
 
+            // when
             ValueTask publishProcessedTask =
                 this.processedEventProcessingService.PublishProcessedAsync(nullProcessed);
 
             ProcessedEventProcessingValidationException actualProcessedEventProcessingValidationException =
                 await Assert.ThrowsAsync<ProcessedEventProcessingValidationException>(publishProcessedTask.AsTask);
 
-            // when
+            // then
             actualProcessedEventProcessingValidationException.Should()
                 .BeEquivalentTo(expectedProcessedEventProcessingValidationException);
 
-            // then
             this.processedEventServiceMock.Verify(service =>
                 service.PublishProcessedAsync(nullProcessed),
                     Times.Never);

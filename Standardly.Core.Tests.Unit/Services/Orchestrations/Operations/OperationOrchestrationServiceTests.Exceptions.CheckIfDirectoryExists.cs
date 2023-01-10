@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions;
 using Xeptions;
@@ -37,16 +38,19 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<bool> checkIfDirectoryExistsTask =
                 this.operationOrchestrationService.CheckIfDirectoryExistsAsync(inputPath);
 
-            // then
             OperationOrchestrationDependencyValidationException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyValidationException>(
                     checkIfDirectoryExistsTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -70,15 +74,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<bool> checkIfDirectoryExistsTask =
                 this.operationOrchestrationService.CheckIfDirectoryExistsAsync(inputPath);
 
-            // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(checkIfDirectoryExistsTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -105,15 +112,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<bool> checkIfDirectoryExistsTask =
                 this.operationOrchestrationService.CheckIfDirectoryExistsAsync(inputPath);
 
-            // then
             OperationOrchestrationServiceException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationServiceException>(checkIfDirectoryExistsTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationServiveException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }

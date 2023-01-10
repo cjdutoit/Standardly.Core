@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions;
 using Xeptions;
@@ -37,15 +38,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<string> ReadFromFileTask =
                 this.operationOrchestrationService.ReadFromFileAsync(inputPath);
 
-            // then
             OperationOrchestrationDependencyValidationException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyValidationException>(ReadFromFileTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.ReadFromFileAsync(inputPath),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -69,15 +73,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<string> ReadFromFileTask =
                 this.operationOrchestrationService.ReadFromFileAsync(inputPath);
 
-            // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(ReadFromFileTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.ReadFromFileAsync(inputPath),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -104,15 +111,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<string> ReadFromFileTask =
                 this.operationOrchestrationService.ReadFromFileAsync(inputPath);
 
-            // then
             OperationOrchestrationServiceException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationServiceException>(ReadFromFileTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationServiveException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.ReadFromFileAsync(inputPath),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }

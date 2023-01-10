@@ -26,17 +26,17 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
             var expectedProcessedEventValidationException =
                 new ProcessedEventValidationException(nullProcessedEventException);
 
+            // when
             ValueTask publishProcessedTask =
                 this.processedEventService.PublishProcessedAsync(nullProcessed);
 
             ProcessedEventValidationException actualProcessedEventValidationException =
                 await Assert.ThrowsAsync<ProcessedEventValidationException>(publishProcessedTask.AsTask);
 
-            // when
+            // then
             actualProcessedEventValidationException.Should()
                 .BeEquivalentTo(expectedProcessedEventValidationException);
 
-            // then
             this.eventBrokerMock.Verify(broker =>
                 broker.PublishProcessedEventAsync(nullProcessed),
                     Times.Never);

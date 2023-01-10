@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions;
 using Xeptions;
@@ -39,15 +40,19 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<List<string>> retrieveListOfFilesTask =
                 this.operationOrchestrationService.RetrieveListOfFilesAsync(inputPath, inputContent);
 
-            // then
             OperationOrchestrationDependencyValidationException actualException =
-                await Assert.ThrowsAsync<OperationOrchestrationDependencyValidationException>(retrieveListOfFilesTask.AsTask);
+                await Assert.ThrowsAsync<OperationOrchestrationDependencyValidationException>(
+                    retrieveListOfFilesTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -72,15 +77,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<List<string>> retrieveListOfFilesTask =
                 this.operationOrchestrationService.RetrieveListOfFilesAsync(inputPath, inputContent);
 
-            // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(retrieveListOfFilesTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -108,15 +116,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<List<string>> retrieveListOfFilesTask =
                 this.operationOrchestrationService.RetrieveListOfFilesAsync(inputPath, inputContent);
 
-            // then
             OperationOrchestrationServiceException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationServiceException>(retrieveListOfFilesTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationServiveException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.RetrieveListOfFilesAsync(inputPath, inputContent),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }

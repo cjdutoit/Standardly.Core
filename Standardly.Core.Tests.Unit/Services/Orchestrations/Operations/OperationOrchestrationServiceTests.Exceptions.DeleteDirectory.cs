@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions;
 using Xeptions;
@@ -38,15 +39,19 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<bool> deleteDirectoryTask =
                 this.operationOrchestrationService.DeleteDirectoryAsync(inputPath, recursive);
 
-            // then
             OperationOrchestrationDependencyValidationException actualException =
-                await Assert.ThrowsAsync<OperationOrchestrationDependencyValidationException>(deleteDirectoryTask.AsTask);
+                await Assert.ThrowsAsync<OperationOrchestrationDependencyValidationException>(
+                    deleteDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyValidationException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.DeleteDirectoryAsync(inputPath, recursive),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -71,15 +76,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<bool> deleteDirectoryTask =
                 this.operationOrchestrationService.DeleteDirectoryAsync(inputPath, recursive);
 
-            // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(deleteDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.DeleteDirectoryAsync(inputPath, recursive),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -107,15 +115,18 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<bool> deleteDirectoryTask =
                 this.operationOrchestrationService.DeleteDirectoryAsync(inputPath, recursive);
 
-            // then
             OperationOrchestrationServiceException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationServiceException>(deleteDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationServiveException);
 
             this.fileProcessingServiceMock.Verify(service =>
                 service.DeleteDirectoryAsync(inputPath, recursive),
                     Times.Once);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }

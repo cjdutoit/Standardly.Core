@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Processings.Files.Exceptions;
 using Xeptions;
@@ -38,9 +39,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> deleteDirectoryTask =
                 this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
-            // then
             FileProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(deleteDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyValidationException);
 
             this.fileServiceMock.Verify(service =>
                 service.DeleteDirectoryAsync(inputPath, recursive),
@@ -71,9 +74,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> deleteDirectoryTask =
                 this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
-            // then
             FileProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyException>(deleteDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyException);
 
             this.fileServiceMock.Verify(service =>
                 service.DeleteDirectoryAsync(inputPath, recursive),
@@ -107,9 +112,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> deleteDirectoryTask =
                 this.fileProcessingService.DeleteDirectoryAsync(inputPath, recursive);
 
-            // then
             FileProcessingServiceException actualException =
                 await Assert.ThrowsAsync<FileProcessingServiceException>(deleteDirectoryTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingServiveException);
 
             this.fileServiceMock.Verify(service =>
                 service.DeleteDirectoryAsync(inputPath, recursive),

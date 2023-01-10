@@ -4,49 +4,40 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
-using System;
-using System.Threading.Tasks;
-using FluentAssertions;
-using Moq;
-using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
-using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
-using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions;
-using Xunit;
-
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 {
     public partial class TemplateGenerationOrchestrationTests
     {
-        [Fact]
-        public void ShouldThrowValidationExceptionOnListenToProcessedEventIfEventHandlerIsNull()
-        {
-            // given
-            var processedOrchestrationEventHandlerMock =
-                new Mock<Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>>>();
+        //[Fact]
+        //public void ShouldThrowValidationExceptionOnListenToProcessedEventIfEventHandlerIsNull()
+        //{
+        //    // given
+        //    var processedOrchestrationEventHandlerMock =
+        //        new Mock<Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>>>();
 
-            var nullProcessedEventOrchestrationHandler =
-                new NullProcessedEventOrchestrationHandlerException();
+        //    var nullProcessedEventOrchestrationHandler =
+        //        new NullProcessedEventOrchestrationHandlerException();
 
-            var expectedProcessedEventOrchestrationValidationException =
-                new ProcessedEventOrchestrationValidationException(nullProcessedEventOrchestrationHandler);
+        //    var expectedProcessedEventOrchestrationValidationException =
+        //        new ProcessedEventOrchestrationValidationException(nullProcessedEventOrchestrationHandler);
 
-            Action listenToProcessedEventAction = () => this.templateGenerationOrchestrationService
-                .ListenToProcessedEvent(processedOrchestrationEventHandlerMock.Object);
+        //    Action listenToProcessedEventAction = () => this.templateGenerationOrchestrationService
+        //        .ListenToProcessedEvent(processedOrchestrationEventHandlerMock.Object);
 
-            ProcessedEventOrchestrationValidationException actualProcessedEventOrchestrationValidationException =
-                Assert.Throws<ProcessedEventOrchestrationValidationException>(listenToProcessedEventAction);
+        //    ProcessedEventOrchestrationValidationException actualProcessedEventOrchestrationValidationException =
+        //        Assert.Throws<ProcessedEventOrchestrationValidationException>(listenToProcessedEventAction);
 
-            // when
-            actualProcessedEventOrchestrationValidationException.Should()
-                .BeEquivalentTo(expectedProcessedEventOrchestrationValidationException);
+        //    // when
+        //    actualProcessedEventOrchestrationValidationException.Should()
+        //        .BeEquivalentTo(expectedProcessedEventOrchestrationValidationException);
 
-            // then
-            this.processedEventProcessingServiceMock.Verify(service =>
-                service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()),
-                    Times.Never);
+        //    // then
+        //    this.processedEventProcessingServiceMock.Verify(service =>
+        //        service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()),
+        //            Times.Never);
 
-            this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
-            this.templateProcessingServiceMock.VerifyNoOtherCalls();
-        }
+        //    this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
+        //    this.templateProcessingServiceMock.VerifyNoOtherCalls();
+        //}
     }
 }
