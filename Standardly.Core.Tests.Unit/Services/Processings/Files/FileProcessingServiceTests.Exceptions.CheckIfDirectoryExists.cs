@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Processings.Files.Exceptions;
 using Xeptions;
@@ -37,10 +38,12 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> checkIfDirectoryExistsTask =
                 this.fileProcessingService.CheckIfDirectoryExistsAsync(inputPath);
 
-            // then
             FileProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyValidationException>(
                     checkIfDirectoryExistsTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyValidationException);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath),
@@ -70,9 +73,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> checkIfDirectoryExistsTask =
                 this.fileProcessingService.CheckIfDirectoryExistsAsync(inputPath);
 
-            // then
             FileProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<FileProcessingDependencyException>(checkIfDirectoryExistsTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingDependencyException);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath),
@@ -105,9 +110,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Files
             ValueTask<bool> checkIfDirectoryExistsTask =
                 this.fileProcessingService.CheckIfDirectoryExistsAsync(inputPath);
 
-            // then
             FileProcessingServiceException actualException =
                 await Assert.ThrowsAsync<FileProcessingServiceException>(checkIfDirectoryExistsTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedFileProcessingServiveException);
 
             this.fileServiceMock.Verify(service =>
                 service.CheckIfDirectoryExistsAsync(inputPath),

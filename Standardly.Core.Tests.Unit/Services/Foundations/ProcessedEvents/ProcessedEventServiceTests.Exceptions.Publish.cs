@@ -35,6 +35,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
                 broker.PublishProcessedEventAsync(inputProcessed))
                     .Throws(serviceException);
 
+            // when
             ValueTask listenToProcessedEventTask = this.processedEventService
                 .PublishProcessedAsync(inputProcessed);
 
@@ -42,11 +43,10 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.ProcessedEvents
                 await Assert.ThrowsAsync<ProcessedEventServiceException>(
                     listenToProcessedEventTask.AsTask);
 
-            // when
+            // then
             actualProcessedEventValidationException.Should()
                 .BeEquivalentTo(expectedProcessedEventServiceException);
 
-            // then
             this.eventBrokerMock.Verify(broker =>
                 broker.PublishProcessedEventAsync(inputProcessed),
                     Times.Once);

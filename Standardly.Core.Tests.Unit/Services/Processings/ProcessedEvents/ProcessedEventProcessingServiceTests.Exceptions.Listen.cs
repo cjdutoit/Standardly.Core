@@ -74,6 +74,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                 service.ListenToProcessedEvent(processedEventHandlerMock.Object))
                     .Throws(dependencyException);
 
+            // when
             Action listenToProcessedEventAction = () => this.processedEventProcessingService
                 .ListenToProcessedEvent(processedEventHandlerMock.Object);
 
@@ -81,11 +82,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                 actualProcessedEventProcessingDependencyException =
                     Assert.Throws<ProcessedEventProcessingDependencyException>(listenToProcessedEventAction);
 
-            // when
+            // then
             actualProcessedEventProcessingDependencyException.Should()
                 .BeEquivalentTo(expectedProcessedEventProcessingDependencyException);
 
-            // then
             this.processedEventServiceMock.Verify(service =>
                 service.ListenToProcessedEvent(processedEventHandlerMock.Object),
                     Times.Once);
@@ -112,17 +112,17 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                 service.ListenToProcessedEvent(processedEventHandlerMock.Object))
                     .Throws(serviceException);
 
+            // when
             Action listenToProcessedEventAction = () => this.processedEventProcessingService
                 .ListenToProcessedEvent(processedEventHandlerMock.Object);
 
             ProcessedEventProcessingServiceException actualProcessedEventProcessingServiceException =
                 Assert.Throws<ProcessedEventProcessingServiceException>(listenToProcessedEventAction);
 
-            // when
+            // then
             actualProcessedEventProcessingServiceException.Should()
                 .BeEquivalentTo(expectedProcessedEventProcessingServiceException);
 
-            // then
             this.processedEventServiceMock.Verify(service =>
                 service.ListenToProcessedEvent(processedEventHandlerMock.Object),
                     Times.Once);

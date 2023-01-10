@@ -49,6 +49,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
                     Times.Never);
 
             this.fileProcessingServiceMock.VerifyNoOtherCalls();
+            this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }

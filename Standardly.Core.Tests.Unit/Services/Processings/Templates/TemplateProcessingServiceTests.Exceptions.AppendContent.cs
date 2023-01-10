@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Processings.Templates.Exceptions;
 using Xeptions;
@@ -53,9 +54,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         appendToBeginning,
                         appendEvenIfContentAlreadyExist);
 
-            // then
             TemplateProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingDependencyValidationException>(appendContentTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingDependencyValidationException);
 
             this.templateServiceMock.Verify(service =>
                 service.AppendContentAsync(
@@ -108,9 +111,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         appendToBeginning,
                         appendEvenIfContentAlreadyExist);
 
-            // then
             TemplateProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingDependencyException>(appendContentTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingDependencyException);
 
             this.templateServiceMock.Verify(service =>
                  service.AppendContentAsync(
@@ -174,9 +179,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                         appendToBeginning,
                         appendEvenIfContentAlreadyExist);
 
-            // then
             TemplateProcessingServiceException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingServiceException>(appendContentTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingServiveException);
 
             this.templateServiceMock.Verify(service =>
                  service.AppendContentAsync(

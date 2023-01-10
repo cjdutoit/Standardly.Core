@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Foundations.Templates;
 using Standardly.Core.Models.Services.Processings.Templates.Exceptions;
@@ -41,9 +42,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .TransformTemplateAsync(inputTemplate);
 
-            // then
             TemplateProcessingDependencyValidationException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingDependencyValidationException>(transformTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingDependencyValidationException);
 
             this.templateServiceMock.Verify(service =>
                 service.TransformStringAsync(inputTemplate.RawTemplate, inputTemplate.ReplacementDictionary),
@@ -84,9 +87,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .TransformTemplateAsync(inputTemplate);
 
-            // then
             TemplateProcessingDependencyException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingDependencyException>(transformTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingDependencyException);
 
             this.templateServiceMock.Verify(service =>
                 service.TransformStringAsync(inputTemplate.RawTemplate, inputTemplate.ReplacementDictionary),
@@ -130,9 +135,11 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.Templates
                 this.templateProcessingService
                     .TransformTemplateAsync(inputTemplate);
 
-            // then
             TemplateProcessingServiceException actualException =
                 await Assert.ThrowsAsync<TemplateProcessingServiceException>(transformTemplateTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedTemplateProcessingServiveException);
 
             this.templateServiceMock.Verify(service =>
                 service.TransformStringAsync(inputTemplate.RawTemplate, randomInputTemplate.ReplacementDictionary),
