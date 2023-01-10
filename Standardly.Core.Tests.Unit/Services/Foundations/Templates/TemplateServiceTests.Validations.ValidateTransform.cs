@@ -41,7 +41,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationTask.AsTask);
 
             // then
-            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualTemplateValidationException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -70,7 +74,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(validateTransformationTask.AsTask);
 
             // then
-            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualTemplateValidationException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

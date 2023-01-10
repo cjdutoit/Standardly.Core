@@ -48,7 +48,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -116,7 +120,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -175,7 +183,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -204,14 +216,14 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     Name = GetRandomString(),
                     BranchName = GetRandomString(),
                     Actions = new List<Action>()
-                {
-                    new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
-                        Name = invalidString,
-                        Files = new List<File>(),
-                        Executions = new List<Execution>(),
+                        new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
+                        {
+                            Name = invalidString,
+                            Files = new List<File>(),
+                            Executions = new List<Execution>(),
+                        }
                     }
-                }
                 };
 
             someTemplate.Tasks.Add(someTask);
@@ -236,7 +248,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -265,28 +281,28 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     Name = GetRandomString(),
                     BranchName = GetRandomString(),
                     Actions = new List<Action>()
-                {
-                    new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
-                        Name = GetRandomString(),
-                        Files = new List<File>()
+                        new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                         {
-                            new Core.Models.Services.Foundations.Templates.Tasks.Actions.Files.File()
+                            Name = GetRandomString(),
+                            Files = new List<File>()
                             {
-                                Template = invalidString,
-                                Target = invalidString
+                                new Core.Models.Services.Foundations.Templates.Tasks.Actions.Files.File()
+                                {
+                                    Template = invalidString,
+                                    Target = invalidString
+                                },
                             },
-                        },
-                        Executions = new List<Execution>()
-                        {
-                            new Execution()
+                            Executions = new List<Execution>()
                             {
-                               Name = GetRandomString(),
-                               Instruction = GetRandomString(),
+                                new Execution()
+                                {
+                                   Name = GetRandomString(),
+                                   Instruction = GetRandomString(),
+                                },
                             },
-                        },
+                        }
                     }
-                }
                 };
 
             someTemplate.Tasks.Add(someTask);
@@ -315,7 +331,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -338,11 +358,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Core.Models.Services.Foundations.Templates.Tasks.Task someTask = new Core.Models.Services.Foundations.Templates.Tasks.Task()
-            {
-                Name = GetRandomString(),
-                BranchName = GetRandomString(),
-                Actions = new List<Action>()
+            Core.Models.Services.Foundations.Templates.Tasks.Task someTask =
+                new Core.Models.Services.Foundations.Templates.Tasks.Task()
+                {
+                    Name = GetRandomString(),
+                    BranchName = GetRandomString(),
+                    Actions = new List<Action>()
                 {
                     new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
@@ -374,7 +395,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                         },
                     }
                 }
-            };
+                };
 
             someTemplate.Tasks.Add(someTask);
             string someStringTemplate = SerializeTemplate(someTemplate);
@@ -406,7 +427,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -429,11 +454,12 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 ProjectsRequired = GetRandomString()
             };
 
-            Core.Models.Services.Foundations.Templates.Tasks.Task someTask = new Core.Models.Services.Foundations.Templates.Tasks.Task()
-            {
-                Name = GetRandomString(),
-                BranchName = GetRandomString(),
-                Actions = new List<Action>()
+            Core.Models.Services.Foundations.Templates.Tasks.Task someTask =
+                new Core.Models.Services.Foundations.Templates.Tasks.Task()
+                {
+                    Name = GetRandomString(),
+                    BranchName = GetRandomString(),
+                    Actions = new List<Action>()
                 {
                     new Core.Models.Services.Foundations.Templates.Tasks.Actions.Action()
                     {
@@ -456,7 +482,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                         },
                     }
                 }
-            };
+                };
 
             someTemplate.Tasks.Add(someTask);
             string someStringTemplate = SerializeTemplate(someTemplate);
@@ -484,7 +510,11 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(convertStringToTemplateTask.AsTask);
 
             // then
-            actualException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

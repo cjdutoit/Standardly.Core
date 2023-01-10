@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Foundations.Executions;
 using Standardly.Core.Models.Services.Orchestrations.Operations.Exceptions;
@@ -40,14 +41,17 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<string> runTask =
                 this.operationOrchestrationService.RunAsync(randomExecutions, inputExecutionFolder);
 
-            // then
             OperationOrchestrationDependencyValidationException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyValidationException>(runTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyValidationException);
 
             this.executionProcessingServiceMock.Verify(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
@@ -74,14 +78,17 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<string> runTask =
                 this.operationOrchestrationService.RunAsync(randomExecutions, inputExecutionFolder);
 
-            // then
             OperationOrchestrationDependencyException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationDependencyException>(runTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationDependencyException);
 
             this.executionProcessingServiceMock.Verify(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
@@ -111,14 +118,17 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
             ValueTask<string> runTask =
                 this.operationOrchestrationService.RunAsync(randomExecutions, inputExecutionFolder);
 
-            // then
             OperationOrchestrationServiceException actualException =
                 await Assert.ThrowsAsync<OperationOrchestrationServiceException>(runTask.AsTask);
+
+            // then
+            actualException.Should().BeEquivalentTo(expectedOperationOrchestrationServiveException);
 
             this.executionProcessingServiceMock.Verify(service =>
                 service.RunAsync(inputExecutions, inputExecutionFolder),
                     Times.Once);
 
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
     }

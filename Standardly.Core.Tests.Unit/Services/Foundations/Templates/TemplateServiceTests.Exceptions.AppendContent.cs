@@ -74,7 +74,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
-            regularExpressionBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                     Times.Never);
 
             this.fileBrokerMock.VerifyNoOtherCalls();
-            regularExpressionBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

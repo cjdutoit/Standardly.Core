@@ -36,6 +36,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                 service.PublishProcessedAsync(inputProcessed))
                     .Throws(dependencyValidationException);
 
+            // when
             ValueTask publishProcessedTask = this.processedEventProcessingService
                 .PublishProcessedAsync(inputProcessed);
 
@@ -44,11 +45,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                     await Assert.ThrowsAsync<ProcessedEventProcessingDependencyValidationException>(
                         publishProcessedTask.AsTask);
 
-            // when
+            // then
             actualProcessedEventProcessingDependencyValidationException.Should()
                 .BeEquivalentTo(expectedProcessedEventProcessingDependencyValidationException);
 
-            // then
             this.processedEventServiceMock.Verify(service =>
                 service.PublishProcessedAsync(inputProcessed),
                     Times.Once);
@@ -75,6 +75,7 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                 service.PublishProcessedAsync(inputProcessed))
                     .Throws(dependencyException);
 
+            // when
             ValueTask publishProcessedTask = this.processedEventProcessingService
                 .PublishProcessedAsync(inputProcessed);
 
@@ -83,11 +84,10 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                     await Assert.ThrowsAsync<ProcessedEventProcessingDependencyException>(
                         publishProcessedTask.AsTask);
 
-            // when
+            // then
             actualProcessedEventProcessingDependencyException.Should()
                 .BeEquivalentTo(expectedProcessedEventProcessingDependencyException);
 
-            // then
             this.processedEventServiceMock.Verify(service =>
                 service.PublishProcessedAsync(inputProcessed),
                     Times.Once);
@@ -114,17 +114,17 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
                 service.PublishProcessedAsync(inputProcessed))
                     .Throws(serviceException);
 
+            // when
             ValueTask publishProcessedTask = this.processedEventProcessingService
                 .PublishProcessedAsync(inputProcessed);
 
             ProcessedEventProcessingServiceException actualProcessedEventProcessingServiceException =
                 await Assert.ThrowsAsync<ProcessedEventProcessingServiceException>(publishProcessedTask.AsTask);
 
-            // when
+            // then
             actualProcessedEventProcessingServiceException.Should()
                 .BeEquivalentTo(expectedProcessedEventProcessingServiceException);
 
-            // then
             this.processedEventServiceMock.Verify(service =>
                 service.PublishProcessedAsync(inputProcessed),
                     Times.Once);

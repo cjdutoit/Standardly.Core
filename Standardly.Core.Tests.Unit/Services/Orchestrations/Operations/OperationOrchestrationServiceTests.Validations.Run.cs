@@ -48,6 +48,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
                 service.RunAsync(nullExecutions, executionFolder),
                     Times.Never);
 
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
 
@@ -87,6 +88,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.Operations
                 service.RunAsync(nullExecutions, executionFolder),
                     Times.Never);
 
+            this.fileProcessingServiceMock.VerifyNoOtherCalls();
             this.executionProcessingServiceMock.VerifyNoOtherCalls();
         }
     }

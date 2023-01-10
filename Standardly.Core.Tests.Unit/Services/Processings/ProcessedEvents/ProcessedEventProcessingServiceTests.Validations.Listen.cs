@@ -28,17 +28,17 @@ namespace Standardly.Core.Tests.Unit.Services.Processings.ProcessedEvents
             var expectedProcessedEventProcessingValidationException =
                 new ProcessedEventProcessingValidationException(nullProcessedEventProcessingHandler);
 
+            // when
             Action listenToProcessedEventAction = () => this.processedEventProcessingService
                 .ListenToProcessedEvent(processedProcessingEventHandlerMock);
 
             ProcessedEventProcessingValidationException actualProcessedEventProcessingValidationException =
                 Assert.Throws<ProcessedEventProcessingValidationException>(listenToProcessedEventAction);
 
-            // when
+            // then
             actualProcessedEventProcessingValidationException.Should()
                 .BeEquivalentTo(expectedProcessedEventProcessingValidationException);
 
-            // then
             this.processedEventServiceMock.Verify(service =>
                 service.ListenToProcessedEvent(processedProcessingEventHandlerMock),
                     Times.Never);

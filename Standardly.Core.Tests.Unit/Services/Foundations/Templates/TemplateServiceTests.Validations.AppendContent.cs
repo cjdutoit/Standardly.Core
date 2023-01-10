@@ -6,6 +6,7 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Standardly.Core.Models.Services.Foundations.Templates.Exceptions;
 using Xunit;
 
@@ -59,7 +60,19 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);
 
             // then
-            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualTemplateValidationException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            regularExpressionBrokerMock.Verify(broker =>
+                broker.CheckForExpressionMatch(regexToMatch, sourceContent),
+                    Times.Never);
+
+            regularExpressionBrokerMock.Verify(broker =>
+                broker.Replace(sourceContent, regexToMatch, appendContent),
+                    Times.Never);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -95,7 +108,19 @@ namespace Standardly.Core.Tests.Unit.Services.Foundations.Templates
                 await Assert.ThrowsAsync<TemplateValidationException>(appendContentTask.AsTask);
 
             // then
-            actualTemplateValidationException.Should().BeEquivalentTo(expectedTemplateValidationException);
+            actualTemplateValidationException.Should()
+                .BeEquivalentTo(expectedTemplateValidationException);
+
+            regularExpressionBrokerMock.Verify(broker =>
+                broker.CheckForExpressionMatch(regexToMatch, sourceContent),
+                    Times.Once);
+
+            regularExpressionBrokerMock.Verify(broker =>
+                broker.Replace(sourceContent, regexToMatch, appendContent),
+                    Times.Never);
+
+            this.fileBrokerMock.VerifyNoOtherCalls();
+            this.regularExpressionBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
