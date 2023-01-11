@@ -4,6 +4,7 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 using Xeptions;
@@ -42,6 +43,13 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
             {
                 throw CreateAndLogDependencyException(processedEventProcessingServiceException);
             }
+            catch (Exception exception)
+            {
+                var failedProcessedEventOrchestrationServiceException =
+                    new FailedProcessedEventOrchestrationServiceException(exception.InnerException as Xeption);
+
+                throw CreateAndLogServiceException(failedProcessedEventOrchestrationServiceException);
+            }
         }
 
         private ProcessedEventOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
@@ -67,6 +75,14 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
                 new ProcessedEventOrchestrationDependencyException(exception.InnerException as Xeption);
 
             throw processedEventOrchestrationDependencyException;
+        }
+
+        private ProcessedEventOrchestrationServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var processedEventOrchestrationServiceException =
+                new ProcessedEventOrchestrationServiceException(exception);
+
+            return processedEventOrchestrationServiceException;
         }
     }
 }
