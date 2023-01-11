@@ -36,7 +36,6 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
             {
                 throw CreateAndLogDependencyValidationException(processedEventProcessingDependencyValidationException);
             }
-
             catch (ProcessedEventProcessingDependencyException processedEventProcessingDependencyException)
             {
                 throw CreateAndLogDependencyException(processedEventProcessingDependencyException);
@@ -63,6 +62,15 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
             catch (NullTemplateGenerationInfoOrchestrationException nullTemplateGenerationInfoOrchestrationException)
             {
                 throw CreateAndLogValidationException(nullTemplateGenerationInfoOrchestrationException);
+            }
+            catch (ProcessedEventProcessingValidationException processedEventProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(processedEventProcessingValidationException);
+            }
+            catch (ProcessedEventProcessingDependencyValidationException
+                processedEventProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(processedEventProcessingDependencyValidationException);
             }
         }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
-using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
+using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions;
 using Xeptions;
 using Xunit;
 
@@ -28,8 +28,8 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             var serviceException = new Exception();
 
-            var expectedProcessedEventProcessingDependencyValidationException =
-                new ProcessedEventProcessingDependencyValidationException(
+            var expectedProcessedEventOrchestrationDependencyValidationException =
+                new ProcessedEventOrchestrationDependencyValidationException(
                     dependencyValidationException.InnerException as Xeption);
 
             this.processedEventProcessingServiceMock.Setup(service =>
@@ -40,14 +40,14 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             ValueTask publishProcessedTask = this.templateGenerationOrchestrationService
                 .PublishProcessedAsync(inputTemplateGenerationInfo);
 
-            ProcessedEventProcessingDependencyValidationException
-                actualProcessedEventProcessingDependencyValidationException =
-                    await Assert.ThrowsAsync<ProcessedEventProcessingDependencyValidationException>(
+            ProcessedEventOrchestrationDependencyValidationException
+                actualProcessedEventOrchestrationDependencyValidationException =
+                    await Assert.ThrowsAsync<ProcessedEventOrchestrationDependencyValidationException>(
                         publishProcessedTask.AsTask);
 
             // then
-            actualProcessedEventProcessingDependencyValidationException.Should()
-                .BeEquivalentTo(expectedProcessedEventProcessingDependencyValidationException);
+            actualProcessedEventOrchestrationDependencyValidationException.Should()
+                .BeEquivalentTo(expectedProcessedEventOrchestrationDependencyValidationException);
 
             this.processedEventProcessingServiceMock.Verify(service =>
                 service.PublishProcessedAsync(inputTemplateGenerationInfo.Processed),
