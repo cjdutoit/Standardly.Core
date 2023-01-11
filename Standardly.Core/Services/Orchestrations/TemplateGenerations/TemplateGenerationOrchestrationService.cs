@@ -42,8 +42,8 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
                     });
             });
 
-        public ValueTask PublishProcessedAsync(TemplateGenerationInfo processed) =>
-            throw new NotImplementedException();
+        public ValueTask PublishProcessedAsync(TemplateGenerationInfo templateGenerationInfo) =>
+            this.processedEventProcessingService.PublishProcessedAsync(templateGenerationInfo.Processed);
 
         public ValueTask<TemplateGenerationInfo> ConvertStringToTemplateAsync(string content) =>
             throw new NotImplementedException();

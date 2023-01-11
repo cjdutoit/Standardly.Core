@@ -4,7 +4,9 @@
 // See License.txt in the project root for license information.
 // ---------------------------------------------------------------
 
+using System;
 using Moq;
+using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
 using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 using Standardly.Core.Services.Orchestrations.TemplateGenerations;
 using Standardly.Core.Services.Processings.ProcessedEvents;
@@ -59,5 +61,20 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
+
+        private static TemplateGenerationInfo CreateRandomTemplateGenerationInfo() =>
+            CreateProcessedFiller().Create();
+
+        private static Filler<TemplateGenerationInfo> CreateProcessedFiller()
+        {
+            var filler = new Filler<TemplateGenerationInfo>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(DateTime.Now)
+                .OnProperty(templateGenerationInfo => templateGenerationInfo.Templates)
+                    .Use(new System.Collections.Generic.List<Core.Models.Services.Foundations.Templates.Template>());
+
+            return filler;
+        }
     }
 }

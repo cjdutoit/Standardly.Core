@@ -16,7 +16,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
         void ListenToProcessedEvent(
             Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>> processedEventProcessingHandler);
 
-        ValueTask PublishProcessedAsync(TemplateGenerationInfo processed);
+        ValueTask PublishProcessedAsync(TemplateGenerationInfo templateGenerationInfo);
 
         ValueTask<TemplateGenerationInfo> ConvertStringToTemplateAsync(string content);
 
