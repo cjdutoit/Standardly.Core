@@ -22,11 +22,31 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             var processedEventOrchestrationHandlerMock =
                 new Mock<Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>>>();
 
+
+            Processed processed = CreateRandomProcessed();
+
+            TemplateGenerationInfo randomTemplateGenerationInfo =
+                new TemplateGenerationInfo
+                {
+                    Processed = processed
+                };
+
+            TemplateGenerationInfo inputTemplateGenerationInfo = randomTemplateGenerationInfo;
+
+            this.processedEventProcessingServiceMock.Setup(service =>
+                service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()))
+                    .Callback<Func<Processed, ValueTask<Processed>>>(processedFunction =>
+                        processedFunction.Invoke(processed));
+
             // when
             this.templateGenerationOrchestrationService.ListenToProcessedEvent(
                 processedEventOrchestrationHandlerMock.Object);
 
             // then
+            processedEventOrchestrationHandlerMock.Verify(handler =>
+                handler.Invoke(It.Is(SameTemplateGenerationInfoAs(inputTemplateGenerationInfo))),
+                    Times.Once);
+
             this.processedEventProcessingServiceMock.Verify(service =>
                 service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()),
                     Times.Once);
