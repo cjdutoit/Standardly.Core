@@ -5,9 +5,13 @@
 // ---------------------------------------------------------------
 
 using Moq;
+using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 using Standardly.Core.Services.Orchestrations.TemplateGenerations;
 using Standardly.Core.Services.Processings.ProcessedEvents;
 using Standardly.Core.Services.Processings.Templates;
+using Tynamix.ObjectFiller;
+using Xeptions;
+using Xunit;
 
 namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 {
@@ -26,5 +30,21 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 processedEventProcessingService: this.processedEventProcessingServiceMock.Object,
                 templateProcessingService: this.templateProcessingServiceMock.Object);
         }
+
+        public static TheoryData ProcessedEventsDependencyValidationExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new ProcessedEventProcessingValidationException(innerException),
+                new ProcessedEventProcessingDependencyValidationException(innerException),
+            };
+        }
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
     }
 }
