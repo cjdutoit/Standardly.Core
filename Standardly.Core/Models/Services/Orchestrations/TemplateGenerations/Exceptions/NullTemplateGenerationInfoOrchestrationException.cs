@@ -6,12 +6,12 @@
 
 using Xeptions;
 
-namespace Standardly.Core.Models.Services.Processings.Executions.Exceptions
+namespace Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions
 {
-    public class NullProcessedEventProcessingException : Xeption
+    public class NullTemplateGenerationInfoOrchestrationException : Xeption
     {
-        public NullProcessedEventProcessingException()
-            : base(message: "Processed event is null.")
+        public NullTemplateGenerationInfoOrchestrationException()
+            : base(message: "Template generation info is null.")
         { }
     }
 }
