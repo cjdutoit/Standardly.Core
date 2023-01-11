@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions;
 using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 using Xeptions;
@@ -14,6 +15,7 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
     public partial class TemplateGenerationOrchestrationService : ITemplateGenerationOrchestrationService
     {
         private delegate void ReturningNothingFunction();
+        private delegate ValueTask ReturningValueTaskFunction();
 
         private void TryCatch(ReturningNothingFunction returningNothingFunction)
         {
@@ -49,6 +51,18 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
                     new FailedProcessedEventOrchestrationServiceException(exception.InnerException as Xeption);
 
                 throw CreateAndLogServiceException(failedProcessedEventOrchestrationServiceException);
+            }
+        }
+
+        private async ValueTask TryCatch(ReturningValueTaskFunction returningValueTaskFunction)
+        {
+            try
+            {
+                await returningValueTaskFunction();
+            }
+            catch (NullTemplateGenerationInfoOrchestrationException nullTemplateGenerationInfoOrchestrationException)
+            {
+                throw CreateAndLogValidationException(nullTemplateGenerationInfoOrchestrationException);
             }
         }
 

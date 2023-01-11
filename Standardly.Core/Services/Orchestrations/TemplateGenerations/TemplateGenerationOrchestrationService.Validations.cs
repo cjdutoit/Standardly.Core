@@ -21,5 +21,13 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
                 throw new NullProcessedEventOrchestrationHandlerException();
             }
         }
+
+        private void ValidateProcessedOnPublish(TemplateGenerationInfo templateGenerationInfo)
+        {
+            if (templateGenerationInfo is null)
+            {
+                throw new NullTemplateGenerationInfoOrchestrationException();
+            }
+        }
     }
 }

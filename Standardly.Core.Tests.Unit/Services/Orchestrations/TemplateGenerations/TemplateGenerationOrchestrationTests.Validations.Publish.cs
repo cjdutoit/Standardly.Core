@@ -7,6 +7,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions;
 using Xunit;
@@ -39,7 +40,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                 .BeEquivalentTo(expectedProcessedEventOrchestrationValidationException);
 
             this.processedEventProcessingServiceMock.Verify(service =>
-                service.PublishProcessedAsync(nullTemplateGenerationInfo.Processed),
+                service.PublishProcessedAsync(It.IsAny<Processed>()),
                     Times.Never);
 
             this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
