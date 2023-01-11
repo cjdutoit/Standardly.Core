@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------
 
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions;
+using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 using Xeptions;
 
 namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
@@ -23,6 +24,15 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
             {
                 throw CreateAndLogValidationException(nullProcessedEventOrchestrationHandler);
             }
+            catch (ProcessedEventProcessingValidationException processedEventProcessingValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(processedEventProcessingValidationException);
+            }
+            catch (ProcessedEventProcessingDependencyValidationException
+                processedEventProcessingDependencyValidationException)
+            {
+                throw CreateAndLogDependencyValidationException(processedEventProcessingDependencyValidationException);
+            }
         }
 
         private ProcessedEventOrchestrationValidationException CreateAndLogValidationException(Xeption exception)
@@ -31,6 +41,15 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
                 new ProcessedEventOrchestrationValidationException(exception);
 
             return processedEventOrchestrationValidationException;
+        }
+
+        private ProcessedEventOrchestrationDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
+        {
+            var processedEventOrchestrationDependencyValidationException =
+                new ProcessedEventOrchestrationDependencyValidationException(exception.InnerException as Xeption);
+
+            throw processedEventOrchestrationDependencyValidationException;
         }
     }
 }
