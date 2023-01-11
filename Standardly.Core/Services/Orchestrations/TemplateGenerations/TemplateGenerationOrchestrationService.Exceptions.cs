@@ -72,6 +72,21 @@ namespace Standardly.Core.Services.Orchestrations.TemplateGenerations
             {
                 throw CreateAndLogDependencyValidationException(processedEventProcessingDependencyValidationException);
             }
+            catch (ProcessedEventProcessingDependencyException processedEventProcessingDependencyException)
+            {
+                throw CreateAndLogDependencyException(processedEventProcessingDependencyException);
+            }
+            catch (ProcessedEventProcessingServiceException processedEventProcessingServiceException)
+            {
+                throw CreateAndLogDependencyException(processedEventProcessingServiceException);
+            }
+            catch (Exception exception)
+            {
+                var failedProcessedEventOrchestrationServiceException =
+                    new FailedProcessedEventOrchestrationServiceException(exception.InnerException as Xeption);
+
+                throw CreateAndLogServiceException(failedProcessedEventOrchestrationServiceException);
+            }
         }
 
         private ProcessedEventOrchestrationValidationException CreateAndLogValidationException(Xeption exception)

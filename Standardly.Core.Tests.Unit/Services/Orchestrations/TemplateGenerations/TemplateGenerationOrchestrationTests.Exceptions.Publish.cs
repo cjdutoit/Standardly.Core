@@ -61,7 +61,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
         [Theory]
         [MemberData(nameof(ProcessedEventsDependencyExceptions))]
         public async Task ShouldThrowDependencyErrorOnPublishIfDependencyErrorOccursAsync(
-                     Xeption dependencyValidationException)
+            Xeption dependencyValidationException)
         {
             // given
             TemplateGenerationInfo randomTemplateGenerationInfo = CreateRandomTemplateGenerationInfo();
@@ -107,28 +107,28 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             var serviceException = new Exception();
 
-            var failedProcessedEventProcessingServiceException =
-                new FailedProcessedEventProcessingServiceException(serviceException);
+            var failedProcessedEventOrchestrationServiceException =
+                new FailedProcessedEventOrchestrationServiceException(serviceException);
 
-            var expectedProcessedEventOrchestrationDependencyException =
-                new ProcessedEventOrchestrationDependencyException(failedProcessedEventProcessingServiceException);
+            var expectedProcessedEventOrchestrationServiceException =
+                new ProcessedEventOrchestrationServiceException(failedProcessedEventOrchestrationServiceException);
 
             this.processedEventProcessingServiceMock.Setup(service =>
                 service.PublishProcessedAsync(inputTemplateGenerationInfo.Processed))
-                    .Throws(failedProcessedEventProcessingServiceException);
+                    .Throws(failedProcessedEventOrchestrationServiceException);
 
             // when
             ValueTask publishProcessedTask = this.templateGenerationOrchestrationService
                 .PublishProcessedAsync(inputTemplateGenerationInfo);
 
-            ProcessedEventOrchestrationDependencyException
+            ProcessedEventOrchestrationServiceException
                 actualProcessedEventOrchestrationDependencyException =
-                    await Assert.ThrowsAsync<ProcessedEventOrchestrationDependencyException>(
+                    await Assert.ThrowsAsync<ProcessedEventOrchestrationServiceException>(
                         publishProcessedTask.AsTask);
 
             // then
             actualProcessedEventOrchestrationDependencyException.Should()
-                .BeEquivalentTo(expectedProcessedEventOrchestrationDependencyException);
+                .BeEquivalentTo(expectedProcessedEventOrchestrationServiceException);
 
             this.processedEventProcessingServiceMock.Verify(service =>
                 service.PublishProcessedAsync(inputTemplateGenerationInfo.Processed),
