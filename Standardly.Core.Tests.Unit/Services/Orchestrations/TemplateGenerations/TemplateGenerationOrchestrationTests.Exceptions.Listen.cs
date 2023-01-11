@@ -55,5 +55,43 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
 
             this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(ProcessedEventsDependencyExceptions))]
+        public void ShouldThrowDependencyOnListenToProcessedEventIfDependencyErrorOccurs(
+            Xeption dependencyException)
+        {
+            // given
+            var processedEventOrchestrationHandlerMock =
+                new Mock<Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>>>();
+
+            var serviceException = new Exception();
+
+            var expectedProcessedEventOrchestrationDependencyException =
+                new ProcessedEventOrchestrationDependencyException(
+                    dependencyException.InnerException as Xeption);
+
+            this.processedEventProcessingServiceMock.Setup(service =>
+                service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()))
+                    .Throws(dependencyException);
+
+            Action listenToProcessedEventAction = () => this.templateGenerationOrchestrationService
+                .ListenToProcessedEvent(processedEventOrchestrationHandlerMock.Object);
+
+            ProcessedEventOrchestrationDependencyException
+                actualProcessedEventOrchestrationDependencyException =
+                    Assert.Throws<ProcessedEventOrchestrationDependencyException>(listenToProcessedEventAction);
+
+            // when
+            actualProcessedEventOrchestrationDependencyException.Should()
+                .BeEquivalentTo(expectedProcessedEventOrchestrationDependencyException);
+
+            // then
+            this.processedEventProcessingServiceMock.Verify(service =>
+                service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()),
+                    Times.Once);
+
+            this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
+        }
     }
 }

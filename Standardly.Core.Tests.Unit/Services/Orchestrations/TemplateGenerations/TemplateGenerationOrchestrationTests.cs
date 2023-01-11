@@ -44,6 +44,19 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
             };
         }
 
+        public static TheoryData ProcessedEventsDependencyExceptions()
+        {
+            string randomMessage = GetRandomString();
+            string exceptionMessage = randomMessage;
+            var innerException = new Xeption(exceptionMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new ProcessedEventProcessingDependencyException(innerException),
+                new ProcessedEventProcessingServiceException(innerException)
+            };
+        }
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
     }
