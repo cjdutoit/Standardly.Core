@@ -11,6 +11,7 @@ using Moq;
 using Standardly.Core.Models.Services.Foundations.ProcessedEvents;
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations;
 using Standardly.Core.Models.Services.Orchestrations.TemplateGenerations.Exceptions;
+using Standardly.Core.Models.Services.Processings.ProcessedEvents.Exceptions;
 using Xeptions;
 using Xunit;
 
@@ -54,6 +55,7 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                     Times.Once);
 
             this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -92,6 +94,45 @@ namespace Standardly.Core.Tests.Unit.Services.Orchestrations.TemplateGenerations
                     Times.Once);
 
             this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnListenToProcessedEventIfServiceErrorOccurs()
+        {
+            var processedEventOrchestrationHandlerMock =
+                new Mock<Func<TemplateGenerationInfo, ValueTask<TemplateGenerationInfo>>>();
+
+            var serviceException = new Exception();
+
+            var failedProcessedEventOrchestrationServiceException =
+                new FailedProcessedEventOrchestrationServiceException(serviceException);
+
+            var expectedProcessedEventOrchestrationServiceException =
+                new ProcessedEventOrchestrationServiceException(failedProcessedEventOrchestrationServiceException);
+
+            this.processedEventProcessingServiceMock.Setup(service =>
+                service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()))
+                    .Throws(serviceException);
+
+            Action listenToProcessedEventAction = () => this.templateGenerationOrchestrationService
+                .ListenToProcessedEvent(processedEventOrchestrationHandlerMock.Object);
+
+            ProcessedEventOrchestrationServiceException
+                actualProcessedEventOrchestrationDependencyException =
+                    Assert.Throws<ProcessedEventOrchestrationServiceException>(listenToProcessedEventAction);
+
+            // when
+            actualProcessedEventOrchestrationDependencyException.Should()
+                .BeEquivalentTo(expectedProcessedEventOrchestrationServiceException);
+
+            // then
+            this.processedEventProcessingServiceMock.Verify(service =>
+                service.ListenToProcessedEvent(It.IsAny<Func<Processed, ValueTask<Processed>>>()),
+                    Times.Once);
+
+            this.processedEventProcessingServiceMock.VerifyNoOtherCalls();
+            this.templateProcessingServiceMock.VerifyNoOtherCalls();
         }
     }
 }
